@@ -1,276 +1,729 @@
 <!DOCTYPE html>
-<html class="dark" lang="pt-br">
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#00C2A0"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Iforms"/>
-  <meta name="description" content="Comunidade técnica Iforms - conecte-se com a rede ICF"/>
-  <title>Comunidade - Iforms ICF</title>
-  <link rel="manifest" href="./manifest.json"/>
-  <link rel="apple-touch-icon" href="./assets/icons/icon-192.svg"/>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <script id="tailwind-config">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Comunidade ICF | Rede de Elite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <script>
     tailwind.config = {
-      darkMode: "class",
       theme: {
         extend: {
           colors: {
-            "primary": "#00C2A0", "on-primary": "#000000",
-            "background": "#0A0C10", "surface": "#161B22",
-            "surface-variant": "#21262D", "on-surface": "#C9D1D9",
-            "on-surface-variant": "#8B949E", "outline": "#30363D",
-            "outline-variant": "#21262D", "secondary": "#8B949E",
-            "error": "#F85149"
-          },
-          borderRadius: {
-            "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"
-          },
-          spacing: {
-            "gutter": "24px", "section-gap": "64px", "stack-md": "16px",
-            "margin-mobile": "16px", "unit": "8px", "stack-lg": "32px",
-            "container-max": "1200px", "stack-sm": "8px"
+            primary: '#00C2A0',
+            secondary: '#031632',
+            background: '#020817',
+            surface: '#0f172a',
+            'surface-variant': '#1e293b',
+            'on-surface': '#f8fafc',
+            'on-surface-variant': '#94a3b8',
+            outline: 'rgba(148, 163, 184, 0.2)'
           },
           fontFamily: {
-            "body-lg": ["Inter"], "body-md": ["Inter"], "h3": ["Inter"],
-            "caption": ["Inter"], "h1": ["Inter"], "label-sm": ["Inter"], "h2": ["Inter"]
-          },
-          fontSize: {
-            "body-lg": ["18px", { lineHeight: "1.6" }],
-            "body-md": ["16px", { lineHeight: "1.6" }],
-            "h3": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
-            "caption": ["12px", { lineHeight: "1.4" }],
-            "h1": ["40px", { lineHeight: "1.2", fontWeight: "700" }],
-            "label-sm": ["14px", { lineHeight: "1.2", fontWeight: "500" }],
-            "h2": ["30px", { lineHeight: "1.3", fontWeight: "600" }]
+            sans: ['Inter', 'sans-serif'],
           }
         }
       }
     }
   </script>
   <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    body { font-family: 'Inter', sans-serif; background-color: #0A0C10; }
-    .accent-glow { text-shadow: 0 0 10px rgba(0, 194, 160, 0.3); }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0A0C10; }
-    ::-webkit-scrollbar-thumb { background: #21262D; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #00C2A0; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    .post-card { animation: fadeIn 0.3s ease forwards; }
-    .post-card:nth-child(2) { animation-delay: 0.08s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+    .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
+    .expert-card:hover { border-color: #00C2A0; box-shadow: 0 0 20px rgba(0, 194, 160, 0.1); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-background text-on-surface min-h-screen">
-
-<!-- TopAppBar -->
-<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-outline h-16 px-4 flex justify-between items-center">
-  <div class="flex items-center gap-4">
-    <a href="./dashboard.html" class="material-symbols-outlined text-primary cursor-pointer active:scale-95 duration-150" aria-label="Voltar">arrow_back</a>
-    <img src="./assets/icons/logo.svg" alt="Iforms Grupo ICF" class="h-[22px] w-auto" />
-  </div>
-  <div class="flex items-center gap-4">
-    <button aria-label="Buscar" class="text-on-surface-variant hover:text-primary transition-colors">
-      <span class="material-symbols-outlined">search</span>
-    </button>
-    <div class="w-8 h-8 rounded-full overflow-hidden border border-outline bg-surface-variant flex items-center justify-center">
-      <span class="material-symbols-outlined text-primary text-sm">person</span>
-    </div>
-  </div>
-</header>
-
-<main class="pt-20 pb-40 px-4 max-w-[1200px] mx-auto">
-
-  <!-- Banner ICF Bank -->
-  <div class="mb-8 p-6 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 relative overflow-hidden group cursor-pointer hover:border-primary/50 transition-all">
-    <div class="relative z-10">
-      <div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-2">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-        </span>
-        Novidade
-      </div>
-      <h3 class="text-xl font-bold text-white mb-2">ICF Bank: Crédito para construir e vender</h3>
-      <p class="text-on-surface-variant text-sm">(Lançamento 2º Semestre/2025)</p>
-    </div>
-    <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl text-primary/10 rotate-12">account_balance</span>
-  </div>
-
-  <!-- Trust Seal -->
-  <div class="mb-8 flex items-start gap-3 p-4 bg-surface rounded-xl border border-outline">
-    <span class="material-symbols-outlined text-primary shrink-0">verified</span>
-    <p class="text-caption text-on-surface-variant">
-      Sistema validado pelo <span class="text-white font-medium">IPT</span> e único em ICF com <span class="text-white font-medium">DATEC</span> financiável pela <span class="text-primary font-bold">Caixa Econômica</span>.
-    </p>
-  </div>
+<body class="bg-background text-on-surface font-sans mb-20 overflow-x-hidden">
 
   <!-- Header -->
-  <div class="mb-stack-lg">
-    <h2 class="font-h2 text-h2 text-white mb-unit">Comunidade</h2>
-    <p class="font-body-md text-on-surface-variant">Troque experiências e conecte-se com a rede Iforms.</p>
-  </div>
+  <header class="fixed top-0 left-0 w-full z-50 glass border-b border-outline">
+    <div class="px-6 h-16 flex items-center justify-between max-w-5xl mx-auto">
+      <div class="flex items-center gap-4">
+        <a href="dashboard.html" class="material-symbols-outlined text-on-surface-variant">arrow_back</a>
+        <h1 class="text-lg font-bold">Comunidade Expert</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined text-on-surface-variant">search</span>
+        <div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-xl">person</span>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <!-- Bento Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
+  <main class="pt-24 px-6 max-w-5xl mx-auto space-y-8">
+    
+    <!-- Hero Carousel -->
+    <section class="animate-fade-in relative">
+      <div id="hero-carousel" class="relative h-64 overflow-hidden rounded-3xl border border-outline shadow-2xl">
+        
+        <!-- 1: Iforms -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-secondary to-background p-8 transition-opacity duration-1000 opacity-100">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">factory</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-primary">Iforms</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Fabricação de formas ICF com tecnologia de ponta para obras de alta performance.</p>
+            <a href="https://grupoicf.com.br/" target="_blank" class="inline-block bg-primary text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
 
-    <!-- Discussões Recentes -->
-    <div class="md:col-span-2 space-y-stack-md">
-      <div class="flex justify-between items-center mb-stack-sm">
-        <h3 class="font-h3 text-h3 text-white">Discussões Recentes</h3>
-        <button class="text-primary font-label-sm flex items-center gap-1 hover:brightness-110 transition-all">
-          Ver tudo <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        <!-- 2: ICF Construtora -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#0f172a] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">apartment</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Construtora</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Execução de obras residenciais e comerciais com velocidade e precisão técnica.</p>
+            <a href="https://grupoicf.com.br/icf-construtora/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 3: ICF Projetos -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#1e1b4b] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">architecture</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-primary">ICF Projetos</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Projetos arquitetônicos e estruturais otimizados para o sistema construtivo ICF.</p>
+            <a href="https://icfprojetos.com.br/" target="_blank" class="inline-block bg-primary text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 4: ICF Argamassas -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#1e293b] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">texture</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Argamassas</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Químicos e argamassas especiais para revestimento e acabamento em ICF.</p>
+            <a href="https://icfargamassas.com.br/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 5: ICF Kit Casa -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#020617] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">home_work</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-primary">ICF Kit Casa</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Projetos padronizados e modulares para quem busca rapidez e custo fixo.</p>
+            <a href="https://grupoicf.com.br/icf-kit-casa/" target="_blank" class="inline-block bg-primary text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 6: ICF Experts -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#064e3b] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">school</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Experts</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Suporte técnico especializado e mentoria para profissionais da rede.</p>
+            <a href="https://grupoicf.com.br/icf-experts/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 7: ICF Farms -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#14532d] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">agriculture</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Farms</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Soluções construtivas térmicas e eficientes para o setor do agronegócio.</p>
+            <a href="https://grupoicf.com.br/icf-farms/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 8: ICF Church -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#1e1b4b] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">church</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Church</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Construção de templos e igrejas com foco em acústica e rapidez.</p>
+            <a href="https://grupoicf.com.br/icf-church/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 9: ICF Energy -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#451a03] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">bolt</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-[#fbbf24]">ICF Energy</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Venda e instalação de energia solar integrada ao projeto ICF.</p>
+            <a href="https://icfenergy.com.br/" target="_blank" class="inline-block bg-[#fbbf24] text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 10: ICF Piscinas -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#0f172a] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">pool</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Piscinas</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Piscinas térmicas e estruturais com a tecnologia e rapidez do sistema ICF.</p>
+            <a href="https://grupoicf.com.br/icf-piscinas/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 11: ICF Bank -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-secondary to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">account_balance</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-primary">ICF Bank</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Linhas de crédito exclusivas para licenciados e fomento à construção.</p>
+            <a href="https://icfbank.com.br/" target="_blank" class="inline-block bg-primary text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- 12: ICF Educação -->
+        <div class="carousel-item absolute inset-0 bg-gradient-to-br from-[#312e81] to-background p-8 transition-opacity duration-1000 opacity-0">
+          <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-[140px]">school</span></div>
+          <div class="relative z-10 space-y-4">
+            <h2 class="text-3xl font-black leading-tight text-white">ICF Educação</h2>
+            <p class="text-sm text-on-surface-variant max-w-xs">Treinamentos técnicos, certificações e capacitação profissional.</p>
+            <a href="https://icfeducacao.com.br/" target="_blank" class="inline-block bg-white text-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Saiba Mais</a>
+          </div>
+        </div>
+
+        <!-- Indicators -->
+        <div class="absolute bottom-6 right-8 z-20 flex gap-1.5 flex-wrap justify-end max-w-[150px]">
+          <div class="carousel-dot w-3 h-1.5 rounded-full bg-primary transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+        </div>
+
+        <!-- Indicators -->
+        <div class="absolute bottom-6 right-8 z-20 flex gap-1.5 flex-wrap justify-end max-w-[150px]">
+          <div class="carousel-dot w-3 h-1.5 rounded-full bg-primary transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+          <div class="carousel-dot w-1.5 h-1.5 rounded-full bg-white/20 transition-all"></div>
+        </div>bg-white/20 transition-all"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Specialty Grid -->
+    <section class="space-y-6 animate-fade-in" style="animation-delay: 0.05s">
+      <div class="flex items-center justify-between px-1">
+        <h3 class="text-lg font-bold">Diretório de Profissionais</h3>
+        <button onclick="openExpertModal()" class="text-xs font-bold text-primary uppercase tracking-widest border border-primary/20 px-4 py-2 rounded-full hover:bg-primary/10">Quero me Cadastrar</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <!-- Arquitetura -->
+        <button onclick="openDirectory('Arquitetura')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">architecture</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Arquitetura</span>
+        </button>
+
+        <!-- Engenharia -->
+        <button onclick="openDirectory('Engenharia')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">engineering</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Engenharia</span>
+        </button>
+
+        <!-- Obras -->
+        <button onclick="openDirectory('Obras')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">construction</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Obras</span>
+        </button>
+
+        <!-- Elétrica -->
+        <button onclick="openDirectory('Elétrica')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">bolt</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Elétrica</span>
+        </button>
+
+        <!-- Hidráulica -->
+        <button onclick="openDirectory('Hidráulica')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">water_drop</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Hidráulica</span>
+        </button>
+
+        <!-- Montadores -->
+        <button onclick="openDirectory('Montadores')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">build</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Montadores</span>
+        </button>
+
+        <!-- Ar Condicionado -->
+        <button onclick="openDirectory('Ar Condicionado')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">ac_unit</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center leading-tight">Ar Condicionado</span>
+        </button>
+
+        <!-- Pintura -->
+        <button onclick="openDirectory('Pintura')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">format_paint</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Pintura</span>
+        </button>
+
+        <!-- Gesso -->
+        <button onclick="openDirectory('Gesso')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">texture</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Gesso</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Recent Discussions -->
+    <section class="space-y-4 animate-fade-in" style="animation-delay: 0.2s">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold">Discussões Recentes</h3>
+        <button onclick="openNewDiscussionModal()" class="w-10 h-10 bg-primary text-secondary rounded-full flex items-center justify-center shadow-lg shadow-primary/20 active:scale-90 transition-transform">
+          <span class="material-symbols-outlined">add</span>
         </button>
       </div>
 
-      <!-- Post 1 -->
-      <div class="post-card bg-surface border border-outline p-gutter rounded-xl hover:border-primary/50 transition-all duration-200 cursor-pointer">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 rounded-full ring-2 ring-outline bg-surface-variant flex items-center justify-center">
-              <span class="material-symbols-outlined text-primary">engineering</span>
+      <div id="discussions-list" class="space-y-4">
+        <!-- Post 1 -->
+        <article class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+                <span class="material-symbols-outlined text-primary">person</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">Dicas para Avaliação do DATEC</h4>
+                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">Admin</span> • 2h atrás</p>
+              </div>
+            </div>
+            <span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed">Documentação necessária para aprovação de crédito na Caixa usando o sistema Iforms. Confira o checklist...</p>
+          <div class="pt-4 border-t border-outline flex items-center gap-6">
+            <button onclick="toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
+              <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
+              <span class="text-xs font-bold">156</span>
+            </button>
+            <button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-xl">chat_bubble</span>
+              <span class="text-xs font-bold">24</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Post 2 -->
+        <article class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+                <span class="material-symbols-outlined text-primary">person</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">Montagem do Kit Casas no canteiro</h4>
+                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">Carlos Eng.</span> • 5h atrás</p>
+              </div>
             </div>
           </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex justify-between items-start gap-2">
-              <h4 class="font-h3 text-[18px] text-white leading-snug">Dicas para Avaliação do DATEC</h4>
-              <span class="shrink-0 bg-primary/10 text-primary px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Fixado</span>
-            </div>
-            <p class="font-body-md text-on-surface-variant line-clamp-2 mt-unit text-sm">Documentação necessária para aprovação de crédito na Caixa usando o sistema Iforms...</p>
-            <div class="flex items-center gap-stack-md mt-stack-md text-on-surface-variant">
-              <div class="flex items-center gap-1 text-caption">
-                <span class="material-symbols-outlined text-sm">chat_bubble</span> 24
-              </div>
-              <div class="flex items-center gap-1 text-caption">
-                <span class="material-symbols-outlined text-sm">favorite</span> 156
-              </div>
-              <div class="flex items-center gap-1 text-caption">
-                <span class="material-symbols-outlined text-sm">schedule</span> 2h
-              </div>
-            </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed">Gostaria de saber a experiência de vocês com a logística de entrega dos painéis no canteiro. Alguma dica?</p>
+          <div class="pt-4 border-t border-outline flex items-center gap-6">
+            <button onclick="toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
+              <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
+              <span class="text-xs font-bold">32</span>
+            </button>
+            <button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-xl">chat_bubble</span>
+              <span class="text-xs font-bold">8</span>
+            </button>
           </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Community Stats -->
+    <section class="bg-surface/50 border border-outline rounded-3xl p-8 animate-fade-in" style="animation-delay: 0.3s">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center space-y-1">
+          <p class="text-3xl font-black text-primary">1.2k</p>
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Membros</p>
+        </div>
+        <div class="text-center space-y-1">
+          <p class="text-3xl font-black text-white">340</p>
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Discussões</p>
+        </div>
+        <div class="text-center space-y-1">
+          <p class="text-3xl font-black text-primary">18</p>
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Experts Online</p>
+        </div>
+        <div class="text-center space-y-1">
+          <p class="text-3xl font-black text-white">96%</p>
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Sucesso</p>
         </div>
       </div>
+    </section>
 
-      <!-- Post 2 -->
-      <div class="post-card bg-surface border border-outline p-gutter rounded-xl hover:border-primary/50 transition-all duration-200 cursor-pointer">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 rounded-full ring-2 ring-outline bg-surface-variant flex items-center justify-center">
-              <span class="material-symbols-outlined text-primary">construction</span>
-            </div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <h4 class="font-h3 text-[18px] text-white leading-snug">Montagem do Kit Casas no canteiro</h4>
-            <p class="font-body-md text-on-surface-variant line-clamp-2 mt-unit text-sm">Gostaria de saber a experiência de vocês com a logística de entrega dos painéis...</p>
-            <div class="flex items-center gap-stack-md mt-stack-md text-on-surface-variant">
-              <div class="flex items-center gap-1 text-caption">
-                <span class="material-symbols-outlined text-sm">chat_bubble</span> 8
-              </div>
-              <div class="flex items-center gap-1 text-caption text-primary">
-                <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">favorite</span> 32
-              </div>
-              <div class="flex items-center gap-1 text-caption">
-                <span class="material-symbols-outlined text-sm">schedule</span> 5h
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  </main>
 
-      <!-- Novo post CTA -->
-      <button class="w-full p-4 rounded-xl border-2 border-dashed border-outline hover:border-primary/40 transition-all text-on-surface-variant hover:text-primary flex items-center justify-center gap-2 text-sm font-medium">
-        <span class="material-symbols-outlined text-sm">add</span>
-        Iniciar nova discussão
-      </button>
-    </div>
-
-
-
-      <!-- Stats -->
-      <div class="bg-surface p-gutter rounded-xl border border-outline">
-        <h4 class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-stack-md">Comunidade</h4>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="text-center">
-            <p class="text-2xl font-bold text-primary">1.2k</p>
-            <p class="text-caption text-on-surface-variant">Membros</p>
-          </div>
-          <div class="text-center">
-            <p class="text-2xl font-bold text-primary">340</p>
-            <p class="text-caption text-on-surface-variant">Posts</p>
-          </div>
-          <div class="text-center">
-            <p class="text-2xl font-bold text-white">18</p>
-            <p class="text-caption text-on-surface-variant">Online agora</p>
-          </div>
-          <div class="text-center">
-            <p class="text-2xl font-bold text-white">96%</p>
-            <p class="text-caption text-on-surface-variant">Satisfação</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="border-t border-outline pt-12 pb-12">
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
-      <div class="col-span-2">
-        <h4 class="text-white font-bold mb-4">Ecosistema Iforms</h4>
-        <p class="text-on-surface-variant text-sm mb-6">Inovação e sustentabilidade em cada etapa da sua construção.</p>
-      </div>
-      <div>
-        <h4 class="text-primary font-bold text-xs uppercase tracking-widest mb-4">Soluções</h4>
-        <ul class="space-y-3 text-sm text-on-surface-variant">
-          <li><a href="#" class="hover:text-primary transition-colors">ICF Energy</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">ICF Planejados</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Kit Casas</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-primary font-bold text-xs uppercase tracking-widest mb-4">Suporte</h4>
-        <ul class="space-y-3 text-sm text-on-surface-variant">
-          <li><a href="#" class="hover:text-primary transition-colors">Central WhatsApp</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Documentação Técnica</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Portal do Franqueado</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="mt-12 pt-8 border-t border-outline text-center text-xs text-on-surface-variant">
-      © 2024 Iforms ICF. Todos os direitos reservados.
-    </div>
-  </footer>
-</main>
-
-<!-- Bottom Nav -->
-<nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-2 pb-safe bg-background border-t border-outline z-50" role="navigation">
-  <a href="./dashboard.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary cursor-pointer transition-all">
-    <span class="material-symbols-outlined">home</span>
-    <span class="text-[10px] font-medium">Início</span>
-  </a>
-    <a href="./calculadora.html" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-2 pb-safe bg-surface border-t border-outline z-50" role="navigation">
+    <a href="./dashboard.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-[10px] font-medium">Início</span>
+    </a>
+    <a href="./calculadora.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
       <span class="material-symbols-outlined">construction</span>
       <span class="text-[10px] font-medium">Ferramentas</span>
     </a>
-  <a href="./comunidade.html" class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1 cursor-pointer transition-all" aria-current="page">
-    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">group</span>
-    <span class="text-[10px] font-medium">Comunidade</span>
-  </a>
-  <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary cursor-pointer transition-all">
-    <span class="material-symbols-outlined">construction</span>
-    <span class="text-[10px] font-medium">Obras</span>
-  </a>
-  <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary cursor-pointer transition-all">
-    <span class="material-symbols-outlined">person</span>
-    <span class="text-[10px] font-medium">Perfil</span>
-  </a>
-</nav>
+    <a href="./comunidade.html" class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1 transition-all" aria-current="page">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">groups</span>
+      <span class="text-[10px] font-bold">Comunidade</span>
+    </a>
+    <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">apartment</span>
+      <span class="text-[10px] font-medium">Obras</span>
+    </a>
+    <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">person</span>
+      <span class="text-[10px] font-medium">Perfil</span>
+    </a>
+  </nav>
 
-<script src="./assets/js/pwa.js"></script>
+  <!-- Directory Modal (List of Professionals) -->
+  <div id="directoryModal" class="fixed inset-0 z-[100] hidden flex-col bg-background animate-slide-up">
+    <!-- Header -->
+    <div class="p-6 border-b border-outline flex items-center justify-between bg-surface/50 backdrop-blur-md sticky top-0">
+      <div class="flex items-center gap-3">
+        <button onclick="closeDirectory()" class="material-symbols-outlined text-on-surface-variant">arrow_back</button>
+        <h3 id="directoryTitle" class="text-lg font-bold">Profissionais</h3>
+      </div>
+      <div class="bg-primary/10 px-3 py-1 rounded-full">
+        <span id="directoryCount" class="text-[10px] font-bold text-primary">0 Encontrados</span>
+      </div>
+    </div>
+
+    <!-- Filters Area -->
+    <div class="p-6 space-y-4 border-b border-outline">
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+        <input type="text" id="regionFilter" oninput="filterByRegion()" placeholder="Buscar por Cidade ou Estado..." class="w-full bg-surface border border-outline rounded-2xl py-4 pl-12 pr-4 text-sm text-white focus:border-primary outline-none transition-all">
+      </div>
+    </div>
+
+    <!-- Results List -->
+    <div id="directoryList" class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
+      <!-- Cards will be injected here -->
+    </div>
+  </div>
+
+  <!-- Registration Modal (Expert) -->
+  <div id="expertModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-background/90 backdrop-blur-md">
+    <div class="bg-surface w-full max-w-sm rounded-3xl border border-outline p-8 space-y-6">
+      <h3 class="text-xl font-bold text-primary text-center">Seja um Credenciado ICF</h3>
+      <p class="text-xs text-on-surface-variant text-center">Cadastre-se e receba contatos diretos via WhatsApp.</p>
+      <div class="space-y-3">
+        <input type="text" id="expertName" placeholder="Nome Completo" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
+        <select id="expertCategory" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors appearance-none">
+          <option value="" disabled selected>Selecione sua Categoria</option>
+          <option value="Arquitetura">Arquitetura</option>
+          <option value="Engenharia">Engenharia</option>
+          <option value="Obras">Obras (Mestre/Pedreiro)</option>
+          <option value="Elétrica">Elétrica</option>
+          <option value="Hidráulica">Hidráulica</option>
+          <option value="Montadores">Montadores</option>
+          <option value="Ar Condicionado">Ar Condicionado</option>
+          <option value="Pintura">Pintura</option>
+          <option value="Gesso">Gesso</option>
+        </select>
+        <input type="tel" id="expertPhone" placeholder="WhatsApp (com DDD)" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
+        <input type="text" id="expertCity" placeholder="Cidade / Estado" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
+      </div>
+      <button onclick="submitExpert()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">ENVIAR CADASTRO</button>
+      <button onclick="closeExpertModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Voltar</button>
+    </div>
+  </div>
+
+  <!-- Success Notification -->
+  <div id="successNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-[120] hidden bg-primary text-secondary px-6 py-3 rounded-full font-bold text-xs shadow-2xl animate-fade-in">
+    ✓ Cadastro enviado para aprovação!
+  </div>
+
+  <script>
+  <!-- New Discussion Modal -->
+  <div id="discussionModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-background/90 backdrop-blur-md">
+    <div class="bg-surface w-full max-w-sm rounded-3xl border border-outline p-8 space-y-6">
+      <h3 class="text-xl font-bold text-primary text-center">Nova Discussão</h3>
+      <p class="text-xs text-on-surface-variant text-center">Compartilhe sua dúvida ou dica técnica com a comunidade.</p>
+      <div class="space-y-3">
+        <input type="text" id="postTitle" placeholder="Título da Discussão" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
+        <textarea id="postContent" rows="4" placeholder="O que você quer compartilhar?" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors resize-none"></textarea>
+      </div>
+      <button onclick="submitNewDiscussion()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">PUBLICAR NO MURAL</button>
+      <button onclick="closeNewDiscussionModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Cancelar</button>
+    </div>
+  </div>
+
+  <script>
+    // Mock Data for demonstration
+    const professionals = [
+      { name: "Arq. Juliana F.", cat: "Arquitetura", city: "Joinville, SC", icon: "architecture", phone: "47999999999" },
+      { name: "Eng. Ricardo M.", cat: "Engenharia", city: "São Paulo, SP", icon: "engineering", phone: "11999999999" },
+      { name: "Mestre Silas", cat: "Obras", city: "Curitiba, PR", icon: "construction", phone: "41999999999" },
+      { name: "Pedro Pedreiro", cat: "Obras", city: "Florianópolis, SC", icon: "construction", phone: "48999999999" },
+      { name: "Eletro Volt", cat: "Elétrica", city: "Curitiba, PR", icon: "bolt", phone: "41888888888" },
+      { name: "Água & Vida", cat: "Hidráulica", city: "Joinville, SC", icon: "water_drop", phone: "47888888888" },
+      { name: "João Montagens", cat: "Montadores", city: "Blumenau, SC", icon: "build", phone: "47777777777" },
+      { name: "Clima Bom", cat: "Ar Condicionado", city: "São Paulo, SP", icon: "ac_unit", phone: "11888888888" }
+    ];
+
+    let currentCategory = '';
+
+    function openDirectory(category) {
+      currentCategory = category;
+      document.getElementById('directoryTitle').textContent = `Profissionais de ${category}`;
+      document.getElementById('directoryModal').classList.remove('hidden');
+      document.getElementById('directoryModal').classList.add('flex');
+      renderDirectory();
+    }
+
+    function closeDirectory() {
+      document.getElementById('directoryModal').classList.add('hidden');
+      document.getElementById('directoryModal').classList.remove('flex');
+      document.getElementById('regionFilter').value = '';
+    }
+
+    function renderDirectory() {
+      const list = document.getElementById('directoryList');
+      const filter = document.getElementById('regionFilter').value.toLowerCase();
+      
+      const filtered = professionals.filter(p => 
+        p.cat === currentCategory && 
+        (p.city.toLowerCase().includes(filter) || p.name.toLowerCase().includes(filter))
+      );
+
+      document.getElementById('directoryCount').textContent = `${filtered.length} Encontrados`;
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-20 text-center space-y-4">
+            <span class="material-symbols-outlined text-on-surface-variant text-6xl opacity-20">search_off</span>
+            <p class="text-on-surface-variant text-sm">Nenhum profissional encontrado<br>nesta região ou categoria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(p => {
+        const waLink = `https://wa.me/55${p.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(p.name)},%20vi%20seu%20perfil%20no%20App%20ICF%20e%20gostaria%20de%20um%20orçamento%20para%20${encodeURIComponent(p.cat)}.`;
+        
+        return `
+          <div class="flex items-center gap-4 bg-surface border border-outline p-4 rounded-2xl active:scale-[0.98] transition-all cursor-pointer">
+            <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+              <span class="material-symbols-outlined text-primary text-2xl">${p.icon}</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="text-sm font-bold text-white">${p.name}</h4>
+              <div class="flex items-center gap-1 text-[10px] text-on-surface-variant mt-1">
+                <span class="material-symbols-outlined text-[12px]">location_on</span>
+                ${p.city}
+              </div>
+            </div>
+            <a href="${waLink}" target="_blank" class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-secondary transition-colors">
+              <span class="material-symbols-outlined text-lg">message</span>
+            </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterByRegion() {
+      renderDirectory();
+    }
+
+    // Modal Controls for New Discussion
+    function openNewDiscussionModal() {
+      document.getElementById('discussionModal').classList.remove('hidden');
+      document.getElementById('discussionModal').classList.add('flex');
+    }
+
+    function closeNewDiscussionModal() {
+      document.getElementById('discussionModal').classList.add('hidden');
+      document.getElementById('discussionModal').classList.remove('flex');
+    }
+
+    function submitNewDiscussion() {
+      const title = document.getElementById('postTitle').value;
+      const content = document.getElementById('postContent').value;
+
+      if (!title || !content) {
+        alert('Por favor, preencha o título e o conteúdo.');
+        return;
+      }
+
+      const list = document.getElementById('discussions-list');
+      const article = document.createElement('article');
+      article.className = "bg-surface border border-primary/30 rounded-3xl p-6 space-y-4 animate-fade-in group";
+      article.innerHTML = `
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30">
+              <span class="material-symbols-outlined text-primary">person</span>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">${title}</h4>
+              <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">Você</span> • Agora</p>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-on-surface-variant leading-relaxed">${content}</p>
+        <div class="pt-4 border-t border-outline flex items-center gap-6">
+          <button onclick="toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
+            <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
+            <span class="text-xs font-bold">0</span>
+          </button>
+          <button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-xl">chat_bubble</span>
+            <span class="text-xs font-bold">0</span>
+          </button>
+        </div>
+      `;
+
+      list.prepend(article);
+      
+      closeNewDiscussionModal();
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postContent').value = '';
+
+      const notification = document.getElementById('successNotification');
+      notification.textContent = '✓ Publicado com sucesso!';
+      notification.classList.remove('hidden');
+      setTimeout(() => notification.classList.add('hidden'), 3000);
+    }
+
+    function toggleLike(btn) {
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const count = btn.querySelector('.text-xs');
+      const isActive = btn.classList.contains('text-primary');
+
+      if (isActive) {
+        btn.classList.remove('text-primary');
+        btn.classList.add('text-on-surface-variant');
+        icon.style.fontVariationSettings = "'FILL' 0";
+        count.textContent = parseInt(count.textContent) - 1;
+      } else {
+        btn.classList.add('text-primary');
+        btn.classList.remove('text-on-surface-variant');
+        icon.style.fontVariationSettings = "'FILL' 1";
+        count.textContent = parseInt(count.textContent) + 1;
+      }
+    }
+
+    function openExpertModal() {
+      document.getElementById('expertModal').classList.remove('hidden');
+      document.getElementById('expertModal').classList.add('flex');
+    }
+
+    function closeExpertModal() {
+      document.getElementById('expertModal').classList.add('hidden');
+      document.getElementById('expertModal').classList.remove('flex');
+    }
+
+    function submitExpert() {
+      const name = document.getElementById('expertName').value;
+      const cat = document.getElementById('expertCategory').value;
+      const phone = document.getElementById('expertPhone').value;
+      const city = document.getElementById('expertCity').value;
+
+      if (!name || !cat || !phone || !city) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      const iconMap = {
+        'Arquitetura': 'architecture',
+        'Engenharia': 'engineering',
+        'Obras': 'construction',
+        'Elétrica': 'bolt',
+        'Hidráulica': 'water_drop',
+        'Montadores': 'build',
+        'Ar Condicionado': 'ac_unit',
+        'Pintura': 'format_paint',
+        'Gesso': 'texture'
+      };
+
+      // Adicionar aos dados mockados
+      professionals.unshift({
+        name: name,
+        cat: cat,
+        phone: phone,
+        city: city,
+        icon: iconMap[cat] || 'person'
+      });
+      
+      closeExpertModal();
+      document.getElementById('expertName').value = '';
+      document.getElementById('expertCategory').selectedIndex = 0;
+      document.getElementById('expertPhone').value = '';
+      document.getElementById('expertCity').value = '';
+
+      const notification = document.getElementById('successNotification');
+      notification.textContent = '✓ Cadastro enviado para aprovação!';
+      notification.classList.remove('hidden');
+      setTimeout(() => notification.classList.add('hidden'), 3000);
+      
+      if (!document.getElementById('directoryModal').classList.contains('hidden')) {
+        renderDirectory();
+      }
+    }
+
+    function startHeroCarousel() {
+      const items = document.querySelectorAll('.carousel-item');
+      const dots = document.querySelectorAll('.carousel-dot');
+      let current = 0;
+
+      setInterval(() => {
+        // Fade out current
+        items[current].classList.replace('opacity-100', 'opacity-0');
+        dots[current].classList.replace('bg-primary', 'bg-white/20');
+        dots[current].classList.remove('w-4');
+        dots[current].classList.add('w-2');
+
+        current = (current + 1) % items.length;
+
+        // Fade in next
+        items[current].classList.replace('opacity-0', 'opacity-100');
+        dots[current].classList.replace('bg-white/20', 'bg-primary');
+        dots[current].classList.add('w-4');
+        dots[current].classList.remove('w-2');
+      }, 5000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      startHeroCarousel();
+    });
+  </script>
+  <script src="./assets/js/pwa.js"></script>
 </body>
 </html>
