@@ -67,163 +67,91 @@
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-white/10 h-16 px-4 flex justify-between items-center">
   <div class="flex items-center gap-4">
-    <a href="./dashboard.html" class="text-white hover:opacity-80 transition-opacity active:scale-95 duration-150" aria-label="Voltar">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </a>
+    <button onclick="toggleMenu(true)" class="active:scale-95 duration-150 hover:opacity-80 transition-opacity" aria-label="Menu">
+      <span class="material-symbols-outlined text-primary">menu</span>
+    </button>
     <img src="./assets/icons/logo.svg" alt="Iforms Grupo ICF" class="h-[22px] w-auto" />
   </div>
   <div class="flex items-center gap-4">
-    <div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-surface-variant flex items-center justify-center">
-      <span class="material-symbols-outlined text-primary text-sm">person</span>
-    </div>
+    <!-- Removido para evitar redundância com o footer -->
   </div>
 </header>
 
+<!-- Side Drawer Overlay -->
+<div id="menuOverlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-background/60 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+
+<!-- Side Drawer Content -->
+<aside id="sideMenu" class="fixed top-0 left-0 h-full w-[280px] bg-surface z-[70] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-out border-r border-outline-variant">
+  <div class="flex flex-col h-full text-on-surface">
+    <!-- Header do Menu -->
+    <div class="p-6 bg-gradient-to-br from-primary/10 to-transparent border-b border-outline">
+      <div class="flex items-center justify-between mb-6">
+        <img src="./assets/icons/logo.svg" alt="Logo" class="h-5 w-auto" />
+        <button onclick="toggleMenu(false)" class="text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full border-2 border-primary/30 bg-surface-variant flex items-center justify-center overflow-hidden">
+          <span class="material-symbols-outlined text-primary text-2xl">person</span>
+        </div>
+        <div>
+          <p class="text-sm font-bold text-white">Aluno Iforms</p>
+          <p class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links de Navegação -->
+    <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+      <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 mt-2">Plataforma</p>
+      <a href="./dashboard.html" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">home</span>
+        <span class="text-sm">Início</span>
+      </a>
+      <a href="./perfil.html" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">workspace_premium</span>
+        <span class="text-sm">Meus Certificados</span>
+      </a>
+      <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">support_agent</span>
+        <span class="text-sm">Suporte Técnico</span>
+      </a>
+
+      <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 pt-6">Institucional</p>
+      <a href="https://grupoicf.com.br/sobre-nos/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">info</span>
+        <span class="text-sm">Sobre o Grupo ICF</span>
+      </a>
+      <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined text-primary">verified_user</span>
+        <div class="flex flex-col">
+          <span class="text-sm">Sistema Homologado</span>
+          <span class="text-[9px] text-primary font-bold">DATEC & IPT</span>
+        </div>
+      </a>
+      <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">gavel</span>
+        <span class="text-sm">Termos de Uso</span>
+      </a>
+      <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <span class="material-symbols-outlined">lock</span>
+        <span class="text-sm">Política de Privacidade</span>
+      </a>
+    </nav>
+
+    <!-- Rodapé do Menu -->
+    <div class="p-4 border-t border-outline">
+      <button class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="text-sm font-bold uppercase tracking-widest">Sair da Conta</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
 <main class="pt-24 pb-40 px-4 max-w-[1200px] mx-auto min-h-screen">
 
-  <!-- Header -->
-  <section class="mb-stack-lg">
-    <h2 class="text-3xl font-bold text-white mb-2">Ferramentas Técnicas</h2>
-    <p class="text-secondary opacity-80">Calculadora e Checklist para execução em campo.</p>
-  </section>
-
-  <!-- Calculadora Card -->
-  <div class="bg-surface rounded-2xl p-6 shadow-xl border border-white/5 mb-8">
-
-    <!-- Input Area -->
-    <div class="mb-8">
-      <label class="block text-sm font-medium text-secondary mb-3 uppercase tracking-wider" for="areaInput">Área Total (m²)</label>
-      <div class="relative">
-        <input
-          id="areaInput"
-          type="number"
-          placeholder="0.00"
-          step="0.01"
-          min="0"
-          class="w-full bg-surface-variant border-2 border-white/10 rounded-xl px-4 py-5 text-3xl font-bold text-white focus:border-primary focus:ring-0 transition-all outline-none placeholder:text-white/20"
-          aria-label="Área total em metros quadrados"
-        />
-        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xl font-bold text-primary">m²</span>
-      </div>
-    </div>
-
-    <!-- Seleção de Tipo -->
-    <div class="mb-8">
-      <label class="block text-sm font-medium text-secondary mb-3 uppercase tracking-wider">Tipo de Formato</label>
-      <div class="grid grid-cols-2 gap-3">
-        <button
-          id="btn12"
-          onclick="setType('12')"
-          class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-primary bg-primary/10 text-white transition-all active:scale-[0.98]"
-          aria-pressed="true"
-        >
-          <span class="text-lg font-bold">12cm Veda</span>
-          <span class="text-xs opacity-60">Seção 7x6cm</span>
-        </button>
-        <button
-          id="btn18"
-          onclick="setType('18')"
-          class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-white/10 bg-surface-variant text-white/60 hover:border-white/20 transition-all active:scale-[0.98]"
-          aria-pressed="false"
-        >
-          <span class="text-lg font-bold">18cm Estrutural</span>
-          <span class="text-xs opacity-60">Seção 10cm</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- CTA -->
-    <button
-      onclick="calculate()"
-      class="w-full bg-primary hover:bg-[#00a88b] text-white font-bold py-5 rounded-xl text-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
-    >
-      <span class="material-symbols-outlined">calculate</span>
-      Calcular Materiais
-    </button>
-  </div>
-
-  <!-- Resultados -->
-  <div id="results" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden mb-12">
-    <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 result-card">
-      <p class="text-secondary text-sm uppercase tracking-wide mb-1">Quantidade de formas</p>
-      <div class="flex items-baseline gap-2">
-        <span id="resFormas" class="text-3xl font-bold text-white">0</span>
-        <span class="text-primary font-medium">unidades</span>
-      </div>
-    </div>
-    <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 result-card" style="animation-delay:0.05s">
-      <p class="text-secondary text-sm uppercase tracking-wide mb-1">Volume de Concreto</p>
-      <div class="flex items-baseline gap-2">
-        <span id="resConcreto" class="text-3xl font-bold text-white">0.000</span>
-        <span class="text-primary font-medium">m³</span>
-      </div>
-    </div>
-    <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 md:col-span-2 result-card" style="animation-delay:0.1s">
-      <p class="text-secondary text-sm uppercase tracking-wide mb-1">Consumo de ICFlex</p>
-      <div class="flex items-baseline gap-2">
-        <span id="resFlex" class="text-3xl font-bold text-white">0.0</span>
-        <span class="text-primary font-medium">kg</span>
-      </div>
-    </div>
-    <!-- Resumo -->
-    <div class="md:col-span-2 bg-primary/10 border border-primary/30 p-4 rounded-xl result-card" style="animation-delay:0.15s">
-      <div class="flex items-start gap-3">
-        <span class="material-symbols-outlined text-primary">info</span>
-        <div>
-          <p class="text-sm text-white font-semibold mb-1">Resultado baseado em:</p>
-          <p id="resResumo" class="text-caption text-on-surface-variant"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Checklist Anti-Erro (Movido da Tela de Aula) -->
-  <section class="mb-12">
-    <div class="bg-surface p-6 rounded-2xl border border-white/5 shadow-xl">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-          <span class="material-symbols-outlined text-primary">fact_check</span>
-        </div>
-        <h3 class="text-xl font-bold text-white">Checklist de Execução</h3>
-      </div>
-      
-      <div class="grid grid-cols-1 gap-3" id="toolChecklist">
-        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
-          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
-          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Prumo e Alinhamento</span>
-        </label>
-        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
-          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
-          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Nivelamento da Base</span>
-        </label>
-        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
-          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
-          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Travamento Superior</span>
-        </label>
-        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
-          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
-          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Esquadro das Cantoneiras</span>
-        </label>
-      </div>
-      <div id="toolCheckStatus" class="mt-4 text-center text-sm font-medium text-primary hidden"></div>
-    </div>
-  </section>
-
-  <!-- Footer Links -->
-  <div class="mt-12 pt-8 border-t border-white/10">
-    <div class="flex flex-col gap-4 items-center">
-      <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">bolt</span>ICF Energy
-      </a>
-      <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">architecture</span>ICF Planejados
-      </a>
-      <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">home_work</span>Kit Casas
-      </a>
-    </div>
-  </div>
-</main>
 
 <!-- Bottom Nav -->
 <nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-2 pb-safe bg-background border-t border-white/10 z-50" role="navigation">
@@ -239,17 +167,33 @@
     <span class="material-symbols-outlined">groups</span>
     <span class="text-[10px] font-medium">Comunidade</span>
   </a>
-  <a href="#" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
-    <span class="material-symbols-outlined">construction</span>
-    <span class="text-[10px] font-medium">Obras</span>
-  </a>
-  <a href="#" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
-    <span class="material-symbols-outlined">person</span>
+  <a href="./perfil.html" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
+    <div class="w-6 h-6 rounded-full border border-white/20 overflow-hidden flex items-center justify-center mb-0.5">
+      <span class="material-symbols-outlined text-sm">person</span>
+    </div>
     <span class="text-[10px] font-medium">Perfil</span>
   </a>
 </nav>
 
 <script>
+  function toggleMenu(show) {
+    const menu = document.getElementById('sideMenu');
+    const overlay = document.getElementById('menuOverlay');
+    if (show) {
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.add('opacity-100');
+        menu.classList.remove('-translate-x-full');
+      }, 10);
+    } else {
+      overlay.classList.remove('opacity-100');
+      menu.classList.add('-translate-x-full');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+      }, 300);
+    }
+  }
+
   let currentType = '12';
 
   function setType(type) {

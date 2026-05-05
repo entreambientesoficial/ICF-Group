@@ -127,7 +127,7 @@
   <header
     class="bg-surface/80 glass-effect fixed top-0 w-full z-50 border-b border-outline-variant shadow-lg flex justify-between items-center h-16 px-4">
     <div class="flex items-center gap-4">
-      <button class="active:scale-95 duration-150 hover:opacity-80 transition-opacity" aria-label="Menu">
+      <button onclick="toggleMenu(true)" class="active:scale-95 duration-150 hover:opacity-80 transition-opacity" aria-label="Menu">
         <span class="material-symbols-outlined text-primary">menu</span>
       </button>
       <a href="./dashboard.html" aria-label="Iforms Grupo ICF">
@@ -135,17 +135,85 @@
       </a>
     </div>
     <div class="flex items-center gap-3">
-      <button class="relative" aria-label="Notificações">
-        <span
-          class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</span>
-        <span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+      <button class="relative p-2" aria-label="Notificações">
+        <span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</span>
+        <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
       </button>
-      <div
-        class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 bg-surface-container flex items-center justify-center">
-        <span class="material-symbols-outlined text-primary">person</span>
-      </div>
     </div>
   </header>
+
+  <!-- Side Drawer Overlay -->
+  <div id="menuOverlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-background/60 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+
+  <!-- Side Drawer Content -->
+  <aside id="sideMenu" class="fixed top-0 left-0 h-full w-[280px] bg-surface z-[70] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-out border-r border-outline-variant">
+    <div class="flex flex-col h-full">
+      <!-- Header do Menu -->
+      <div class="p-6 bg-gradient-to-br from-primary/10 to-transparent border-b border-outline-variant">
+        <div class="flex items-center justify-between mb-6">
+          <img src="./assets/icons/logo.svg" alt="Logo" class="h-5 w-auto" />
+          <button onclick="toggleMenu(false)" class="text-on-surface-variant hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full border-2 border-primary/30 bg-surface-variant flex items-center justify-center overflow-hidden">
+            <span class="material-symbols-outlined text-primary text-2xl">person</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-white">Aluno Iforms</p>
+            <p class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links de Navegação -->
+      <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 mt-2">Plataforma</p>
+        <a href="./dashboard.html" class="flex items-center gap-4 p-3 rounded-xl bg-primary/10 text-primary font-bold transition-all">
+          <span class="material-symbols-outlined">home</span>
+          <span class="text-sm">Início</span>
+        </a>
+        <a href="./perfil.html" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">workspace_premium</span>
+          <span class="text-sm">Meus Certificados</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">support_agent</span>
+          <span class="text-sm">Suporte Técnico</span>
+        </a>
+
+        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 pt-6">Institucional</p>
+        <a href="https://grupoicf.com.br/sobre-nos/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">info</span>
+          <span class="text-sm">Sobre o Grupo ICF</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-primary">verified_user</span>
+          <div class="flex flex-col">
+            <span class="text-sm">Sistema Homologado</span>
+            <span class="text-[9px] text-primary font-bold">DATEC & IPT</span>
+          </div>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">gavel</span>
+          <span class="text-sm">Termos de Uso</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">lock</span>
+          <span class="text-sm">Política de Privacidade</span>
+        </a>
+      </nav>
+
+      <!-- Rodapé do Menu -->
+      <div class="p-4 border-t border-outline-variant">
+        <button class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="text-sm font-bold uppercase tracking-widest">Sair da Conta</span>
+        </button>
+      </div>
+    </div>
+  </aside>
 
   <main class="max-w-[1200px] mx-auto px-4 pt-24 space-y-stack-lg">
 
@@ -512,12 +580,10 @@
       <span class="material-symbols-outlined">groups</span>
       <span class="text-[10px] font-medium">Comunidade</span>
     </a>
-    <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
-      <span class="material-symbols-outlined">apartment</span>
-      <span class="text-[10px] font-medium">Obras</span>
-    </a>
-    <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
-      <span class="material-symbols-outlined">person</span>
+    <a href="./perfil.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <div class="w-6 h-6 rounded-full border border-on-surface-variant group-hover:border-primary overflow-hidden flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-sm">person</span>
+      </div>
       <span class="text-[10px] font-medium">Perfil</span>
     </a>
   </nav>
@@ -559,6 +625,25 @@
     </div>
 
   <script>
+    function toggleMenu(show) {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('menuOverlay');
+      if (show) {
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+          overlay.classList.add('opacity-100');
+          menu.classList.remove('-translate-x-full');
+        }, 10);
+      } else {
+        overlay.classList.remove('opacity-100');
+        menu.classList.add('-translate-x-full');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
       const totalLessons = 5;
       let completedCount = 0;

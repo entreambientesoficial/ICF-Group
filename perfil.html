@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00C2A0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Meu Perfil - Iforms Grupo ICF</title>
+  <link rel="manifest" href="./manifest.json" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00C2A0",
+            "background": "#020817",
+            "surface": "#0f172a",
+            "surface-variant": "#1e293b",
+            "on-surface": "#f1f5f9",
+            "on-surface-variant": "#94a3b8",
+            "outline": "#475569",
+            "secondary": "#00C2A0"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { background-color: #020817; min-height: 100dvh; }
+    .badge-glow { filter: drop-shadow(0 0 10px rgba(0, 194, 160, 0.4)); }
+  </style>
+</head>
+
+<body class="bg-background text-on-surface font-body-md pb-32">
+
+  <!-- TopAppBar -->
+  <header class="bg-background/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/5 h-16 px-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <button onclick="toggleMenu(true)" class="active:scale-95 duration-150 hover:opacity-80 transition-opacity" aria-label="Menu">
+        <span class="material-symbols-outlined text-primary">menu</span>
+      </button>
+      <h1 class="text-lg font-bold text-white">Meu Perfil</h1>
+    </div>
+  </header>
+
+  <!-- Side Drawer Overlay -->
+  <div id="menuOverlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-background/60 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+
+  <!-- Side Drawer Content -->
+  <aside id="sideMenu" class="fixed top-0 left-0 h-full w-[280px] bg-surface z-[70] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-out border-r border-outline-variant">
+    <div class="flex flex-col h-full">
+      <!-- Header do Menu -->
+      <div class="p-6 bg-gradient-to-br from-primary/10 to-transparent border-b border-outline-variant">
+        <div class="flex items-center justify-between mb-6">
+          <img src="./assets/icons/logo.svg" alt="Logo" class="h-5 w-auto" />
+          <button onclick="toggleMenu(false)" class="text-on-surface-variant hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full border-2 border-primary/30 bg-surface-variant flex items-center justify-center overflow-hidden">
+            <span class="material-symbols-outlined text-primary text-2xl">person</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-white">Aluno Iforms</p>
+            <p class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links de Navegação -->
+      <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 mt-2">Plataforma</p>
+        <a href="./dashboard.html" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">home</span>
+          <span class="text-sm">Início</span>
+        </a>
+        <a href="./perfil.html" class="flex items-center gap-4 p-3 rounded-xl bg-primary/10 text-primary font-bold transition-all">
+          <span class="material-symbols-outlined">workspace_premium</span>
+          <span class="text-sm">Meus Certificados</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">support_agent</span>
+          <span class="text-sm">Suporte Técnico</span>
+        </a>
+
+        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 pt-6">Institucional</p>
+        <a href="https://grupoicf.com.br/sobre-nos/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">info</span>
+          <span class="text-sm">Sobre o Grupo ICF</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined text-primary">verified_user</span>
+          <div class="flex flex-col">
+            <span class="text-sm">Sistema Homologado</span>
+            <span class="text-[9px] text-primary font-bold">DATEC & IPT</span>
+          </div>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">gavel</span>
+          <span class="text-sm">Termos de Uso</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+          <span class="material-symbols-outlined">lock</span>
+          <span class="text-sm">Política de Privacidade</span>
+        </a>
+      </nav>
+
+      <!-- Rodapé do Menu -->
+      <div class="p-4 border-t border-outline-variant">
+        <button class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="text-sm font-bold uppercase tracking-widest">Sair da Conta</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Header Perfil -->
+  <header class="pt-24 pb-8 px-6 bg-gradient-to-b from-surface to-background border-b border-white/5 relative overflow-hidden">
+
+    <div class="absolute top-0 right-0 p-8 opacity-5">
+      <span class="material-symbols-outlined text-[180px] rotate-12">workspace_premium</span>
+    </div>
+    
+    <div class="flex flex-col items-center text-center space-y-4 relative z-10">
+      <div class="relative">
+        <div class="w-24 h-24 rounded-full border-4 border-primary/30 p-1">
+          <div class="w-full h-full rounded-full bg-surface-variant flex items-center justify-center overflow-hidden">
+            <span class="material-symbols-outlined text-primary text-5xl">person</span>
+          </div>
+        </div>
+        <button class="absolute bottom-0 right-0 w-8 h-8 bg-primary text-background rounded-full flex items-center justify-center border-4 border-background active:scale-90 transition-transform">
+          <span class="material-symbols-outlined text-sm">edit</span>
+        </button>
+      </div>
+      
+      <div>
+        <h2 class="text-2xl font-bold text-white">Aluno Iforms</h2>
+        <p id="profile-level" class="text-xs font-black text-primary uppercase tracking-[0.2em] mt-1">Iniciando Jornada</p>
+      </div>
+
+      <div class="flex gap-4 pt-2">
+        <div class="bg-surface/50 border border-outline/30 px-4 py-2 rounded-2xl">
+          <p id="stats-lessons" class="text-lg font-bold text-white">0/5</p>
+          <p class="text-[8px] uppercase tracking-widest text-on-surface-variant">Aulas</p>
+        </div>
+        <div class="bg-surface/50 border border-outline/30 px-4 py-2 rounded-2xl">
+          <p class="text-lg font-bold text-white">12</p>
+          <p class="text-[8px] uppercase tracking-widest text-on-surface-variant">Contribuições</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="px-6 mt-8 space-y-8 max-w-lg mx-auto">
+    
+    <!-- Certification Status -->
+    <section class="space-y-4">
+      <h3 class="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em]">Minhas Conquistas</h3>
+      <div class="grid grid-cols-3 gap-4">
+        <div id="badge-expert" class="aspect-square bg-surface border border-outline/20 rounded-2xl flex flex-col items-center justify-center p-3 grayscale opacity-30 transition-all">
+          <span class="material-symbols-outlined text-primary text-3xl mb-1">workspace_premium</span>
+          <p class="text-[8px] font-bold text-center uppercase tracking-tighter">Selo Expert</p>
+        </div>
+        <div class="aspect-square bg-surface border border-outline/20 rounded-2xl flex flex-col items-center justify-center p-3 opacity-30 grayscale">
+          <span class="material-symbols-outlined text-primary text-3xl mb-1">verified</span>
+          <p class="text-[8px] font-bold text-center uppercase tracking-tighter">Homologado</p>
+        </div>
+        <div class="aspect-square bg-surface border border-outline/20 rounded-2xl flex flex-col items-center justify-center p-3 opacity-30 grayscale">
+          <span class="material-symbols-outlined text-primary text-3xl mb-1">military_tech</span>
+          <p class="text-[8px] font-bold text-center uppercase tracking-tighter">Embaixador</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Professional Actions -->
+    <section class="space-y-4">
+      <h3 class="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em]">Configurações Profissionais</h3>
+      <div class="bg-surface border border-outline/20 rounded-3xl overflow-hidden">
+        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-primary">badge</span>
+            <div class="text-left">
+              <p class="text-sm font-bold text-white">Dados do Credenciado</p>
+              <p class="text-[10px] text-on-surface-variant">Como você aparece na rede de profissionais</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+        </button>
+        
+        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-primary">chat_bubble</span>
+            <div class="text-left">
+              <p class="text-sm font-bold text-white">Minhas Discussões</p>
+              <p class="text-[10px] text-on-surface-variant">Tópicos que você criou no fórum</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+        </button>
+
+        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors group">
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-primary">notifications</span>
+            <div class="text-left">
+              <p class="text-sm font-bold text-white">Notificações</p>
+              <p class="text-[10px] text-on-surface-variant">Gerenciar alertas de obras e mensagens</p>
+            </div>
+          </div>
+          <div class="w-10 h-6 bg-primary/20 rounded-full relative">
+            <div class="absolute right-1 top-1 w-4 h-4 bg-primary rounded-full"></div>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Support & Logout -->
+    <section class="space-y-4">
+      <div class="bg-surface border border-outline/20 rounded-3xl overflow-hidden">
+        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-on-surface-variant">support_agent</span>
+            <p class="text-sm font-bold text-white">Suporte ao Licenciado</p>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
+        </button>
+        
+        <button class="w-full flex items-center p-5 text-red-400 hover:bg-red-400/5 transition-colors">
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined">logout</span>
+            <p class="text-sm font-bold uppercase tracking-widest">Sair da Conta</p>
+          </div>
+        </button>
+      </div>
+      <p class="text-center text-[10px] text-on-surface-variant opacity-50">App ICF v1.2.0 • Grupo ICF © 2026</p>
+    </section>
+
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-2 pb-safe bg-surface border-t border-outline-variant shadow-2xl z-50">
+    <a href="./dashboard.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-[10px] font-medium">Início</span>
+    </a>
+    <a href="./calculadora.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">construction</span>
+      <span class="text-[10px] font-medium">Ferramentas</span>
+    </a>
+    <a href="./comunidade.html" class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">groups</span>
+      <span class="text-[10px] font-medium">Comunidade</span>
+    </a>
+    <a href="./perfil.html" class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1 transition-all" aria-current="page">
+      <div class="w-6 h-6 rounded-full border border-primary overflow-hidden flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">person</span>
+      </div>
+      <span class="text-[10px] font-bold">Perfil</span>
+    </a>
+  </nav>
+
+  <script>
+    function toggleMenu(show) {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('menuOverlay');
+      if (show) {
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+          overlay.classList.add('opacity-100');
+          menu.classList.remove('-translate-x-full');
+        }, 10);
+      } else {
+        overlay.classList.remove('opacity-100');
+        menu.classList.add('-translate-x-full');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sincronizar Progresso Real
+      const totalLessons = 5;
+      let completedCount = 0;
+      for (let i = 1; i <= totalLessons; i++) {
+        if (localStorage.getItem(`lesson_${i}_completed`) === 'true') completedCount++;
+      }
+      
+      document.getElementById('stats-lessons').textContent = `${completedCount}/${totalLessons}`;
+
+      // Sincronizar Nível e Selo
+      const levelElement = document.getElementById('profile-level');
+      if (completedCount === totalLessons) {
+        levelElement.textContent = 'Expert ICF';
+        const badge = document.getElementById('badge-expert');
+        if (badge) {
+          badge.classList.remove('grayscale', 'opacity-30');
+          badge.classList.add('badge-glow', 'border-primary/40', 'bg-primary/5');
+        }
+      } else {
+        levelElement.textContent = 'Iniciante';
+      }
+    });
+  </script>
+</body>
+</html>
