@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00C2A0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Iforms"/>
+  <meta name="description" content="Calculadora técnica de materiais ICF - Iforms Tech"/>
+  <title>Calculadora de Materiais - Iforms Tech</title>
+  <link rel="manifest" href="./manifest.json"/>
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.svg"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00C2A0", "on-primary": "#ffffff",
+            "background": "#031632", "surface": "#1a2b48",
+            "surface-variant": "#263143", "on-surface": "#ffffff",
+            "on-surface-variant": "#b6c7eb", "outline": "#44474d",
+            "secondary": "#b7c8e1"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem",
+            "2xl": "1rem", "full": "9999px"
+          },
+          spacing: {
+            "gutter": "24px", "section-gap": "64px", "stack-md": "16px",
+            "margin-mobile": "16px", "unit": "8px", "stack-lg": "32px",
+            "container-max": "1200px", "stack-sm": "8px"
+          },
+          fontFamily: {
+            "body-lg": ["Inter"], "body-md": ["Inter"], "h3": ["Inter"],
+            "caption": ["Inter"], "h1": ["Inter"], "label-sm": ["Inter"], "h2": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { min-height: 100dvh; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Animação dos resultados */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .result-card { animation: slideUp 0.35s ease forwards; }
+
+    /* Number input sem setas */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen selection:bg-primary/30">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-white/10 h-16 px-4 flex justify-between items-center">
+  <div class="flex items-center gap-4">
+    <a href="./dashboard.html" class="text-white hover:opacity-80 transition-opacity active:scale-95 duration-150" aria-label="Voltar">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+    <img src="./assets/icons/logo.svg" alt="Iforms Grupo ICF" class="h-[22px] w-auto" />
+  </div>
+  <div class="flex items-center gap-4">
+    <div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-surface-variant flex items-center justify-center">
+      <span class="material-symbols-outlined text-primary text-sm">person</span>
+    </div>
+  </div>
+</header>
+
+<main class="pt-24 pb-40 px-4 max-w-[1200px] mx-auto min-h-screen">
+
+  <!-- Header -->
+  <section class="mb-stack-lg">
+    <h2 class="text-3xl font-bold text-white mb-2">Calculadora de Materiais Iforms</h2>
+    <p class="text-secondary opacity-80">Dimensionamento técnico preciso para sua obra em ICF.</p>
+  </section>
+
+  <!-- Calculadora Card -->
+  <div class="bg-surface rounded-2xl p-6 shadow-xl border border-white/5 mb-8">
+
+    <!-- Input Area -->
+    <div class="mb-8">
+      <label class="block text-sm font-medium text-secondary mb-3 uppercase tracking-wider" for="areaInput">Área Total (m²)</label>
+      <div class="relative">
+        <input
+          id="areaInput"
+          type="number"
+          placeholder="0.00"
+          step="0.01"
+          min="0"
+          class="w-full bg-surface-variant border-2 border-white/10 rounded-xl px-4 py-5 text-3xl font-bold text-white focus:border-primary focus:ring-0 transition-all outline-none placeholder:text-white/20"
+          aria-label="Área total em metros quadrados"
+        />
+        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xl font-bold text-primary">m²</span>
+      </div>
+    </div>
+
+    <!-- Seleção de Tipo -->
+    <div class="mb-8">
+      <label class="block text-sm font-medium text-secondary mb-3 uppercase tracking-wider">Tipo de Formato</label>
+      <div class="grid grid-cols-2 gap-3">
+        <button
+          id="btn12"
+          onclick="setType('12')"
+          class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-primary bg-primary/10 text-white transition-all active:scale-[0.98]"
+          aria-pressed="true"
+        >
+          <span class="text-lg font-bold">12cm Veda</span>
+          <span class="text-xs opacity-60">Seção 7x6cm</span>
+        </button>
+        <button
+          id="btn18"
+          onclick="setType('18')"
+          class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-white/10 bg-surface-variant text-white/60 hover:border-white/20 transition-all active:scale-[0.98]"
+          aria-pressed="false"
+        >
+          <span class="text-lg font-bold">18cm Estrutural</span>
+          <span class="text-xs opacity-60">Seção 10cm</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <button
+      onclick="calculate()"
+      class="w-full bg-primary hover:bg-[#00a88b] text-white font-bold py-5 rounded-xl text-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+    >
+      <span class="material-symbols-outlined">calculate</span>
+      Calcular Materiais
+    </button>
+  </div>
+
+  <!-- Resultados -->
+  <div id="results" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+    <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 result-card">
+      <p class="text-secondary text-sm uppercase tracking-wide mb-1">Quantidade de formas</p>
+      <div class="flex items-baseline gap-2">
+        <span id="resFormas" class="text-3xl font-bold text-white">0</span>
+        <span class="text-primary font-medium">unidades</span>
+      </div>
+    </div>
+    <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 result-card" style="animation-delay:0.05s">
+      <p class="text-secondary text-sm uppercase tracking-wide mb-1">Volume de Concreto</p>
+      <div class="flex items-baseline gap-2">
+        <span id="resConcreto" class="text-3xl font-bold text-white">0.000</span>
+        <span class="text-primary font-medium">m³</span>
+      </div>
+    </div>
+    <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 md:col-span-2 result-card" style="animation-delay:0.1s">
+      <p class="text-secondary text-sm uppercase tracking-wide mb-1">Consumo de ICFlex</p>
+      <div class="flex items-baseline gap-2">
+        <span id="resFlex" class="text-3xl font-bold text-white">0.0</span>
+        <span class="text-primary font-medium">kg</span>
+      </div>
+    </div>
+    <!-- Resumo -->
+    <div class="md:col-span-2 bg-primary/10 border border-primary/30 p-4 rounded-xl result-card" style="animation-delay:0.15s">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary">info</span>
+        <div>
+          <p class="text-sm text-white font-semibold mb-1">Resultado baseado em:</p>
+          <p id="resResumo" class="text-caption text-on-surface-variant"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Links -->
+  <div class="mt-12 pt-8 border-t border-white/10">
+    <div class="flex flex-col gap-4 items-center">
+      <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">bolt</span>ICF Energy
+      </a>
+      <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">architecture</span>ICF Planejados
+      </a>
+      <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">home_work</span>Kit Casas
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- Bottom Nav -->
+<nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-2 pb-safe bg-background border-t border-white/10 z-50" role="navigation">
+  <a href="./dashboard.html" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
+    <span class="material-symbols-outlined">home</span>
+    <span class="text-[10px] font-medium">Início</span>
+  </a>
+  <a href="./calculadora.html" class="flex flex-col items-center justify-center text-primary px-3 py-1 bg-white/5 rounded-xl transition-all" aria-current="page">
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">calculate</span>
+    <span class="text-[10px] font-medium">Cálculo</span>
+  </a>
+  <a href="#" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
+    <span class="material-symbols-outlined">menu_book</span>
+    <span class="text-[10px] font-medium">Manual</span>
+  </a>
+  <a href="#" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
+    <span class="material-symbols-outlined">person</span>
+    <span class="text-[10px] font-medium">Perfil</span>
+  </a>
+</nav>
+
+<script>
+  let currentType = '12';
+
+  function setType(type) {
+    currentType = type;
+    const btn12 = document.getElementById('btn12');
+    const btn18 = document.getElementById('btn18');
+
+    if (type === '12') {
+      btn12.className = 'flex flex-col items-center justify-center p-4 rounded-xl border-2 border-primary bg-primary/10 text-white transition-all active:scale-[0.98]';
+      btn12.setAttribute('aria-pressed', 'true');
+      btn18.className = 'flex flex-col items-center justify-center p-4 rounded-xl border-2 border-white/10 bg-surface-variant text-white/60 hover:border-white/20 transition-all active:scale-[0.98]';
+      btn18.setAttribute('aria-pressed', 'false');
+    } else {
+      btn18.className = 'flex flex-col items-center justify-center p-4 rounded-xl border-2 border-primary bg-primary/10 text-white transition-all active:scale-[0.98]';
+      btn18.setAttribute('aria-pressed', 'true');
+      btn12.className = 'flex flex-col items-center justify-center p-4 rounded-xl border-2 border-white/10 bg-surface-variant text-white/60 hover:border-white/20 transition-all active:scale-[0.98]';
+      btn12.setAttribute('aria-pressed', 'false');
+    }
+  }
+
+  function calculate() {
+    const area = parseFloat(document.getElementById('areaInput').value);
+    if (!area || area <= 0) {
+      document.getElementById('areaInput').focus();
+      document.getElementById('areaInput').classList.add('border-red-500');
+      setTimeout(() => document.getElementById('areaInput').classList.remove('border-red-500'), 1500);
+      return;
+    }
+
+    const results = document.getElementById('results');
+    results.classList.remove('hidden');
+
+    // Anima novamente ao recalcular
+    results.querySelectorAll('.result-card').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+
+    // Formas: Area * 2
+    document.getElementById('resFormas').textContent = Math.ceil(area * 2);
+
+    // Concreto
+    const vol = area * (currentType === '12' ? 0.042 : 0.048);
+    document.getElementById('resConcreto').textContent = vol.toFixed(3);
+
+    // ICFlex
+    document.getElementById('resFlex').textContent = (area * 2.8).toFixed(1);
+
+    // Resumo
+    const tipoLabel = currentType === '12' ? '12cm Veda (Seção 7x6cm)' : '18cm Estrutural (Seção 10cm)';
+    document.getElementById('resResumo').textContent = `Área: ${area.toFixed(2)} m² · Tipo: ${tipoLabel}`;
+
+    results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Calcular ao apertar Enter
+  document.getElementById('areaInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') calculate();
+  });
+</script>
+
+<script src="./assets/js/pwa.js"></script>
+</body>
+</html>

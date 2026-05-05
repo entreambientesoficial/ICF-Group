@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Full bleed background for maskable -->
+  <rect width="512" height="512" fill="#031632"/>
+  <!-- I letter mark — centered with safe zone padding (10%) -->
+  <rect x="220" y="108" width="72" height="22" rx="7" fill="#00C2A0"/>
+  <rect x="237" y="130" width="38" height="188" rx="6" fill="#00C2A0"/>
+  <rect x="220" y="318" width="72" height="22" rx="7" fill="#00C2A0"/>
+  <!-- Accent -->
+  <rect x="140" y="366" width="232" height="8" rx="4" fill="#00C2A0" opacity="0.35"/>
+  <text x="256" y="410" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#00C2A0" text-anchor="middle" letter-spacing="8">ICF</text>
+</svg>

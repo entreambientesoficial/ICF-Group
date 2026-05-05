@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00C2A0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Iforms" />
+  <meta name="description" content="Painel principal da plataforma Iforms Grupo ICF" />
+  <title>Dashboard - Iforms Grupo ICF</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.svg" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00C2A0",
+            "on-primary": "#031632",
+            "background": "#020817",
+            "surface": "#0f172a",
+            "surface-container": "#1e293b",
+            "surface-variant": "#334155",
+            "on-background": "#f8fafc",
+            "on-surface": "#f1f5f9",
+            "on-surface-variant": "#94a3b8",
+            "outline": "#475569",
+            "outline-variant": "#1e293b",
+            "secondary": "#00C2A0"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"
+          },
+          spacing: {
+            "gutter": "24px", "section-gap": "64px", "stack-md": "16px",
+            "margin-mobile": "16px", "unit": "8px", "stack-lg": "32px",
+            "container-max": "1200px", "stack-sm": "8px"
+          },
+          fontFamily: {
+            "body-lg": ["Inter"], "body-md": ["Inter"], "h3": ["Inter"],
+            "caption": ["Inter"], "h1": ["Inter"], "label-sm": ["Inter"], "h2": ["Inter"]
+          },
+          fontSize: {
+            "body-lg": ["18px", { lineHeight: "1.6", letterSpacing: "0", fontWeight: "400" }],
+            "body-md": ["16px", { lineHeight: "1.6", letterSpacing: "0", fontWeight: "400" }],
+            "h3": ["24px", { lineHeight: "1.4", letterSpacing: "0", fontWeight: "600" }],
+            "caption": ["12px", { lineHeight: "1.4", letterSpacing: "0", fontWeight: "400" }],
+            "h1": ["40px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "label-sm": ["14px", { lineHeight: "1.2", letterSpacing: "0.05em", fontWeight: "500" }],
+            "h2": ["30px", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .progress-ring__circle {
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    .glass-effect {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    body {
+      min-height: 100dvh;
+      background-color: #020817;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #020817;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00C2A0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    main>* {
+      animation: fadeIn 0.3s ease forwards;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+
+  <!-- TopAppBar -->
+  <header
+    class="bg-surface/80 glass-effect fixed top-0 w-full z-50 border-b border-outline-variant shadow-lg flex justify-between items-center h-16 px-4">
+    <div class="flex items-center gap-4">
+      <button class="active:scale-95 duration-150 hover:opacity-80 transition-opacity" aria-label="Menu">
+        <span class="material-symbols-outlined text-primary">menu</span>
+      </button>
+      <a href="./dashboard.html" aria-label="Iforms Grupo ICF">
+        <img src="./assets/icons/logo.svg" alt="Iforms Grupo ICF" class="h-[22px] w-auto" />
+      </a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="relative" aria-label="Notificações">
+        <span
+          class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</span>
+        <span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+      </button>
+      <div
+        class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 bg-surface-container flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary">person</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-[1200px] mx-auto px-4 pt-24 space-y-stack-lg">
+
+    <!-- Trust Seal -->
+    <!-- Trust Seal (Authority Badge) -->
+    <div
+      class="relative overflow-hidden bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border-l-4 border-primary p-4 rounded-r-xl flex items-center gap-4 group shadow-sm">
+      <div class="shrink-0 w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center shadow-inner">
+        <span class="material-symbols-outlined text-primary text-3xl">verified</span>
+      </div>
+      <div class="flex-grow">
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-0.5">Sistema Validado e Homologado
+        </h4>
+        <p class="text-sm text-on-surface leading-tight">
+          Único sistema ICF com <span class="text-primary font-bold">DATEC</span> financiável pela <span
+            class="font-bold">Caixa Econômica</span> e validado pelo <span class="font-bold">IPT</span>.
+        </p>
+      </div>
+      <span
+        class="material-symbols-outlined absolute right-2 opacity-5 text-6xl rotate-12 group-hover:scale-110 transition-transform">security</span>
+    </div>
+
+    <!-- Welcome Section -->
+    <section class="flex flex-col gap-unit">
+      <h2 class="font-h1 text-h1 text-on-background">Olá, Aluno!</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+        Sua jornada técnica rumo à excelência na construção em ICF continua aqui.
+      </p>
+    </section>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+
+      <!-- Vídeo de Conceito + Atalho de Aula -->
+      <div class="md:col-span-8 space-y-gutter">
+        <!-- YouTube Player -->
+        <div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-2xl group">
+          <div class="relative w-full" style="aspect-ratio:16/9;">
+            <iframe src="https://www.youtube.com/embed/z-X1F_9xRIE?rel=0&modestbranding=1"
+              title="O que é o Sistema ICF? Entenda o conceito" class="absolute inset-0 w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+          <div class="p-gutter bg-gradient-to-b from-surface to-surface/50">
+            <div class="flex items-center gap-2 mb-2">
+
+              <span class="text-[9px] text-on-surface-variant font-bold uppercase tracking-widest">Introdução
+                Estratégica</span>
+            </div>
+            <h3 class="font-h2 text-xl text-on-surface leading-tight group-hover:text-primary transition-colors">O que é
+              o Sistema ICF? Entenda o conceito</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comunicados -->
+      <div class="md:col-span-4 space-y-gutter">
+
+        <!-- Status da Certificação Unificado -->
+        <div
+          class="bg-surface border border-outline-variant p-gutter rounded-xl shadow-lg relative overflow-hidden group">
+          <div class="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-all duration-500">
+            <span class="material-symbols-outlined text-8xl text-primary">workspace_premium</span>
+          </div>
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary">military_tech</span>
+              </div>
+              <h4 class="font-h3 text-h3 text-on-surface">Sua Certificação</h4>
+            </div>
+
+            <div class="flex items-center gap-gutter mb-6">
+              <div class="relative w-24 h-24 shrink-0">
+                <svg class="w-24 h-24" viewBox="0 0 80 80">
+                  <circle class="text-surface-variant/30 stroke-current" cx="40" cy="40" fill="transparent" r="34"
+                    stroke-width="6" />
+                  <circle class="text-primary stroke-current progress-ring__circle" cx="40" cy="40" fill="transparent"
+                    r="34" stroke-linecap="round" stroke-width="6"
+                    style="stroke-dasharray:213.6;stroke-dashoffset:170.88;" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span class="font-bold text-primary text-lg leading-none">20%</span>
+                  <span class="text-[8px] text-on-surface-variant font-bold uppercase tracking-tighter">Geral</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Nível Atual</p>
+                <p class="text-lg font-bold text-white leading-tight">Sua Formação</p>
+                <div class="flex items-center gap-1 text-primary">
+                  <span class="material-symbols-outlined text-[14px]">stars</span>
+                  <span class="text-[11px] font-bold">Rumo ao Expert</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div
+                class="flex items-center gap-2 py-2.5 px-3 bg-surface-container rounded-lg border border-outline-variant/50">
+                <span class="material-symbols-outlined text-primary text-sm">lock_open</span>
+                <span class="text-[11px] text-on-surface-variant">Faltam <span class="text-primary font-bold">4 aulas</span> para o selo <span
+                    class="text-primary font-bold">ICF Expert</span></span>
+              </div>
+              <button
+                class="w-full bg-surface-container text-on-surface border border-outline-variant py-3 rounded-lg font-bold hover:border-primary/50 transition-all active:scale-[0.98] text-xs uppercase tracking-widest">
+                Ver requisitos do selo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Módulos de Formação -->
+    <section class="space-y-stack-md">
+      <div class="flex justify-between items-end">
+        <h3 class="font-h2 text-h2 text-on-background">Jornada do Intensivão</h3>
+        <a href="./aula.html" class="text-primary font-semibold hover:underline text-sm">Ver trilha completa</a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-gutter">
+        <!-- AULA 01 -->
+        <a href="./aula.html?id=1"
+          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block">
+          <div class="flex justify-between items-start mb-4">
+            <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #01</span>
+            <span class="material-symbols-outlined text-primary"
+              style="font-variation-settings:'FILL' 1;">check_circle</span>
+          </div>
+          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Fundamentos da ICF</h5>
+          <div class="mt-4 flex items-center gap-2">
+            <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 1</span>
+            <span class="text-[9px] font-bold text-primary uppercase">Assistir</span>
+          </div>
+        </a>
+
+        <!-- AULA 02 (ATIVO) -->
+        <a href="./aula.html?id=2"
+          class="bg-surface border-2 border-primary p-gutter rounded-xl shadow-xl shadow-primary/10 cursor-pointer relative overflow-hidden block hover:shadow-primary/20 hover:scale-[1.02] transition-all">
+          <div class="absolute top-0 right-0">
+            <span class="bg-primary text-on-primary text-[8px] px-2 py-1 font-black uppercase tracking-widest rounded-bl-lg">LIVE</span>
+          </div>
+          <span class="font-black text-[10px] text-primary uppercase tracking-widest">AULA #02</span>
+          <h5 class="font-bold text-base text-white mt-1 leading-tight">Implementação Prática I</h5>
+          <div class="mt-8 flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-wider">
+             DIA 2 · HOJE <span class="material-symbols-outlined text-sm">play_circle</span>
+          </div>
+        </a>
+
+        <!-- AULA 03 (LOCK) -->
+        <a href="./aula.html?id=3"
+          class="bg-surface/20 border border-outline-variant p-gutter rounded-xl opacity-40 cursor-pointer relative group overflow-hidden block hover:opacity-100 transition-all">
+          <div class="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-white text-3xl">lock</span>
+          </div>
+          <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #03</span>
+          <h5 class="font-bold text-base text-on-surface mt-1 leading-tight">Implementação Prática II</h5>
+          <div class="mt-4 flex items-center gap-2">
+            <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 3</span>
+            <div class="flex items-center gap-1 text-[9px] text-on-surface-variant/50 font-bold uppercase">
+              <span class="material-symbols-outlined text-xs">calendar_month</span>
+              06/05
+            </div>
+          </div>
+        </a>
+
+        <!-- AULA 04 (LOCK) -->
+        <a href="./aula.html?id=4"
+          class="bg-surface/20 border border-outline-variant p-gutter rounded-xl opacity-40 cursor-pointer relative group overflow-hidden block hover:opacity-100 transition-all">
+          <div class="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-white text-3xl">lock</span>
+          </div>
+          <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #04</span>
+          <h5 class="font-bold text-base text-on-surface mt-1 leading-tight">Cálculo e Planejamento</h5>
+          <div class="mt-4 flex items-center gap-2">
+            <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 4</span>
+            <div class="flex items-center gap-1 text-[9px] text-on-surface-variant/50 font-bold uppercase">
+              <span class="material-symbols-outlined text-xs">calendar_month</span>
+              07/05
+            </div>
+          </div>
+        </a>
+
+        <!-- AULA 05 (LOCK) -->
+        <a href="./aula.html?id=5"
+          class="bg-surface/20 border border-outline-variant p-gutter rounded-xl opacity-40 cursor-pointer relative group overflow-hidden block hover:opacity-100 transition-all">
+          <div class="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-white text-3xl">lock</span>
+          </div>
+          <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #05</span>
+          <h5 class="font-bold text-base text-on-surface mt-1 leading-tight">Certificação e Business</h5>
+          <div class="mt-4 flex items-center gap-2">
+            <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 5</span>
+            <div class="flex items-center gap-1 text-[9px] text-on-surface-variant/50 font-bold uppercase">
+              <span class="material-symbols-outlined text-xs">stars</span>
+              08/05
+            </div>
+          </div>
+        </a>
+      </div>
+      </div>
+    </section>
+
+    <!-- Ecossistema Grupo ICF -->
+    <section class="pt-12 border-t border-outline-variant">
+      <div class="text-center mb-8">
+        <p class="text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-2">Ecossistema de Soluções</p>
+        <h3 class="text-2xl font-bold text-white">Expanda seus Negócios com o Grupo ICF</h3>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+
+        <a href="#"
+          class="bg-surface/40 border border-outline-variant rounded-2xl p-6 flex flex-col items-center gap-3 hover:border-primary/50 hover:bg-surface transition-all group text-center shadow-lg">
+          <div
+            class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-3xl">bolt</span>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black text-white group-hover:text-primary transition-colors tracking-wider">ICF
+              ENERGY</span>
+            <span class="text-[10px] text-on-surface-variant font-medium">Energia Solar</span>
+          </div>
+        </a>
+
+        <a href="#"
+          class="bg-surface/40 border border-outline-variant rounded-2xl p-6 flex flex-col items-center gap-3 hover:border-primary/50 hover:bg-surface transition-all group text-center shadow-lg">
+          <div
+            class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-3xl">countertops</span>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black text-white group-hover:text-primary transition-colors tracking-wider">ICF
+              PLANEJADOS</span>
+            <span class="text-[10px] text-on-surface-variant font-medium">Marcenaria Premium</span>
+          </div>
+        </a>
+
+        <a href="#"
+          class="bg-surface/40 border border-outline-variant rounded-2xl p-6 flex flex-col items-center gap-3 hover:border-primary/50 hover:bg-surface transition-all group text-center shadow-lg">
+          <div
+            class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-3xl">home_work</span>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black text-white group-hover:text-primary transition-colors tracking-wider">KIT
+              CASAS</span>
+            <span class="text-[10px] text-on-surface-variant font-medium">Projetos & Logística</span>
+          </div>
+        </a>
+
+        <a href="#"
+          class="bg-surface/40 border border-outline-variant rounded-2xl p-6 flex flex-col items-center gap-3 hover:border-primary/50 hover:bg-surface transition-all group text-center shadow-lg relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-bl-lg">
+            2025</div>
+          <div
+            class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-3xl">account_balance</span>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black text-white group-hover:text-primary transition-colors tracking-wider">ICF
+              BANK</span>
+            <span class="text-[10px] text-on-surface-variant font-medium">Crédito & Fomento</span>
+          </div>
+        </a>
+
+        <a href="#"
+          class="bg-surface/40 border border-outline-variant rounded-2xl p-6 flex flex-col items-center gap-3 hover:border-primary/50 hover:bg-surface transition-all group text-center shadow-lg">
+          <div
+            class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-3xl">workspace_premium</span>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black text-white group-hover:text-primary transition-colors tracking-wider">ICF
+              EXPERTS</span>
+            <span class="text-[10px] text-on-surface-variant font-medium">Rede de Elite</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav
+    class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-2 pb-safe bg-surface border-t border-outline-variant shadow-2xl z-50"
+    role="navigation" aria-label="Navegação principal">
+    <a href="./dashboard.html"
+      class="flex flex-col items-center justify-center text-primary rounded-xl px-3 py-1 transition-all"
+      aria-current="page">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">home</span>
+      <span class="text-[10px] font-bold">Início</span>
+    </a>
+    <a href="./aula.html"
+      class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">school</span>
+      <span class="text-[10px] font-medium">Formação</span>
+    </a>
+    <a href="./calculadora.html"
+      class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">calculate</span>
+      <span class="text-[10px] font-medium">Projetos</span>
+    </a>
+    <a href="./comunidade.html"
+      class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">diversity_3</span>
+      <span class="text-[10px] font-medium">Ecossistema</span>
+    </a>
+    <a href="#"
+      class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-all">
+      <span class="material-symbols-outlined">settings_account_box</span>
+      <span class="text-[10px] font-medium">Perfil</span>
+    </a>
+  </nav>
+
+  <!-- FAB Support -->
+  <button
+    class="fixed right-6 bottom-20 bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40"
+    aria-label="Suporte">
+    <span class="material-symbols-outlined">support_agent</span>
+  </button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const totalLessons = 5;
+      let completedCount = 0;
+      
+      // 1. Calculate Progress
+      for (let i = 1; i <= totalLessons; i++) {
+        if (localStorage.getItem(`lesson_${i}_completed`) === 'true') {
+          completedCount++;
+        }
+      }
+      
+      const percentage = (completedCount / totalLessons) * 100;
+      
+      // 2. Update Progress UI
+      const percentText = document.querySelector('.font-bold.text-primary.text-lg.leading-none');
+      if (percentText) percentText.textContent = `${percentage}%`;
+      
+      const circle = document.querySelector('.progress-ring__circle');
+      if (circle) {
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percentage / 100) * circumference;
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = offset;
+      }
+
+      const pendingText = document.querySelector('.text-[11px].text-on-surface-variant span.text-primary.font-bold');
+      if (pendingText) pendingText.textContent = `${totalLessons - completedCount} aulas`;
+
+      // 3. Sequential Unlocking & Visual Status
+      for (let i = 1; i <= totalLessons; i++) {
+        const isCompleted = localStorage.getItem(`lesson_${i}_completed`) === 'true';
+        const prevCompleted = i === 1 || localStorage.getItem(`lesson_${i-1}_completed`) === 'true';
+        
+        // Find the card (using id or index)
+        const cards = document.querySelectorAll('main section:nth-of-type(2) .grid a');
+        const card = cards[i-1];
+        
+        if (card) {
+          // Update Check Icon
+          const checkIcon = card.querySelector('.material-symbols-outlined.text-primary');
+          if (checkIcon) {
+            checkIcon.style.opacity = isCompleted ? '1' : '0.2';
+          }
+
+          // Lock Logic
+          if (!prevCompleted && i > 1) {
+            card.classList.add('opacity-30', 'pointer-events-none', 'grayscale');
+            const statusDiv = card.querySelector('.mt-8') || card.querySelector('.mt-4');
+            if (statusDiv) {
+              statusDiv.innerHTML = `<span class="material-symbols-outlined text-sm">lock</span> BLOQUEADO`;
+            }
+          }
+        }
+      }
+    });
+  </script>
+  <script src="./assets/js/pwa.js"></script>
+</body>
+
+</html>
