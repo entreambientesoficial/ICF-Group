@@ -325,12 +325,21 @@ npm run format:check # Verifica formatação sem alterar arquivos
 - **Progresso 100% Dinâmico:** Cálculo automático de 20% por aula em todas as telas.
 - **Sinalização de Status:** Badges de "Assistida" e "Concluída" para navegação guiada.
 
-### 5. Próximos Passos (Atualizado)
+### 6. Dashboard Premium & PWA 2.0 ✅
+- **Ecossistema 100% Fiel:** Reestruturação da grade de soluções com 12 braços de atuação (Energy, Planejados, Kits, Experts, etc), organizada em 3 colunas impecáveis.
+- **Hierarquia de Autoridade:** Refinamento do Selo de Confiança (verde Iforms puro) e remoção de animações distrativas para focar na credibilidade técnica.
+- **Nível Dinâmico:** Implementação de progressão de nível (Iniciante -> Intermediário -> Expert) refletida em tempo real no Dashboard.
+- **Instalação PWA de Luxo:** Substituição do botão simples por um Modal Central com Backdrop Blur e animação Zoom-in, elevando a percepção de "App Nativo".
+- **UX de Boas-vindas:** Ajuste de copy estratégico focado no início da jornada do aluno.
+
+### 7. Próximos Passos (Atualizado)
 - [x] Lógica de progresso real (localStorage)
 - [x] Sistema de Flashcards técnicos
 - [x] Hub de Ferramentas (Calculadora + Checklist)
+- [x] Otimização Premium do Dashboard (Tela 1)
 - [ ] **Fase 3:** Implementação do Fluxo de Login (`login.html`)
 - [ ] **Fase 3:** Criação da página de Perfil do Aluno (`perfil.html`)
 - [ ] **Fase 3:** Implementação do Quiz nas Aulas 2 a 5 conforme envio dos dados.
 
 ---
+
