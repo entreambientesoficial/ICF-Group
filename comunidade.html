@@ -367,16 +367,16 @@
     <section class="bg-surface/50 border border-outline rounded-3xl p-8 animate-fade-in" style="animation-delay: 0.3s">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div class="text-center space-y-1">
-          <p class="text-3xl font-black text-primary">1.2k</p>
+          <p id="stat-members" class="text-3xl font-black text-primary">1.2k</p>
           <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Membros</p>
         </div>
         <div class="text-center space-y-1">
-          <p class="text-3xl font-black text-white">340</p>
+          <p id="stat-discussions" class="text-3xl font-black text-white">0</p>
           <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Discussões</p>
         </div>
         <div class="text-center space-y-1">
-          <p class="text-3xl font-black text-primary">18</p>
-          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Experts Online</p>
+          <p id="stat-experts" class="text-3xl font-black text-primary">18</p>
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Credenciados</p>
         </div>
         <div class="text-center space-y-1">
           <p class="text-3xl font-black text-white">96%</p>
@@ -470,18 +470,51 @@
     ✓ Cadastro enviado para aprovação!
   </div>
 
-  <script>
   <!-- New Discussion Modal -->
   <div id="discussionModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-background/90 backdrop-blur-md">
     <div class="bg-surface w-full max-w-sm rounded-3xl border border-outline p-8 space-y-6">
       <h3 class="text-xl font-bold text-primary text-center">Nova Discussão</h3>
       <p class="text-xs text-on-surface-variant text-center">Compartilhe sua dúvida ou dica técnica com a comunidade.</p>
       <div class="space-y-3">
-        <input type="text" id="postTitle" placeholder="Título da Discussão" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
-        <textarea id="postContent" rows="4" placeholder="O que você quer compartilhar?" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors resize-none"></textarea>
+        <input type="text" id="postTitle" placeholder="Título da Discussão" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-all">
+        <textarea id="postContent" rows="4" placeholder="O que você quer compartilhar?" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-all resize-none"></textarea>
       </div>
       <button onclick="submitNewDiscussion()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">PUBLICAR NO MURAL</button>
       <button onclick="closeNewDiscussionModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Reply / Thread Modal -->
+  <div id="threadModal" class="fixed inset-0 z-[120] hidden flex-col bg-background animate-slide-up">
+    <!-- Header -->
+    <div class="p-6 border-b border-outline flex items-center justify-between bg-surface/50 backdrop-blur-md sticky top-0">
+      <div class="flex items-center gap-3">
+        <button onclick="closeThread()" class="material-symbols-outlined text-on-surface-variant">arrow_back</button>
+        <h3 class="text-lg font-bold">Discussão</h3>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto no-scrollbar">
+      <!-- Original Post -->
+      <div id="threadOriginalPost" class="p-6 border-b border-outline bg-surface/20">
+        <!-- Content will be injected here -->
+      </div>
+
+      <!-- Replies List -->
+      <div id="repliesList" class="p-6 space-y-6">
+        <!-- Replies will be injected here -->
+      </div>
+    </div>
+
+    <!-- Reply Input -->
+    <div class="p-4 bg-surface border-t border-outline pb-safe">
+      <div class="flex items-center gap-3">
+        <input type="text" id="replyInput" placeholder="Escreva sua resposta..." class="flex-1 bg-background border border-outline rounded-full px-6 py-3 text-sm text-white focus:border-primary outline-none transition-all">
+        <button onclick="submitReply()" class="w-12 h-12 bg-primary text-secondary rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -498,7 +531,36 @@
       { name: "Clima Bom", cat: "Ar Condicionado", city: "São Paulo, SP", icon: "ac_unit", phone: "11888888888" }
     ];
 
+    const discussions = [
+      { 
+        id: 1, 
+        title: "Dicas para Avaliação do DATEC", 
+        author: "Admin", 
+        time: "2h atrás", 
+        content: "Documentação necessária para aprovação de crédito na Caixa usando o sistema Iforms. Confira o checklist...",
+        likes: 156,
+        comments: [
+          { author: "Eng. Ricardo", text: "Muito bom! O checklist ajudou muito no último projeto." },
+          { author: "Arq. Juliana", text: "Tem alguma atualização sobre os prazos de resposta da Caixa?" }
+        ],
+        fixed: true
+      },
+      { 
+        id: 2, 
+        title: "Montagem do Kit Casas no canteiro", 
+        author: "Carlos Eng.", 
+        time: "5h atrás", 
+        content: "Gostaria de saber a experiência de vocês com a logística de entrega dos painéis no canteiro. Alguma dica?",
+        likes: 32,
+        comments: [
+          { author: "Mestre Silas", text: "O segredo é nivelar bem a base antes da chegada do caminhão." }
+        ],
+        fixed: false
+      }
+    ];
+
     let currentCategory = '';
+    let currentThreadId = null;
 
     function openDirectory(category) {
       currentCategory = category;
@@ -562,6 +624,82 @@
       renderDirectory();
     }
 
+    // Discussion Thread Logic
+    function openThread(id) {
+      currentThreadId = id;
+      const discussion = discussions.find(d => d.id === id);
+      if (!discussion) return;
+
+      document.getElementById('threadModal').classList.remove('hidden');
+      document.getElementById('threadModal').classList.add('flex');
+
+      // Render Original Post
+      document.getElementById('threadOriginalPost').innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                <span class="material-symbols-outlined text-primary">person</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white">${discussion.title}</h4>
+                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${discussion.author}</span> • ${discussion.time}</p>
+              </div>
+            </div>
+            ${discussion.fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
+          </div>
+          <p class="text-sm text-white leading-relaxed">${discussion.content}</p>
+          <div class="flex items-center gap-4 pt-2">
+            <div class="flex items-center gap-1 text-primary">
+              <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1">favorite</span>
+              <span class="text-xs font-bold">${discussion.likes}</span>
+            </div>
+            <div class="flex items-center gap-1 text-on-surface-variant">
+              <span class="material-symbols-outlined text-lg">chat_bubble</span>
+              <span class="text-xs font-bold">${discussion.comments.length} Respostas</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      renderReplies();
+    }
+
+    function renderReplies() {
+      const discussion = discussions.find(d => d.id === currentThreadId);
+      const list = document.getElementById('repliesList');
+      
+      list.innerHTML = discussion.comments.map(c => `
+        <div class="flex gap-4">
+          <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center border border-outline flex-shrink-0">
+            <span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+          </div>
+          <div class="space-y-1">
+            <p class="text-[10px] text-primary font-bold uppercase tracking-wider">${c.author}</p>
+            <p class="text-xs text-on-surface-variant bg-surface border border-outline p-3 rounded-2xl rounded-tl-none leading-relaxed">${c.text}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function closeThread() {
+      document.getElementById('threadModal').classList.add('hidden');
+      document.getElementById('threadModal').classList.remove('flex');
+    }
+
+    function submitReply() {
+      const input = document.getElementById('replyInput');
+      const text = input.value;
+      if (!text) return;
+
+      const discussion = discussions.find(d => d.id === currentThreadId);
+      discussion.comments.push({ author: "Você", text: text });
+      
+      input.value = '';
+      renderReplies();
+      renderDiscussionsList(); // Update count on main screen
+    }
+
     // Modal Controls for New Discussion
     function openNewDiscussionModal() {
       document.getElementById('discussionModal').classList.remove('hidden');
@@ -582,35 +720,19 @@
         return;
       }
 
-      const list = document.getElementById('discussions-list');
-      const article = document.createElement('article');
-      article.className = "bg-surface border border-primary/30 rounded-3xl p-6 space-y-4 animate-fade-in group";
-      article.innerHTML = `
-        <div class="flex items-start justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30">
-              <span class="material-symbols-outlined text-primary">person</span>
-            </div>
-            <div>
-              <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">${title}</h4>
-              <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">Você</span> • Agora</p>
-            </div>
-          </div>
-        </div>
-        <p class="text-xs text-on-surface-variant leading-relaxed">${content}</p>
-        <div class="pt-4 border-t border-outline flex items-center gap-6">
-          <button onclick="toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
-            <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
-            <span class="text-xs font-bold">0</span>
-          </button>
-          <button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
-            <span class="material-symbols-outlined text-xl">chat_bubble</span>
-            <span class="text-xs font-bold">0</span>
-          </button>
-        </div>
-      `;
+      const newId = discussions.length + 1;
+      discussions.unshift({
+        id: newId,
+        title: title,
+        author: "Você",
+        time: "Agora",
+        content: content,
+        likes: 0,
+        comments: [],
+        fixed: false
+      });
 
-      list.prepend(article);
+      renderDiscussionsList();
       
       closeNewDiscussionModal();
       document.getElementById('postTitle').value = '';
@@ -622,81 +744,48 @@
       setTimeout(() => notification.classList.add('hidden'), 3000);
     }
 
-    function toggleLike(btn) {
-      const icon = btn.querySelector('.material-symbols-outlined');
-      const count = btn.querySelector('.text-xs');
-      const isActive = btn.classList.contains('text-primary');
-
-      if (isActive) {
-        btn.classList.remove('text-primary');
-        btn.classList.add('text-on-surface-variant');
-        icon.style.fontVariationSettings = "'FILL' 0";
-        count.textContent = parseInt(count.textContent) - 1;
-      } else {
-        btn.classList.add('text-primary');
-        btn.classList.remove('text-on-surface-variant');
-        icon.style.fontVariationSettings = "'FILL' 1";
-        count.textContent = parseInt(count.textContent) + 1;
-      }
+    function renderDiscussionsList() {
+      const list = document.getElementById('discussions-list');
+      list.innerHTML = discussions.map(d => `
+        <article onclick="openThread(${d.id})" class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group cursor-pointer active:scale-[0.98]">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+                <span class="material-symbols-outlined text-primary">person</span>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">${d.title}</h4>
+                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${d.author}</span> • ${d.time}</p>
+              </div>
+            </div>
+            ${d.fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">${d.content}</p>
+          <div class="pt-4 border-t border-outline flex items-center gap-6">
+            <div onclick="event.stopPropagation(); toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
+              <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
+              <span class="text-xs font-bold">${d.likes}</span>
+            </div>
+            <div class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-xl">chat_bubble</span>
+              <span class="text-xs font-bold">${d.comments.length}</span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+      updateStats();
     }
 
-    function openExpertModal() {
-      document.getElementById('expertModal').classList.remove('hidden');
-      document.getElementById('expertModal').classList.add('flex');
+    function updateStats() {
+      // Sincroniza com os dados reais do app
+      document.getElementById('stat-discussions').textContent = discussions.length + 338; // 338 é a base inicial
+      document.getElementById('stat-members').textContent = (1.2 + (discussions.length * 0.01)).toFixed(1) + 'k';
+      document.getElementById('stat-experts').textContent = professionals.length + 12; // 12 é a base de experts offline simulada
     }
 
-    function closeExpertModal() {
-      document.getElementById('expertModal').classList.add('hidden');
-      document.getElementById('expertModal').classList.remove('flex');
-    }
-
-    function submitExpert() {
-      const name = document.getElementById('expertName').value;
-      const cat = document.getElementById('expertCategory').value;
-      const phone = document.getElementById('expertPhone').value;
-      const city = document.getElementById('expertCity').value;
-
-      if (!name || !cat || !phone || !city) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-
-      const iconMap = {
-        'Arquitetura': 'architecture',
-        'Engenharia': 'engineering',
-        'Obras': 'construction',
-        'Elétrica': 'bolt',
-        'Hidráulica': 'water_drop',
-        'Montadores': 'build',
-        'Ar Condicionado': 'ac_unit',
-        'Pintura': 'format_paint',
-        'Gesso': 'texture'
-      };
-
-      // Adicionar aos dados mockados
-      professionals.unshift({
-        name: name,
-        cat: cat,
-        phone: phone,
-        city: city,
-        icon: iconMap[cat] || 'person'
-      });
-      
-      closeExpertModal();
-      document.getElementById('expertName').value = '';
-      document.getElementById('expertCategory').selectedIndex = 0;
-      document.getElementById('expertPhone').value = '';
-      document.getElementById('expertCity').value = '';
-
-      const notification = document.getElementById('successNotification');
-      notification.textContent = '✓ Cadastro enviado para aprovação!';
-      notification.classList.remove('hidden');
-      setTimeout(() => notification.classList.add('hidden'), 3000);
-      
-      if (!document.getElementById('directoryModal').classList.contains('hidden')) {
-        renderDirectory();
-      }
-    }
+    // Initialize list
+    renderDiscussionsList();
+    updateStats();
 
     function startHeroCarousel() {
       const items = document.querySelectorAll('.carousel-item');

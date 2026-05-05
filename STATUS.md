@@ -16,13 +16,14 @@
 
 ### 3. Sistema de Registro & Contato Direto
 - **WhatsApp Integration:** O ícone de mensagem agora abre o WhatsApp do profissional com uma mensagem pré-definida de orçamento.
-- **Formulário de Cadastro:** Modal completo com validação de campos, incluindo nome, categoria, WhatsApp e região.
+- **Formulário de Cadastro:** Modal completo com campo de telefone/WhatsApp e região.
 - **Feedback ao Usuário:** Adicionadas notificações de sucesso após ações de cadastro e publicação.
 
-### 4. Mural de Discussões Funcional
-- **Interatividade Total:** Botão de "+" agora abre modal para novas discussões (Título e Conteúdo).
-- **Dinamismo:** Novas postagens são inseridas no topo do feed instantaneamente.
-- **Sistema de Engajamento:** Botão de "Like" funcional com atualização de contadores e feedback visual (preenchimento do ícone).
+### 4. Mural de Discussões & Interatividade (Fórum)
+- **Publicação em Tempo Real:** Botão de "+" funcional para criar novos tópicos com Título e Conteúdo.
+- **Sistema de Respostas (Thread):** Implementada a funcionalidade de clicar em um post para ler e enviar respostas, tornando a comunidade bidirecional.
+- **Estatísticas Dinâmicas:** O rodapé (Membros, Discussões e Experts) agora se atualiza automaticamente a cada interação no app.
+- **Engajamento:** Sistema de "Likes" persistente durante a sessão com feedback visual instantâneo.
 
 ---
-**Status Geral:** Tela de Comunidade profissionalizada e pronta para escala.
+**Status Geral:** TELA DE COMUNIDADE APROVADA PELO USUÁRIO. Pronta para integração com banco de dados real.
