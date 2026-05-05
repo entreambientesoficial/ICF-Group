@@ -83,8 +83,8 @@
 
   <!-- Header -->
   <section class="mb-stack-lg">
-    <h2 class="text-3xl font-bold text-white mb-2">Calculadora de Materiais Iforms</h2>
-    <p class="text-secondary opacity-80">Dimensionamento técnico preciso para sua obra em ICF.</p>
+    <h2 class="text-3xl font-bold text-white mb-2">Ferramentas Técnicas</h2>
+    <p class="text-secondary opacity-80">Calculadora e Checklist para execução em campo.</p>
   </section>
 
   <!-- Calculadora Card -->
@@ -143,7 +143,7 @@
   </div>
 
   <!-- Resultados -->
-  <div id="results" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+  <div id="results" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden mb-12">
     <div class="bg-surface-variant/50 p-5 rounded-2xl border border-white/5 result-card">
       <p class="text-secondary text-sm uppercase tracking-wide mb-1">Quantidade de formas</p>
       <div class="flex items-baseline gap-2">
@@ -177,6 +177,38 @@
     </div>
   </div>
 
+  <!-- Checklist Anti-Erro (Movido da Tela de Aula) -->
+  <section class="mb-12">
+    <div class="bg-surface p-6 rounded-2xl border border-white/5 shadow-xl">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">fact_check</span>
+        </div>
+        <h3 class="text-xl font-bold text-white">Checklist de Execução</h3>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-3" id="toolChecklist">
+        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
+          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
+          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Prumo e Alinhamento</span>
+        </label>
+        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
+          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
+          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Nivelamento da Base</span>
+        </label>
+        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
+          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
+          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Travamento Superior</span>
+        </label>
+        <label class="flex items-center gap-4 p-4 bg-surface-variant/40 border border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-all group">
+          <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-background text-primary focus:ring-primary/20"/>
+          <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Esquadro das Cantoneiras</span>
+        </label>
+      </div>
+      <div id="toolCheckStatus" class="mt-4 text-center text-sm font-medium text-primary hidden"></div>
+    </div>
+  </section>
+
   <!-- Footer Links -->
   <div class="mt-12 pt-8 border-t border-white/10">
     <div class="flex flex-col gap-4 items-center">
@@ -200,8 +232,8 @@
     <span class="text-[10px] font-medium">Início</span>
   </a>
   <a href="./calculadora.html" class="flex flex-col items-center justify-center text-primary px-3 py-1 bg-white/5 rounded-xl transition-all" aria-current="page">
-    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">calculate</span>
-    <span class="text-[10px] font-medium">Cálculo</span>
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">construction</span>
+    <span class="text-[10px] font-medium">Ferramentas</span>
   </a>
   <a href="#" class="flex flex-col items-center justify-center text-white/50 px-3 py-1 hover:text-primary transition-all">
     <span class="material-symbols-outlined">menu_book</span>
@@ -274,6 +306,38 @@
   document.getElementById('areaInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') calculate();
   });
+
+  // Checklist Logic
+  const toolCheckboxes = document.querySelectorAll('#toolChecklist input');
+  const toolStatusEl = document.getElementById('toolCheckStatus');
+  const TOOL_CHECKLIST_KEY = 'iforms_global_checklist';
+
+  const toolSaved = JSON.parse(localStorage.getItem(TOOL_CHECKLIST_KEY) || '[]');
+  
+  toolCheckboxes.forEach((cb, i) => {
+    cb.checked = toolSaved[i] || false;
+    cb.addEventListener('change', () => {
+      const states = Array.from(toolCheckboxes).map(c => c.checked);
+      localStorage.setItem(TOOL_CHECKLIST_KEY, JSON.stringify(states));
+      updateToolStatus(states);
+    });
+  });
+
+  function updateToolStatus(states) {
+    const done = states.filter(Boolean).length;
+    if (done === toolCheckboxes.length) {
+      toolStatusEl.textContent = '✓ Obra conferida! Pronto para concretagem.';
+      toolStatusEl.classList.remove('hidden');
+    } else if (done > 0) {
+      toolStatusEl.textContent = `${done} de ${toolCheckboxes.length} conferidos`;
+      toolStatusEl.classList.remove('hidden');
+    } else {
+      toolStatusEl.classList.add('hidden');
+    }
+  }
+
+  // Init status
+  updateToolStatus(toolSaved);
 </script>
 
 <script src="./assets/js/pwa.js"></script>

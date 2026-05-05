@@ -67,6 +67,12 @@
 
     /* Video play overlay */
     .video-overlay { background: radial-gradient(ellipse at center, rgba(0,194,160,0.1) 0%, rgba(2,8,23,0.6) 70%); }
+    /* Flashcard 3D */
+    .perspective-1000 { perspective: 1000px; }
+    .preserve-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    .flipped { transform: rotateY(180deg); }
   </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased">
@@ -132,33 +138,88 @@
         </div>
       </div>
 
-      <!-- Checklist Anti-Erro -->
+      <!-- Recursos da Aula (Movido da Lateral) -->
       <div class="bg-surface p-gutter rounded-xl border border-outline/30 shadow-xl">
         <div class="flex items-center gap-3 mb-stack-md">
-          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary">fact_check</span>
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-primary">folder_open</span>
           </div>
-          <h3 class="font-h3 text-h3 text-on-surface">Checklist Anti-Erro</h3>
+          <h3 class="font-h3 text-h3 text-on-surface">Materiais de Apoio</h3>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="checklist">
-          <label class="flex items-center gap-3 p-4 bg-surface-container-low border border-outline/20 rounded-lg cursor-pointer hover:border-primary/50 transition-all group">
-            <input type="checkbox" class="w-5 h-5 rounded"/>
-            <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Prumo</span>
-          </label>
-          <label class="flex items-center gap-3 p-4 bg-surface-container-low border border-outline/20 rounded-lg cursor-pointer hover:border-primary/50 transition-all group">
-            <input type="checkbox" class="w-5 h-5 rounded"/>
-            <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Nível</span>
-          </label>
-          <label class="flex items-center gap-3 p-4 bg-surface-container-low border border-outline/20 rounded-lg cursor-pointer hover:border-primary/50 transition-all group">
-            <input type="checkbox" class="w-5 h-5 rounded"/>
-            <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Alinhamento</span>
-          </label>
-          <label class="flex items-center gap-3 p-4 bg-surface-container-low border border-outline/20 rounded-lg cursor-pointer hover:border-primary/50 transition-all group">
-            <input type="checkbox" class="w-5 h-5 rounded"/>
-            <span class="text-on-surface font-medium group-hover:text-primary transition-colors">Esquadro</span>
-          </label>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3" id="resourceList">
+          <!-- Dinamicamente preenchido -->
+        </ul>
+      </div>
+
+      <!-- Quiz Interativo (Flashcards) -->
+      <div id="quizSection" class="bg-surface p-gutter rounded-xl border border-outline/30 shadow-xl overflow-hidden min-h-[320px] flex flex-col">
+        <div id="quizIntro">
+          <div class="flex items-center gap-3 mb-stack-md">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-primary">quiz</span>
+            </div>
+            <h3 class="font-h3 text-h3 text-on-surface">Reforce o que Aprendeu</h3>
+          </div>
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex-grow">
+              <p class="text-on-surface-variant text-sm mb-4 leading-relaxed">
+                Teste seus conhecimentos desta aula com flashcards interativos e garanta sua primeira certificação.
+              </p>
+              <div class="flex items-center gap-2 text-primary font-bold">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">menu_book</span>
+                <span class="text-caption">12 flashcards técnicos · Meta: 70%</span>
+              </div>
+            </div>
+            <button onclick="startFlashcards()" class="shrink-0 px-8 py-4 bg-primary text-on-primary rounded-xl font-bold hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+              <span class="material-symbols-outlined">play_arrow</span>
+              Iniciar Flashcards
+            </button>
+          </div>
         </div>
-        <p id="checklistStatus" class="mt-3 text-caption text-on-surface-variant hidden text-center"></p>
+
+        <div id="quizGame" class="hidden flex-grow flex flex-col">
+          <div class="flex items-center justify-between mb-6">
+            <span id="quizProgress" class="text-[10px] font-black uppercase tracking-widest text-primary">Card 1 de 12</span>
+            <div class="flex gap-1" id="quizDots"></div>
+          </div>
+          
+          <!-- Flashcard 3D -->
+          <div class="relative perspective-1000 h-48 w-full group cursor-pointer" onclick="flipCard()">
+            <div id="flashcard" class="relative w-full h-full transition-transform duration-500 preserve-3d">
+              <!-- Front -->
+              <div class="absolute inset-0 backface-hidden bg-surface-container-low border border-outline/30 rounded-2xl p-6 flex items-center justify-center text-center shadow-inner">
+                <p id="cardQuestion" class="text-lg font-bold text-on-surface leading-tight"></p>
+                <div class="absolute bottom-4 right-4 text-[10px] text-on-surface-variant/40 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">touch_app</span> Tocar para ver resposta
+                </div>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 backface-hidden bg-surface-container-high border border-primary/30 rounded-2xl p-6 flex items-center justify-center text-center rotate-y-180 shadow-[0_0_30px_rgba(0,194,160,0.1)]">
+                <p id="cardAnswer" class="text-lg font-medium text-primary leading-tight"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div id="quizControls" class="mt-8 grid grid-cols-2 gap-4 hidden">
+            <button onclick="submitAnswer(false)" class="py-4 bg-surface-variant border border-outline/30 text-on-surface rounded-xl font-bold hover:bg-red-500/10 hover:border-red-500/50 transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-red-500">close</span> Errei
+            </button>
+            <button onclick="submitAnswer(true)" class="py-4 bg-primary/10 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined">check</span> Acertei
+            </button>
+          </div>
+        </div>
+
+        <div id="quizResult" class="hidden flex-grow flex flex-col items-center justify-center text-center py-4">
+          <div id="resultIcon" class="w-20 h-20 rounded-full flex items-center justify-center mb-4"></div>
+          <h3 id="resultTitle" class="text-2xl font-bold text-on-surface mb-2"></h3>
+          <p id="resultText" class="text-on-surface-variant text-sm mb-6 max-w-xs mx-auto"></p>
+          <div class="flex gap-4 w-full max-w-xs">
+            <button onclick="resetQuiz()" class="flex-1 py-4 border border-outline rounded-xl font-bold text-sm">Tentar de Novo</button>
+            <button id="btnFinishQuiz" onclick="finishQuiz()" class="flex-1 py-4 bg-primary text-on-primary rounded-xl font-bold text-sm hidden">Concluir</button>
+          </div>
+        </div>
       </div>
 
       <!-- Anotações -->
@@ -183,50 +244,7 @@
     <!-- Right: Sidebar -->
     <aside class="space-y-stack-md">
 
-      <!-- Recursos -->
-      <div class="bg-surface-container-low p-gutter rounded-xl border border-outline/20">
-        <h3 class="font-bold text-on-surface mb-stack-md flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">folder_open</span>
-          Recursos da Aula
-        </h3>
-        <ul class="space-y-3">
-          <li class="group flex items-center justify-between p-4 bg-surface border border-outline/30 rounded-lg hover:border-primary transition-all cursor-pointer">
-            <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-primary">picture_as_pdf</span>
-              <span class="text-label-sm text-on-surface font-medium">EBOOK 1 - Aula 1 Intensivão ICF</span>
-            </div>
-            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">download</span>
-          </li>
-          <li class="group flex items-center justify-between p-4 bg-surface border border-outline/30 rounded-lg hover:border-primary transition-all cursor-pointer">
-            <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-primary">assignment</span>
-              <span class="text-label-sm text-on-surface font-medium">Questionário de Fixação</span>
-            </div>
-            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">open_in_new</span>
-          </li>
-        </ul>
-      </div>
 
-      <!-- Reforce o que Aprendeu -->
-      <div class="bg-surface p-gutter rounded-xl border border-outline/30 shadow-xl">
-        <div class="flex items-center gap-3 mb-stack-md">
-          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-primary">quiz</span>
-          </div>
-          <h4 class="font-h3 text-h3 text-on-surface">Reforce o que Aprendeu</h4>
-        </div>
-        <p class="text-caption text-on-surface-variant mb-stack-md leading-relaxed">
-          Teste seus conhecimentos desta aula com cards de fixação interativos.
-        </p>
-        <div class="flex items-center gap-2 mb-stack-md">
-          <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1;">menu_book</span>
-          <span class="text-caption text-on-surface-variant">12 flashcards · ~5 min</span>
-        </div>
-        <button class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-          <span class="material-symbols-outlined font-bold">quiz</span>
-          Iniciar Quiz
-        </button>
-      </div>
 
       <!-- Trilha do Intensivão (Playlist) -->
       <div class="space-y-4">
@@ -243,34 +261,17 @@
       <div class="bg-surface p-gutter rounded-xl border border-outline/30 shadow-sm">
         <div class="flex items-center justify-between mb-3">
           <span class="text-caption font-bold text-on-surface uppercase tracking-wider">Progresso no Módulo</span>
-          <span class="text-caption font-bold text-primary">25%</span>
+          <span id="moduleProgressPercent" class="text-caption font-bold text-primary">0%</span>
         </div>
         <div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
-          <div class="h-full bg-primary w-1/4 rounded-full shadow-[0_0_8px_#00C2A0]"></div>
+          <div id="moduleProgressBar" class="h-full bg-primary w-0 rounded-full shadow-[0_0_8px_#00C2A0] transition-all duration-1000"></div>
         </div>
-        <p class="mt-4 text-caption text-on-surface-variant italic">
+        <p id="moduleProgressQuote" class="mt-4 text-caption text-on-surface-variant italic">
           "A excelência não é um ato, mas um hábito." Continue focado.
         </p>
       </div>
 
-      <!-- Quick Nav -->
-      <div class="bg-surface p-gutter rounded-xl border border-outline/30">
-        <h3 class="font-bold text-on-surface mb-stack-md text-sm">Navegar para</h3>
-        <div class="space-y-2">
-          <a href="./dashboard.html" class="flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
-            <span class="material-symbols-outlined text-sm">home</span>
-            <span class="text-label-sm">Dashboard</span>
-          </a>
-          <a href="./calculadora.html" class="flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
-            <span class="material-symbols-outlined text-sm">calculate</span>
-            <span class="text-label-sm">Calculadora</span>
-          </a>
-          <a href="./comunidade.html" class="flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
-            <span class="material-symbols-outlined text-sm">forum</span>
-            <span class="text-label-sm">Comunidade</span>
-          </a>
-        </div>
-      </div>
+
     </aside>
   </div>
 </main>
@@ -280,6 +281,10 @@
   <a href="./dashboard.html" class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined">home</span>
     <span class="text-[10px] font-medium">Início</span>
+  </a>
+  <a href="./calculadora.html" class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all">
+    <span class="material-symbols-outlined">construction</span>
+    <span class="text-[10px] font-medium">Ferramentas</span>
   </a>
   <button class="flex flex-col items-center justify-center text-primary font-bold">
     <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">school</span>
@@ -319,71 +324,48 @@
   const CHECKLIST_KEY = 'iforms_aula1_checklist';
   const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
 
-  checkboxes.forEach((cb, i) => {
-    cb.checked = saved[i] || false;
-    cb.addEventListener('change', () => {
-      const states = [...checkboxes].map(c => c.checked);
-      localStorage.setItem(CHECKLIST_KEY, JSON.stringify(states));
-      const done = states.filter(Boolean).length;
-      if (done === checkboxes.length) {
-        statusEl.textContent = '✓ Todos os itens verificados!';
-        statusEl.className = 'mt-3 text-caption text-primary text-center font-bold';
-        statusEl.classList.remove('hidden');
-      } else if (done > 0) {
-        statusEl.textContent = `${done} de ${checkboxes.length} itens verificados`;
-        statusEl.className = 'mt-3 text-caption text-on-surface-variant text-center';
-        statusEl.classList.remove('hidden');
-      } else {
-        statusEl.classList.add('hidden');
-      }
-    });
-  });
-
-  // Botão concluir
-  // Handle Completion
+  // Handle Completion Logic
   const urlParams = new URLSearchParams(window.location.search);
   const lessonId = urlParams.get('id') || "1";
   const btnConcluir = document.getElementById('btnConcluir');
+  const successModal = document.getElementById('successModal');
+  const actionContainer = btnConcluir ? btnConcluir.parentElement : null;
 
-  // Check if already completed
+  // 1. Initial Check on Load
   if (localStorage.getItem(`lesson_${lessonId}_completed`) === 'true') {
-    btnConcluir.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1;">check_circle</span> Aula Concluída!';
-    btnConcluir.classList.add('opacity-75', 'cursor-default');
-    btnConcluir.classList.replace('bg-primary', 'bg-surface-container-high');
-    btnConcluir.disabled = true;
+    if (actionContainer) actionContainer.style.display = 'none';
   }
 
-    // Handle Completion
-    const btnConcluir = document.getElementById('btnConcluir');
-    const successModal = document.getElementById('successModal');
-
-    // Check if already completed
-    if (localStorage.getItem(`lesson_${lessonId}_completed`) === 'true') {
-      btnConcluir.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1;">check_circle</span> Aula Concluída!';
-      btnConcluir.classList.add('opacity-75', 'cursor-default');
-      btnConcluir.classList.replace('bg-primary', 'bg-surface-container-high');
-      btnConcluir.disabled = true;
-    }
-
+  // 2. Click Event
+  if (btnConcluir) {
     btnConcluir.addEventListener('click', function() {
       localStorage.setItem(`lesson_${lessonId}_completed`, 'true');
-      this.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1;">check_circle</span> Aula Concluída!';
-      this.classList.add('opacity-75', 'cursor-default');
-      this.classList.replace('bg-primary', 'bg-surface-container-high');
-      this.disabled = true;
+      
+      // Update UI immediately
+      updateModuleProgress();
+      loadLesson();
+      
+      // Hide button container
+      if (actionContainer) actionContainer.style.display = 'none';
       
       // Show Premium Modal
-      successModal.classList.remove('hidden');
-      successModal.classList.add('flex');
+      if (successModal) {
+        successModal.classList.remove('hidden');
+        successModal.classList.add('flex');
+      }
     });
+  }
 
-    // Close modal function
-    window.closeSuccessModal = () => {
+  // Close modal function
+  window.closeSuccessModal = () => {
+    const successModal = document.getElementById('successModal');
+    if (successModal) {
       successModal.classList.add('hidden');
       successModal.classList.remove('flex');
-      window.location.href = './dashboard.html';
-    };
-  </script>
+    }
+    window.location.href = './dashboard.html';
+  };
+</script>
 
   <!-- Premium Success Modal -->
   <div id="successModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-md animate-in fade-in duration-300">
@@ -413,8 +395,7 @@
         description: "Fundamentos da mentalidade ICF e análise do mercado bilionário da construção.",
         released: true,
         resources: [
-          { name: "EBOOK 1 - Aula 1 Intensivão ICF", type: "pdf" },
-          { name: "Questionário de Fixação", type: "quiz" }
+          { name: "EBOOK 1 - Aula 1 Intensivão ICF", type: "pdf", url: "https://drive.google.com/file/d/1UkwvL2sbqOJ-nxy1NYNFb05UkIzHXKPP/view" }
         ]
       },
       "2": {
@@ -458,6 +439,7 @@
       }
     };
 
+    // Load dynamic content
     // Load dynamic content
     function loadLesson() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -511,6 +493,29 @@
           playButton.onclick = null;
         }
 
+        // Render Resources
+        const resourceList = document.getElementById('resourceList');
+        if (resourceList && lesson.resources) {
+          resourceList.innerHTML = '';
+          lesson.resources.forEach(res => {
+            const li = document.createElement('li');
+            li.className = "group flex items-center justify-between p-4 bg-surface-container-low border border-outline/30 rounded-xl hover:border-primary transition-all cursor-pointer";
+            li.innerHTML = `
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">${res.type === 'pdf' ? 'picture_as_pdf' : 'quiz'}</span>
+                <span class="text-sm text-on-surface font-medium">${res.name}</span>
+              </div>
+              <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                ${res.type === 'pdf' ? 'download' : 'open_in_new'}
+              </span>
+            `;
+            li.onclick = () => {
+              if (res.url && res.url !== '#') window.open(res.url, '_blank');
+            };
+            resourceList.appendChild(li);
+          });
+        }
+
         // Render Playlist
         const playlistContainer = document.getElementById('playlist');
         playlistContainer.innerHTML = ''; 
@@ -521,7 +526,7 @@
           const isActuallyReleased = l.released;
 
           const item = document.createElement('div');
-          item.className = `p-3 rounded-xl border transition-all flex items-center gap-3 ${isActive ? 'bg-primary/5 border-primary shadow-[0_0_15px_rgba(0,194,160,0.1)]' : 'bg-surface border-outline/20 hover:border-outline'} ${!isActuallyReleased && !isActive ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`;
+          item.className = `p-3 rounded-xl border transition-all flex items-center gap-3 ${isActive ? 'bg-primary/5 border-primary shadow-[0_0_15px_rgba(0,194,160,0.1) ]' : 'bg-surface border-outline/20 hover:border-outline'} ${!isActuallyReleased && !isActive ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`;
           
           item.innerHTML = `
             <div class="relative w-24 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 flex items-center justify-center border border-outline/30 bg-cover bg-center" style="background-image: url('${l.thumbnail}'); ${!isActuallyReleased ? 'filter: grayscale(1);' : ''}">
@@ -531,9 +536,16 @@
             <div class="flex-grow">
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-[9px] font-black uppercase tracking-widest text-primary">Aula ${id}</span>
-                ${isActive ? '<span class="text-[8px] px-1.5 py-0.5 bg-primary text-on-primary rounded font-bold uppercase tracking-tighter">Assistindo</span>' : ''}
+                ${isActive ? 
+                  (localStorage.getItem(`lesson_${id}_completed`) === 'true' ? 
+                    '<span class="text-[8px] px-1.5 py-0.5 bg-primary/20 text-primary border border-primary/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span>Assistida</span>' : 
+                    '<span class="text-[8px] px-1.5 py-0.5 bg-primary text-on-primary rounded font-bold uppercase tracking-tighter">Assistindo</span>') 
+                  : ''}
+                ${!isActive && localStorage.getItem(`lesson_${id}_completed`) === 'true' ? '<span class="text-[8px] px-1.5 py-0.5 bg-[#00C2A0]/20 text-[#00C2A0] border border-[#00C2A0]/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">check</span>Concluída</span>' : ''}
               </div>
-              <h5 class="text-xs font-bold text-on-surface leading-tight">${l.title.split(': ')[1]}</h5>
+              <h5 class="text-xs font-bold text-on-surface leading-tight">
+                ${l.title.includes(': ') ? l.title.split(': ')[1] : l.title}
+              </h5>
               <p class="text-[10px] text-on-surface-variant mt-1">${!isActuallyReleased ? 'Em breve' : l.duration}</p>
             </div>
           `;
@@ -546,7 +558,162 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', loadLesson);
+    function updateModuleProgress() {
+      const totalLessons = 5;
+      let completedCount = 0;
+      for (let i = 1; i <= totalLessons; i++) {
+        if (localStorage.getItem(`lesson_${i}_completed`) === 'true') completedCount++;
+      }
+      
+      const percent = (completedCount / totalLessons) * 100;
+      const bar = document.getElementById('moduleProgressBar');
+      const text = document.getElementById('moduleProgressPercent');
+      
+      if (bar && text) {
+        bar.style.width = `${percent}%`;
+        text.textContent = `${percent.toFixed(0)}%`;
+      }
+
+      // Update quote based on progress
+      const quote = document.getElementById('moduleProgressQuote');
+      if (quote) {
+        if (percent === 0) quote.textContent = '"O primeiro passo é o mais importante." Comece agora!';
+        else if (percent < 50) quote.textContent = '"A consistência é a chave do sucesso." Continue firme!';
+        else if (percent < 100) quote.textContent = '"Você está quase lá!" Mantenha o foco.';
+        else quote.textContent = '🎉 Módulo concluído! Você é um Expert Iforms.';
+      }
+    }
+
+    // --- QUIZ SYSTEM (SCALABLE) ---
+    const lessonQuizzes = {
+      "1": [
+        { q: "Qual o déficit habitacional no Brasil hoje?", a: "Quase 7 milhões de casas." },
+        { q: "O que é a 'Âncora Invisível'?", a: "O modelo convencional que gera dependência de equipes grandes e alto desperdício." },
+        { q: "Economia estimada em energia?", a: "Entre R$ 20.000 e R$ 30.000 ao longo dos anos." },
+        { q: "Por que a Caixa financia o Iforms?", a: "Devido ao DATEC e validação pelo IPT." },
+        { q: "Quem inventou o ICF em 1967?", a: "Werner Gregory." },
+        { q: "Diferença da forma de 12cm e 18cm?", a: "12cm (veda) tem 6cm de concreto; 18cm (estrutural) tem 10cm de concreto." },
+        { q: "Área de cobertura de 1 forma?", a: "0,5 m² (1,25m x 0,40m)." },
+        { q: "Por que é 'anti-erro'?", a: "O encaixe (bolinha com bolinha) impede a montagem em posição errada." },
+        { q: "Quais os 4 conceitos garantidos no travamento?", a: "Prumo, Nível, Alinhamento e Esquadro." },
+        { q: "De que é feita a estrutura real?", a: "Concreto armado puro; o isopor é apenas fôrma e isolante." },
+        { q: "Nome do reboco 4 em 1 do Grupo ICF?", a: "ICFlex." },
+        { q: "Velocidade de montagem por minuto?", a: "Até 4 m² em menos de 1 minuto." }
+      ],
+      "2": [], // Aguardando dados da Aula 2
+      "3": [], // Aguardando dados da Aula 3
+      "4": [], // Aguardando dados da Aula 4
+      "5": []  // Aguardando dados da Aula 5
+    };
+
+    let currentQuiz = [];
+    let currentCard = 0;
+    let score = 0;
+    let isFlipped = false;
+
+    window.startFlashcards = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const lessonId = urlParams.get('id') || "1";
+      currentQuiz = lessonQuizzes[lessonId] || [];
+
+      if (currentQuiz.length === 0) {
+        alert("Flashcards para esta aula estarão disponíveis em breve!");
+        return;
+      }
+
+      document.getElementById('quizIntro').classList.add('hidden');
+      document.getElementById('quizGame').classList.remove('hidden');
+      currentCard = 0;
+      score = 0;
+      showCard();
+    };
+
+    function showCard() {
+      isFlipped = false;
+      document.getElementById('flashcard').classList.remove('flipped');
+      document.getElementById('quizControls').classList.add('hidden');
+      document.getElementById('quizProgress').textContent = `Card ${currentCard + 1} de ${currentQuiz.length}`;
+      document.getElementById('cardQuestion').textContent = currentQuiz[currentCard].q;
+      document.getElementById('cardAnswer').textContent = currentQuiz[currentCard].a;
+      
+      const dots = document.getElementById('quizDots');
+      if (dots) {
+        dots.innerHTML = '';
+        currentQuiz.forEach((_, i) => {
+          const dot = document.createElement('div');
+          dot.className = `w-1.5 h-1.5 rounded-full ${i === currentCard ? 'bg-primary' : i < currentCard ? 'bg-primary/40' : 'bg-outline/30'}`;
+          dots.appendChild(dot);
+        });
+      }
+    }
+
+    window.flipCard = () => {
+      if (isFlipped) return;
+      isFlipped = true;
+      document.getElementById('flashcard').classList.add('flipped');
+      document.getElementById('quizControls').classList.remove('hidden');
+    };
+
+    window.submitAnswer = (correct) => {
+      if (correct) score++;
+      if (currentCard < currentQuiz.length - 1) {
+        currentCard++;
+        showCard();
+      } else {
+        showResult();
+      }
+    };
+
+    function showResult() {
+      document.getElementById('quizGame').classList.add('hidden');
+      document.getElementById('quizResult').classList.remove('hidden');
+      
+      const percent = (score / currentQuiz.length) * 100;
+      const resultIcon = document.getElementById('resultIcon');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultText = document.getElementById('resultText');
+      const btnFinish = document.getElementById('btnFinishQuiz');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const lessonId = urlParams.get('id') || "1";
+
+      if (percent >= 70) {
+        resultIcon.className = "w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-4 text-primary";
+        resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">workspace_premium</span>';
+        resultTitle.textContent = "Excelente Aproveitamento!";
+        
+        let level = "Iniciante";
+        if (lessonId === "3") level = "Intermediário";
+        if (lessonId === "5") level = "Expert ICF";
+        
+        resultText.textContent = `Você acertou ${score} de ${currentQuiz.length} flashcards (${percent.toFixed(0)}%). Nível: ${level} alcançado!`;
+        btnFinish.classList.remove('hidden');
+        localStorage.setItem('cert_level', level);
+        localStorage.setItem(`lesson_${lessonId}_quiz_passed`, 'true');
+      } else {
+        resultIcon.className = "w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mb-4 text-red-500";
+        resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">error_outline</span>';
+        resultTitle.textContent = "Quase lá!";
+        resultText.textContent = `Você acertou ${score} de ${currentQuiz.length} flashcards. Precisa de 70% para validar este módulo.`;
+        btnFinish.classList.add('hidden');
+      }
+    }
+
+    window.resetQuiz = () => {
+      currentCard = 0;
+      score = 0;
+      document.getElementById('quizResult').classList.add('hidden');
+      document.getElementById('quizIntro').classList.remove('hidden');
+    };
+
+    window.finishQuiz = () => {
+      window.location.href = './dashboard.html';
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadLesson();
+      updateModuleProgress();
+    });
   </script>
 </body>
 </html>

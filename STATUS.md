@@ -318,10 +318,19 @@ npm run format:check # Verifica formatação sem alterar arquivos
 - **Otimização de Títulos:** Ajuste de tamanhos de fonte (3xl/5xl) e encurtamento de textos para evitar quebras de linha em telas mobile, mantendo a imponência visual.
 - **Segurança de Código:** Implementação de IDs específicos (`mainLessonTitle`) para evitar que scripts dinâmicos sobrescrevam títulos de outros componentes como o Checklist.
 
-### 4. Próximos Passos (Atualizado)
+### 4. Refinamento Pedagógico e Gamificação (Aula 2.0) ✅
+- **Flashcards de Retenção:** Motor de quiz 3D com 12 perguntas técnicas para fixação de conhecimento.
+- **Fluxo de Estudo Otimizado:** Reorganização hierárquica (Vídeo > Materiais > Quiz > Anotações).
+- **Hub de Ferramentas Técnicas:** Migração do Checklist Anti-Erro para a aba "Ferramentas" (antiga Calculadora).
+- **Progresso 100% Dinâmico:** Cálculo automático de 20% por aula em todas as telas.
+- **Sinalização de Status:** Badges de "Assistida" e "Concluída" para navegação guiada.
+
+### 5. Próximos Passos (Atualizado)
 - [x] Lógica de progresso real (localStorage)
-- [x] Integração com links reais do YouTube
-- [x] Sistema de trava sequencial
+- [x] Sistema de Flashcards técnicos
+- [x] Hub de Ferramentas (Calculadora + Checklist)
 - [ ] **Fase 3:** Implementação do Fluxo de Login (`login.html`)
 - [ ] **Fase 3:** Criação da página de Perfil do Aluno (`perfil.html`)
+- [ ] **Fase 3:** Implementação do Quiz nas Aulas 2 a 5 conforme envio dos dados.
 
+---
