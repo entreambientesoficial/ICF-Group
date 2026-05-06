@@ -617,35 +617,51 @@
     }
 
     // ── Lógica da Calculadora ──────────────────────────────────────────
-    window.calcularICF = () => {
+    const SIMULATION_KEY = 'iforms_last_simulation';
+
+    window.calcularICF = (isAuto = false) => {
       const area18 = parseFloat(document.getElementById('inArea18').value) || 0;
       const area12 = parseFloat(document.getElementById('inArea12').value) || 0;
       const altura = parseFloat(document.getElementById('inAltura').value) || 0;
       const cantos = parseFloat(document.getElementById('inCantos').value) || 0;
       const vaos   = parseFloat(document.getElementById('inVaos').value) || 0;
 
-      if (area18 <= 0 && area12 <= 0) {
-        alert("Por favor, insira a área das paredes.");
-        return;
+      if (!isAuto) {
+        if (area18 <= 0 && area12 <= 0) {
+          alert("Por favor, insira a área das paredes.");
+          return;
+        }
+        if (altura <= 0) {
+          alert("Por favor, insira a altura (pé-direito).");
+          return;
+        }
+      } else if (area18 <= 0 && area12 <= 0) {
+        return; // Silent return for auto-load
       }
-      if (altura <= 0) {
-        alert("Por favor, insira a altura (pé-direito).");
-        return;
-      }
+
+      // Salvar para persistência
+      localStorage.setItem(SIMULATION_KEY, JSON.stringify({
+        area18, area12, altura, cantos, vaos
+      }));
 
       const somaAreas   = area18 + area12;
       const formas18    = Math.ceil(area18 * 2);
       const formas12    = Math.ceil(area12 * 2);
       const formasCanto = Math.ceil(((cantos + vaos * 2) * altura) / 0.40);
       
-      const concreto    = ((area18 * 0.048) + (area12 * 0.042)) * 1.05;
+      // Cálculo Técnico de Concreto:
+      // 18cm (Externas): 0.072 m³/m² (Núcleo de 10cm)
+      // 12cm (Internas): 0.042 m³/m² (Núcleo de 6cm)
+      const volBruto    = (area18 * 0.072) + (area12 * 0.042);
+      const concreto    = volBruto * 1.05; // Margem de 5%
+      
       const icflexKg    = somaAreas * 2.8;
       const icflexSacos = Math.ceil(icflexKg / 20);
       const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
       
-      const mLinear     = somaAreas / altura;
-      const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * altura);
-      const aco63       = Math.ceil(Math.ceil(altura / 0.40) * mLinear);
+      const mLinear     = somaAreas / (altura || 1);
+      const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * (altura || 1));
+      const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear);
       const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
       document.getElementById('memArea18').textContent = area18.toFixed(1);
@@ -665,10 +681,18 @@
 
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('memorial').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (!isAuto) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     window.resetForm = () => {
+      localStorage.removeItem(SIMULATION_KEY);
+      // Limpar campos
+      document.getElementById('inArea18').value = '';
+      document.getElementById('inArea12').value = '';
+      document.getElementById('inAltura').value = '';
+      document.getElementById('inCantos').value = '';
+      document.getElementById('inVaos').value = '';
+      
       document.getElementById('memorial').classList.add('hidden');
       document.getElementById('formSection').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -680,9 +704,9 @@
     const protocoloOk     = document.getElementById('protocoloSucesso');
     const CHECKLIST_KEY   = 'iforms_protocolo_checklist';
 
-    const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
+    const savedChecklist = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
     toolCheckboxes.forEach((cb, i) => {
-      cb.checked = saved[i] || false;
+      cb.checked = savedChecklist[i] || false;
       cb.addEventListener('change', () => {
         const states = Array.from(toolCheckboxes).map(c => c.checked);
         localStorage.setItem(CHECKLIST_KEY, JSON.stringify(states));
@@ -710,8 +734,19 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      updateStatus(saved.map(Boolean));
+      updateStatus(savedChecklist.map(Boolean));
       
+      // Carregar última simulação se existir
+      const lastSimulation = JSON.parse(localStorage.getItem(SIMULATION_KEY));
+      if (lastSimulation) {
+        document.getElementById('inArea18').value = lastSimulation.area18 || '';
+        document.getElementById('inArea12').value = lastSimulation.area12 || '';
+        document.getElementById('inAltura').value = lastSimulation.altura || '';
+        document.getElementById('inCantos').value = lastSimulation.cantos || '';
+        document.getElementById('inVaos').value   = lastSimulation.vaos || '';
+        window.calcularICF(true); // Chamada silenciosa
+      }
+
       const user = await getUser();
       if (user) {
         const name = user.user_metadata?.full_name || 'Aluno Iforms';

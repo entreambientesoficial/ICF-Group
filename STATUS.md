@@ -59,18 +59,23 @@ iforms-pwa/
 - **Simplificação**: Removida a seção de anotações para maior foco no vídeo.
 
 ### Calculadora (`calculadora.html`) ✅
-- **Estabilização Crítica**: Resolvido erro de corrupção de script.
-- **Sincronia de Dados**: Inputs e motor de cálculo reconectados.
-- **Memorial Descritivo**: Gerando relatórios técnicos 100% funcionais.
+- **Estabilização Crítica**: Resolvido erro de corrupção de script e sincronização de inputs.
+- **Motor de Engenharia Corrigido**: Implementados coeficientes diferenciados para concreto (0.072 para 18cm e 0.042 para 12cm).
+- **Persistência Local (F5)**: Agora o app lembra os dados da última simulação mesmo após o recarregamento da página.
+- **Memorial Descritivo**: Gerando relatórios técnicos 100% funcionais e precisos.
 
 ---
 
 ## Changelog — Sessão Final 2026-05-06
 
+### Engenharia e Ferramentas
+- **[FIX]** **Cálculo de Concreto**: Ajustada a lógica de preenchimento para refletir os núcleos reais de 10cm e 6cm das formas Iforms.
+- **[FEAT]** **Calculadora com Memória**: Implementado `localStorage` para manter os dados da simulação até que o usuário clique em "Nova Simulação".
+
 ### Integração Supabase (Fase 1 e 2 Concluídas)
 - **[FEAT]** **Social Login**: Implementado login via Google no `index.html`.
 - **[FEAT]** **Progress Persistence**: Sincronização automática de aulas concluídas com a tabela `user_progress`.
-- **[FIX]** **Schema Resilience**: Lógica de progresso adaptada para funcionar mesmo sem a coluna `status` (baseada em registro de presença).
+- **[FIX]** **Schema Resilience**: Lógica de progresso adaptada para funcionar mesmo sem a coluna `status`.
 
 ### UI/UX & Refinamento
 - **[STYLE]** **Botão Concluído**: Novo estilo cinza premium (mais visível e elegante).
@@ -83,6 +88,7 @@ iforms-pwa/
 
 - [x] Integrar Supabase para Autenticação (Google Login)
 - [x] Sincronização de Progresso (Cloud Persistence)
+- [x] Correção Crítica: Motor de Cálculo de Concreto (Coeficientes 0.072 e 0.042)
 - [ ] Criar Painel de Admin para o Mentor (Fase 3 - Gerenciamento de Alunos)
 - [ ] Inserir perguntas e respostas das Aulas 03 a 05 (Aguardando liberação de conteúdo)
 - [ ] Implementar geração de Certificado PDF (Pós-conclusão do curso)

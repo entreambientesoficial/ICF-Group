@@ -1,0 +1,132 @@
+  <script type="module">
+    import { logout, getUser } from './assets/js/supabase.js';
+
+    window.toggleMenu = (show) => {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('menuOverlay');
+      if (show) {
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+          overlay.classList.add('opacity-100');
+          menu.classList.remove('-translate-x-full');
+        }, 10);
+      } else {
+        overlay.classList.remove('opacity-100');
+        menu.classList.add('-translate-x-full');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    window.logout = async () => {
+      if(confirm("Deseja realmente sair da conta? Sua sessão será encerrada com segurança.")) {
+        await logout();
+      }
+    };
+
+    // ── Lógica da Calculadora ──────────────────────────────────────────
+    window.calcularICF = () => {
+      const area18 = parseFloat(document.getElementById('area18').value) || 0;
+      const area12 = parseFloat(document.getElementById('area12').value) || 0;
+      const altura = parseFloat(document.getElementById('altura').value) || 0;
+
+      if (area18 <= 0 && area12 <= 0) {
+        alert("Por favor, insira a área das paredes.");
+        return;
+      }
+
+      const somaAreas   = area18 + area12;
+      const formas18    = Math.ceil(area18 / 0.45);
+      const formas12    = Math.ceil(area12 / 0.45);
+      const formasCanto = Math.ceil((altura / 0.30) * 4); // 4 cantos padrão
+      
+      const concreto    = ((area18 * 0.048) + (area12 * 0.042)) * 1.05;
+      const icflexKg    = somaAreas * 2.8;
+      const icflexSacos = Math.ceil(icflexKg / 20);
+      const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
+      
+      const mLinear     = somaAreas / (altura || 1);
+      const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * (altura || 1));
+      const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear);
+      const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
+
+      document.getElementById('memArea18').textContent = area18.toFixed(1);
+      document.getElementById('memArea12').textContent = area12.toFixed(1);
+      document.getElementById('memAltura').textContent = altura.toFixed(2);
+
+      document.getElementById('resFormas18').textContent    = formas18.toLocaleString('pt-BR');
+      document.getElementById('resFormas12').textContent    = formas12.toLocaleString('pt-BR');
+      document.getElementById('resFormasCanto').textContent = formasCanto.toLocaleString('pt-BR');
+      document.getElementById('resPeso').textContent        = pesoTotal.toFixed(0);
+      document.getElementById('resConcreto').textContent    = concreto.toFixed(3);
+      document.getElementById('resAco8').textContent        = aco8.toLocaleString('pt-BR');
+      document.getElementById('resAco63').textContent       = aco63.toLocaleString('pt-BR');
+      document.getElementById('resICFlex').textContent      = icflexSacos;
+      document.getElementById('icflexKgLabel').textContent  = `${icflexKg.toFixed(1)} kg total · sacos de 20 kg`;
+      document.getElementById('resTela').textContent        = tela;
+
+      document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('memorial').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.resetForm = () => {
+      document.getElementById('memorial').classList.add('hidden');
+      document.getElementById('formSection').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Protocolo de Montagem Anti-Erro ───────────────────────────────
+    const toolCheckboxes  = document.querySelectorAll('#toolChecklist input[type="checkbox"]');
+    const toolStatusEl    = document.getElementById('toolCheckStatus');
+    const protocoloOk     = document.getElementById('protocoloSucesso');
+    const CHECKLIST_KEY   = 'iforms_protocolo_checklist';
+
+    const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
+    toolCheckboxes.forEach((cb, i) => {
+      cb.checked = saved[i] || false;
+      cb.addEventListener('change', () => {
+        const states = Array.from(toolCheckboxes).map(c => c.checked);
+        localStorage.setItem(CHECKLIST_KEY, JSON.stringify(states));
+        updateStatus(states);
+      });
+    });
+
+    function updateStatus(states) {
+      const done  = states.filter(Boolean).length;
+      const total = toolCheckboxes.length;
+      const all   = done === total;
+
+      if (all) {
+        toolStatusEl.textContent = '✓ Concluído';
+        toolStatusEl.classList.remove('hidden');
+        protocoloOk.classList.remove('hidden');
+      } else if (done > 0) {
+        toolStatusEl.textContent = `${done}/${total} itens`;
+        toolStatusEl.classList.remove('hidden');
+        protocoloOk.classList.add('hidden');
+      } else {
+        toolStatusEl.classList.add('hidden');
+        protocoloOk.classList.add('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateStatus(saved.map(Boolean));
+      
+      const user = await getUser();
+      if (user) {
+        const name = user.user_metadata?.full_name || 'Aluno Iforms';
+        const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+        
+        const sideName = document.querySelector('#sideMenu .text-white');
+        if (sideName) sideName.textContent = name;
+        
+        const sideAvatar = document.querySelector('#sideMenu .w-12.h-12');
+        if (sideAvatar) {
+            sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+        }
+      }
+    });
+  </script>
