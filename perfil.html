@@ -86,28 +86,28 @@
           <span class="material-symbols-outlined">workspace_premium</span>
           <span class="text-sm">Meus Certificados</span>
         </a>
-        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <a href="https://wa.me/5511963079436?text=Olá,%20sou%20aluno%20do%20Intensivão%20Iforms%20e%20gostaria%20de%20suporte%20técnico." target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
           <span class="material-symbols-outlined">support_agent</span>
           <span class="text-sm">Suporte Técnico</span>
         </a>
 
         <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] px-4 mb-4 pt-6">Institucional</p>
-        <a href="https://grupoicf.com.br/sobre-nos/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <a href="./sobre.html" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
           <span class="material-symbols-outlined">info</span>
           <span class="text-sm">Sobre o Grupo ICF</span>
         </a>
-        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <a href="https://grupoicf.com.br/iforms/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
           <span class="material-symbols-outlined text-primary">verified_user</span>
           <div class="flex flex-col">
             <span class="text-sm">Sistema Homologado</span>
             <span class="text-[9px] text-primary font-bold">DATEC & IPT</span>
           </div>
         </a>
-        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <a href="https://grupoicf.com.br/termos/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
           <span class="material-symbols-outlined">gavel</span>
           <span class="text-sm">Termos de Uso</span>
         </a>
-        <a href="#" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
+        <a href="https://grupoicf.com.br/politica-de-privacidade/" target="_blank" class="flex items-center gap-4 p-3 rounded-xl text-on-surface-variant hover:bg-white/5 transition-all">
           <span class="material-symbols-outlined">lock</span>
           <span class="text-sm">Política de Privacidade</span>
         </a>
@@ -115,7 +115,7 @@
 
       <!-- Rodapé do Menu -->
       <div class="p-4 border-t border-outline-variant">
-        <button class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
+        <button onclick="logout()" class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
           <span class="material-symbols-outlined">logout</span>
           <span class="text-sm font-bold uppercase tracking-widest">Sair da Conta</span>
         </button>
@@ -137,13 +137,13 @@
             <span class="material-symbols-outlined text-primary text-5xl">person</span>
           </div>
         </div>
-        <button class="absolute bottom-0 right-0 w-8 h-8 bg-primary text-background rounded-full flex items-center justify-center border-4 border-background active:scale-90 transition-transform">
+        <button onclick="editProfile()" class="absolute bottom-0 right-0 w-8 h-8 bg-primary text-background rounded-full flex items-center justify-center border-4 border-background active:scale-90 transition-transform">
           <span class="material-symbols-outlined text-sm">edit</span>
         </button>
       </div>
       
       <div>
-        <h2 class="text-2xl font-bold text-white">Aluno Iforms</h2>
+        <h2 class="text-2xl font-bold text-white">Mestre</h2>
         <p id="profile-level" class="text-xs font-black text-primary uppercase tracking-[0.2em] mt-1">Iniciando Jornada</p>
       </div>
 
@@ -233,7 +233,7 @@
           <span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
         </button>
         
-        <button class="w-full flex items-center p-5 text-red-400 hover:bg-red-400/5 transition-colors">
+        <button onclick="logout()" class="w-full flex items-center p-5 text-red-400 hover:bg-red-400/5 transition-colors">
           <div class="flex items-center gap-4">
             <span class="material-symbols-outlined">logout</span>
             <p class="text-sm font-bold uppercase tracking-widest">Sair da Conta</p>
@@ -286,8 +286,35 @@
       }
     }
 
+    // Função para editar perfil (Simulação)
+    window.editProfile = () => {
+      const newName = prompt("Digite seu nome completo:", localStorage.getItem('user_name') || "Aluno Iforms");
+      if (newName) {
+        localStorage.setItem('user_name', newName);
+        location.reload();
+      }
+    };
+
+    window.logout = () => {
+      if(confirm("Deseja realmente sair da conta? Os dados locais serão mantidos, mas a sessão será encerrada.")) {
+        window.location.href = './index.html';
+      }
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Sincronizar Progresso Real
+      // 1. Carregar Dados do Usuário
+      const name = localStorage.getItem('user_name') || 'Mestre';
+      const photo = localStorage.getItem('user_photo') || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+      
+      // Atualizar Nome e Foto na página
+      document.querySelector('h2.text-2xl').textContent = name;
+      document.querySelector('.w-24.h-24 img, .w-24.h-24 span').outerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+      
+      // Atualizar no Menu Lateral
+      document.querySelector('#sideMenu .text-white').textContent = name;
+      document.querySelector('#sideMenu .w-12.h-12').innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+
+      // 2. Sincronizar Progresso Real
       const totalLessons = 5;
       let completedCount = 0;
       for (let i = 1; i <= totalLessons; i++) {
@@ -296,17 +323,24 @@
       
       document.getElementById('stats-lessons').textContent = `${completedCount}/${totalLessons}`;
 
-      // Sincronizar Nível e Selo
+      // 3. Sincronizar Nível e Selo
       const levelElement = document.getElementById('profile-level');
-      if (completedCount === totalLessons) {
-        levelElement.textContent = 'Expert ICF';
+      const sideLevel = document.querySelector('#sideMenu .text-primary');
+      
+      let currentLevel = 'Iniciando Jornada';
+      if (completedCount >= 5) currentLevel = 'Expert ICF';
+      else if (completedCount >= 3) currentLevel = 'Intermediário';
+      else if (completedCount >= 1) currentLevel = 'Iniciante';
+
+      levelElement.textContent = currentLevel;
+      if(sideLevel) sideLevel.textContent = `Nível ${currentLevel}`;
+
+      if (completedCount >= 5) {
         const badge = document.getElementById('badge-expert');
         if (badge) {
           badge.classList.remove('grayscale', 'opacity-30');
           badge.classList.add('badge-glow', 'border-primary/40', 'bg-primary/5');
         }
-      } else {
-        levelElement.textContent = 'Iniciante';
       }
     });
   </script>

@@ -526,24 +526,26 @@
           const l = lessons[id];
           const isActive = id === lessonId;
           const isActuallyReleased = l.released;
+          const prevLessonQuizPassed = id === "1" || localStorage.getItem(`lesson_${parseInt(id)-1}_quiz_passed`) === 'true';
+          const isLocked = !isActuallyReleased || (!prevLessonQuizPassed && !isActive);
 
           const item = document.createElement('div');
-          item.className = `p-3 rounded-xl border transition-all flex items-center gap-3 ${isActive ? 'bg-primary/5 border-primary shadow-[0_0_15px_rgba(0,194,160,0.1) ]' : 'bg-surface border-outline/20 hover:border-outline'} ${!isActuallyReleased && !isActive ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`;
+          item.className = `p-3 rounded-xl border transition-all flex items-center gap-3 ${isActive ? 'bg-primary/5 border-primary shadow-[0_0_15px_rgba(0,194,160,0.1) ]' : 'bg-surface border-outline/20 hover:border-outline'} ${isLocked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`;
           
           item.innerHTML = `
-            <div class="relative w-24 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 flex items-center justify-center border border-outline/30 bg-cover bg-center" style="background-image: url('${l.thumbnail}'); ${!isActuallyReleased ? 'filter: grayscale(1);' : ''}">
+            <div class="relative w-24 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 flex items-center justify-center border border-outline/30 bg-cover bg-center" style="background-image: url('${l.thumbnail}'); ${isLocked ? 'filter: grayscale(1);' : ''}">
               <div class="absolute inset-0 bg-black/40"></div>
-              ${!isActuallyReleased ? '<span class="material-symbols-outlined text-white text-sm relative z-10">lock</span>' : '<span class="material-symbols-outlined text-white text-sm relative z-10" style="font-variation-settings:\'FILL\' 1;">play_arrow</span>'}
+              ${isLocked ? '<span class="material-symbols-outlined text-white text-sm relative z-10">lock</span>' : '<span class="material-symbols-outlined text-white text-sm relative z-10" style="font-variation-settings:\'FILL\' 1;">play_arrow</span>'}
             </div>
             <div class="flex-grow">
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-[9px] font-black uppercase tracking-widest text-primary">Aula ${id}</span>
                 ${isActive ? 
-                  (localStorage.getItem(`lesson_${id}_completed`) === 'true' ? 
+                  (localStorage.getItem(`lesson_${id}_quiz_passed`) === 'true' ? 
                     '<span class="text-[8px] px-1.5 py-0.5 bg-primary/20 text-primary border border-primary/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span>Assistida</span>' : 
                     '<span class="text-[8px] px-1.5 py-0.5 bg-primary text-on-primary rounded font-bold uppercase tracking-tighter">Assistindo</span>') 
                   : ''}
-                ${!isActive && localStorage.getItem(`lesson_${id}_completed`) === 'true' ? '<span class="text-[8px] px-1.5 py-0.5 bg-[#00C2A0]/20 text-[#00C2A0] border border-[#00C2A0]/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">check</span>Concluída</span>' : ''}
+                ${!isActive && localStorage.getItem(`lesson_${id}_quiz_passed`) === 'true' ? '<span class="text-[8px] px-1.5 py-0.5 bg-[#00C2A0]/20 text-[#00C2A0] border border-[#00C2A0]/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">check</span>Concluída</span>' : ''}
               </div>
               <h5 class="text-xs font-bold text-on-surface leading-tight">
                 ${l.title.includes(': ') ? l.title.split(': ')[1] : l.title}
@@ -552,7 +554,7 @@
             </div>
           `;
 
-          if (isActuallyReleased || isActive) {
+          if (!isLocked) {
             item.onclick = () => window.location.href = `./aula.html?id=${id}`;
           }
           playlistContainer.appendChild(item);
@@ -586,91 +588,120 @@
       }
     }
 
-    // --- QUIZ SYSTEM (SCALABLE) ---
+    // --- QUIZ SYSTEM (STRICT MCQ STEPPER) ---
     const lessonQuizzes = {
       "1": [
-        { q: "Qual o déficit habitacional no Brasil hoje?", a: "Quase 7 milhões de casas." },
-        { q: "O que é a 'Âncora Invisível'?", a: "O modelo convencional que gera dependência de equipes grandes e alto desperdício." },
-        { q: "Economia estimada em energia?", a: "Entre R$ 20.000 e R$ 30.000 ao longo dos anos." },
-        { q: "Por que a Caixa financia o Iforms?", a: "Devido ao DATEC e validação pelo IPT." },
-        { q: "Quem inventou o ICF em 1967?", a: "Werner Gregory." },
-        { q: "Diferença da forma de 12cm e 18cm?", a: "12cm (veda) tem 6cm de concreto; 18cm (estrutural) tem 10cm de concreto." },
-        { q: "Área de cobertura de 1 forma?", a: "0,5 m² (1,25m x 0,40m)." },
-        { q: "Por que é 'anti-erro'?", a: "O encaixe (bolinha com bolinha) impede a montagem em posição errada." },
-        { q: "Quais os 4 conceitos garantidos no travamento?", a: "Prumo, Nível, Alinhamento e Esquadro." },
-        { q: "De que é feita a estrutura real?", a: "Concreto armado puro; o isopor é apenas fôrma e isolante." },
-        { q: "Nome do reboco 4 em 1 do Grupo ICF?", a: "ICFlex." },
-        { q: "Velocidade de montagem por minuto?", a: "Até 4 m² em menos de 1 minuto." }
+        { q: "Qual o déficit habitacional brasileiro citado como a grande oportunidade para o mercado ICF?", options: ["Cerca de 1 milhão de casas", "Quase 7 milhões de casas", "15 milhões de casas", "Menos de 500 mil casas"], correct: 1 },
+        { q: "O que o sistema define como 'Âncora Invisível' no mercado imobiliário?", options: ["A falta de crédito bancário", "A burocracia dos cartórios", "O modelo convencional que gera desperdício e dependência de grandes equipes", "O preço do terreno"], correct: 2 },
+        { q: "Quem foi o inventor do sistema ICF em 1967?", options: ["Elon Musk", "Auguste Perret", "Werner Gregory", "Le Corbusier"], correct: 2 },
+        { q: "Qual a economia de energia estimada ao longo dos anos para quem mora em uma casa Iforms?", options: ["R$ 1.000 a R$ 5.000", "Nenhuma economia significativa", "R$ 20.000 a R$ 30.000", "R$ 100.000"], correct: 2 },
+        { q: "Por que o sistema Iforms é o único em ICF no Brasil financiável pela Caixa Econômica?", options: ["Por ser o mais barato", "Pela posse do DATEC e validação técnica pelo IPT", "Por ser uma tecnologia nova", "Por usar isopor comum"], correct: 1 },
+        { q: "Qual a carga máxima suportada por uma parede Iforms no teste oficial do IPT?", options: ["10 toneladas", "50 toneladas", "140 toneladas (equivalente a 56 elefantes)", "1000 toneladas"], correct: 2 },
+        { q: "Qual o comportamento do EPS (Isopor) do sistema Iforms em relação ao fogo?", options: ["É altamente inflamável", "Derrete e propaga chamas", "Não propaga chamas (Classe F)", "Explode em altas temperaturas"], correct: 2 },
+        { q: "Qual a redução estimada de resíduos e uso de madeira (caixaria) na obra ICF?", options: ["Cerca de 10%", "Entre 80% a 100%", "Apenas 30%", "Não reduz o uso de madeira"], correct: 1 },
+        { q: "Por que o sistema Iforms é considerado ideal para regiões com maresia?", options: ["Pela pintura especial", "O EPS encapsula o concreto e o concreto encapsula o aço, protegendo contra a corrosão", "O isopor repele o sal", "Não é recomendado para o litoral"], correct: 1 },
+        { q: "Qual a meta do Ecossistema ICF para o mercado brasileiro até 2028?", options: ["Dominar 50% das obras", "Suprir 0,5% do déficit habitacional brasileiro", "Acabar com a alvenaria", "Vender para outros países"], correct: 1 },
+        { q: "Sobre a maturidade da tecnologia, o sistema é novo ou já foi testado?", options: ["É um experimento recente", "Testado desde 1967 e provado inclusive em desastres como furacões", "Ainda está em fase de protótipo", "Só funciona em países frios"], correct: 1 },
+        { q: "O que significa a sigla ICF?", options: ["Integrated Cement Foundation", "Internal Concrete Frame", "Insulated Concrete Forms", "International Construction Firm"], correct: 2 }
       ],
-      "2": [], // Aguardando dados da Aula 2
-      "3": [], // Aguardando dados da Aula 3
-      "4": [], // Aguardando dados da Aula 4
-      "5": []  // Aguardando dados da Aula 5
+      "2": [
+        { q: "Qual é o primeiro passo essencial para determinar o tipo de fundação ideal e evitar desperdício de dinheiro?", options: ["Comprar as formas de isopor", "Realizar o ensaio de solo SPT (Sondagem)", "Iniciar a limpeza do terreno", "Escolher a cor da tinta externa"], correct: 1 },
+        { q: "Na execução de um radier, qual a função principal da lona plástica colocada sobre a brita?", options: ["Impermeabilizar a casa contra umidade", "Evitar que o concreto perca umidade para o solo durante a cura", "Substituir a necessidade de aço", "Servir de gabarito para as paredes"], correct: 1 },
+        { q: "Qual tecnologia moderna pode substituir a tela de aço no radier, gerando economia de 50% a 70%?", options: ["Fios de nylon comuns", "Macro fibra de polipropileno", "Adesivo epóxi bicomponente", "Ripas de madeira tratada"], correct: 1 },
+        { q: "Por onde deve-se sempre iniciar o assentamento das formas de uma parede ICF?", options: ["Pelo meio da parede mais longa", "Pelas aberturas de janelas", "Pelos cantos da edificação", "Por onde estiver o ponto de energia"], correct: 2 },
+        { q: "Como é feita a fixação (ancoragem) dos vergalhões verticais na fundação pronta?", options: ["Apenas encaixando no furo com areia", "Com pregos de aço", "Utilizando adesivo químico (como o ICF Bond)", "Soldando diretamente na brita"], correct: 2 },
+        { q: "O que deve ser feito para proteger os 'dentes' superiores da última fiada durante a concretagem e garantir o encaixe perfeito das próximas formas?", options: ["Nada, o concreto limpa fácil depois", "Proteger os dentes com tubos de PVC cortados ao meio", "Lixar as bordas das formas", "Usar fita crepe em todos os dentes"], correct: 1 },
+        { q: "No gerenciamento de aberturas, como se garante o alinhamento das fiadas acima de uma porta?", options: ["Deixando o vão aberto desde o início", "Passando a primeira fiada direto e cortando o vão após a cura do concreto", "Usando formas menores nas laterais", "Colando as formas com fita adesiva"], correct: 1 },
+        { q: "Qual o Slump (fluidez) recomendado para a concretagem das fiadas superiores para garantir o preenchimento total dos espaços e evitar 'brocas'?", options: ["Slump 12 +/- 2 (Ideal para a primeira fiada)", "Slump 16 +/- 2 (Podendo chegar a 18 +/- 2 para máxima fluidez nas superiores)", "Slump 8 +/- 2 (Concreto muito seco para paredes)", "Slump 22+ (Concreto com excesso de água, prejudica a resistência)"], correct: 1 },
+        { q: "O que é o 'Travamento para baixo' na montagem das paredes?", options: ["Pressionar as formas com o pé", "Prender as formas à fiada inferior com arames/aço para não 'levantar' com a pressão", "Colocar pesos de areia sobre a parede", "Cavar um buraco abaixo da primeira forma"], correct: 1 },
+        { q: "Onde as instalações elétricas e hidráulicas devem ser passadas no sistema Iforms?", options: ["Quebrando o concreto após ele secar", "Por fora da parede, escondidas pelo reboco", "Dentro dos espaços vazados do isopor antes da concretagem", "Dentro dos vergalhões de aço"], correct: 2 },
+        { q: "Qual a recomendação para pendurar armários pesados em uma parede ICF?", options: ["Usar apenas cola de contato no isopor", "Usar parafusos longos que alcancem a seção interna de concreto", "Pendurar no teto", "Usar pregos comuns de alvenaria"], correct: 1 },
+        { q: "Quanto tempo de economia de obra o sistema ICF pode proporcionar em comparação ao convencional?", options: ["Cerca de 10%", "Até 50% mais rápido", "Nenhuma economia, mas é mais barato", "O dobro do tempo devido ao travamento"], correct: 1 }
+      ]
     };
 
     let currentQuiz = [];
-    let currentCard = 0;
+    let currentStep = 0;
     let score = 0;
-    let isFlipped = false;
 
-    window.startFlashcards = () => {
+    window.startFlashcards = () => { // Mantive o nome da função para não quebrar o HTML antigo, mas agora é MCQ
       const urlParams = new URLSearchParams(window.location.search);
       const lessonId = urlParams.get('id') || "1";
       currentQuiz = lessonQuizzes[lessonId] || [];
 
       if (currentQuiz.length === 0) {
-        alert("Flashcards para esta aula estarão disponíveis em breve!");
+        alert("O quiz para esta aula será liberado em breve!");
         return;
       }
 
       document.getElementById('quizIntro').classList.add('hidden');
       document.getElementById('quizGame').classList.remove('hidden');
-      currentCard = 0;
+      
+      // Adaptar o container para MCQ
+      const gameContainer = document.getElementById('quizGame');
+      gameContainer.innerHTML = `
+        <div class="flex items-center justify-between mb-6">
+          <span id="quizProgress" class="text-[10px] font-black uppercase tracking-widest text-primary">Questão 1 de 12</span>
+          <div class="h-1 flex-1 mx-4 bg-white/5 rounded-full overflow-hidden">
+            <div id="quizBar" class="h-full bg-primary transition-all duration-300" style="width: 8.33%"></div>
+          </div>
+        </div>
+        
+        <div class="flex-grow flex flex-col justify-center min-h-[200px]">
+          <h4 id="quizQuestion" class="text-lg font-bold text-on-surface leading-snug mb-6"></h4>
+          <div id="quizOptions" class="grid grid-cols-1 gap-3"></div>
+        </div>
+      `;
+      
+      currentStep = 0;
       score = 0;
-      showCard();
+      showQuestion();
     };
 
-    function showCard() {
-      isFlipped = false;
-      document.getElementById('flashcard').classList.remove('flipped');
-      document.getElementById('quizControls').classList.add('hidden');
-      document.getElementById('quizProgress').textContent = `Card ${currentCard + 1} de ${currentQuiz.length}`;
-      document.getElementById('cardQuestion').textContent = currentQuiz[currentCard].q;
-      document.getElementById('cardAnswer').textContent = currentQuiz[currentCard].a;
+    function showQuestion() {
+      const question = currentQuiz[currentStep];
+      document.getElementById('quizProgress').textContent = `Questão ${currentStep + 1} de ${currentQuiz.length}`;
+      document.getElementById('quizBar').style.width = `${((currentStep + 1) / currentQuiz.length) * 100}%`;
+      document.getElementById('quizQuestion').textContent = question.q;
       
-      const dots = document.getElementById('quizDots');
-      if (dots) {
-        dots.innerHTML = '';
-        currentQuiz.forEach((_, i) => {
-          const dot = document.createElement('div');
-          dot.className = `w-1.5 h-1.5 rounded-full ${i === currentCard ? 'bg-primary' : i < currentCard ? 'bg-primary/40' : 'bg-outline/30'}`;
-          dots.appendChild(dot);
-        });
-      }
+      const optionsContainer = document.getElementById('quizOptions');
+      optionsContainer.innerHTML = '';
+      
+      question.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full p-4 bg-surface-variant border border-outline/30 rounded-xl text-left text-sm font-medium hover:border-primary hover:bg-primary/5 transition-all active:scale-[0.99] flex items-center gap-3 group";
+        btn.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-background border border-outline/50 flex items-center justify-center shrink-0 group-hover:border-primary group-hover:text-primary font-bold text-[10px]">${String.fromCharCode(65 + idx)}</div>
+          <span class="flex-1">${opt}</span>
+        `;
+        btn.onclick = () => selectOption(idx);
+        optionsContainer.appendChild(btn);
+      });
     }
 
-    window.flipCard = () => {
-      if (isFlipped) return;
-      isFlipped = true;
-      document.getElementById('flashcard').classList.add('flipped');
-      document.getElementById('quizControls').classList.remove('hidden');
-    };
+    function selectOption(index) {
+      if (index === currentQuiz[currentStep].correct) {
+        score++;
+      }
 
-    window.submitAnswer = (correct) => {
-      if (correct) score++;
-      if (currentCard < currentQuiz.length - 1) {
-        currentCard++;
-        showCard();
+      if (currentStep < currentQuiz.length - 1) {
+        currentStep++;
+        showQuestion();
       } else {
         showResult();
       }
-    };
+    }
 
     function showResult() {
-      document.getElementById('quizGame').classList.add('hidden');
-      document.getElementById('quizResult').classList.remove('hidden');
+      const gameContainer = document.getElementById('quizGame');
+      gameContainer.classList.add('hidden');
+      
+      const resultContainer = document.getElementById('quizResult');
+      resultContainer.classList.remove('hidden');
       
       const percent = (score / currentQuiz.length) * 100;
+      const pass = percent >= 70;
+      
       const resultIcon = document.getElementById('resultIcon');
       const resultTitle = document.getElementById('resultTitle');
       const resultText = document.getElementById('resultText');
@@ -679,33 +710,26 @@
       const urlParams = new URLSearchParams(window.location.search);
       const lessonId = urlParams.get('id') || "1";
 
-      if (percent >= 70) {
-        resultIcon.className = "w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-4 text-primary";
-        resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">workspace_premium</span>';
-        resultTitle.textContent = "Excelente Aproveitamento!";
-        
-        let level = "Iniciante";
-        if (lessonId === "3") level = "Intermediário";
-        if (lessonId === "5") level = "Expert ICF";
-        
-        resultText.textContent = `Você acertou ${score} de ${currentQuiz.length} flashcards (${percent.toFixed(0)}%). Nível: ${level} alcançado!`;
+      if (pass) {
+        resultIcon.className = "w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-4 text-primary animate-bounce";
+        resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">verified</span>';
+        resultTitle.innerHTML = '<span class="text-primary block text-sm uppercase tracking-widest mb-1">Uauu! Eeeita glória!</span>Aprovado!';
+        resultText.innerHTML = `Você acertou <strong>${score} de 12</strong> (${percent.toFixed(0)}%). Domínio técnico demonstrado. A próxima aula foi desbloqueada!`;
         btnFinish.classList.remove('hidden');
-        localStorage.setItem('cert_level', level);
+        
         localStorage.setItem(`lesson_${lessonId}_quiz_passed`, 'true');
+        localStorage.setItem(`lesson_${lessonId}_completed`, 'true'); // Marca a aula como concluída automaticamente ao passar no quiz
       } else {
         resultIcon.className = "w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mb-4 text-red-500";
-        resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">error_outline</span>';
-        resultTitle.textContent = "Quase lá!";
-        resultText.textContent = `Você acertou ${score} de ${currentQuiz.length} flashcards. Precisa de 70% para validar este módulo.`;
+        resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">history_edu</span>';
+        resultTitle.textContent = "Revisão Necessária";
+        resultText.innerHTML = `Desempenho: <strong>${score}/12</strong>. O sistema Iforms exige precisão técnica. Revise o material e tente novamente para liberar o próximo módulo.`;
         btnFinish.classList.add('hidden');
       }
     }
 
     window.resetQuiz = () => {
-      currentCard = 0;
-      score = 0;
-      document.getElementById('quizResult').classList.add('hidden');
-      document.getElementById('quizIntro').classList.remove('hidden');
+      window.location.reload();
     };
 
     window.finishQuiz = () => {
