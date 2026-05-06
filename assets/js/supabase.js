@@ -119,3 +119,109 @@ export async function updateProgress(lessonId, status) {
         throw err
     }
 }
+// ── Funções de Comunidade (Dados Reais) ──────────────────────────
+
+// Buscar todos os especialistas credenciados
+export async function getExperts(category = '') {
+    let query = supabase.from('experts').select('*').order('created_at', { ascending: false })
+    if (category) query = query.eq('category', category)
+    
+    const { data, error } = await query
+    if (error) {
+        console.error('Erro ao buscar especialistas:', error.message)
+        return []
+    }
+    return data
+}
+
+// Cadastrar novo especialista
+export async function registerExpert(expertData) {
+    const { data, error } = await supabase
+        .from('experts')
+        .insert([{
+            ...expertData,
+            created_at: new Date().toISOString()
+        }])
+    
+    if (error) throw error
+    return data
+}
+
+// Buscar discussões do mural
+export async function getDiscussions() {
+    const { data, error } = await supabase
+        .from('discussions')
+        .select('*, profiles(full_name, avatar_url), discussion_comments(count)')
+        .order('is_fixed', { ascending: false })
+        .order('created_at', { ascending: false })
+
+    if (error) {
+        console.error('Erro ao buscar discussões:', error.message)
+        return []
+    }
+    return data
+}
+
+// Criar nova discussão
+export async function createDiscussion(title, content) {
+    const user = await getUser()
+    if (!user) throw new Error('Usuário não autenticado')
+
+    const { data, error } = await supabase
+        .from('discussions')
+        .insert([{
+            title,
+            content,
+            author_id: user.id,
+            likes: 0,
+            is_fixed: false,
+            created_at: new Date().toISOString()
+        }])
+    
+    if (error) throw error
+    return data
+}
+
+// Buscar comentários de uma discussão
+export async function getComments(discussionId) {
+    const { data, error } = await supabase
+        .from('discussion_comments')
+        .select('*, profiles(full_name, avatar_url)')
+        .eq('discussion_id', discussionId)
+        .order('created_at', { ascending: true })
+
+    if (error) {
+        console.error('Erro ao buscar comentários:', error.message)
+        return []
+    }
+    return data
+}
+
+// Adicionar comentário
+export async function addComment(discussionId, text) {
+    const user = await getUser()
+    if (!user) throw new Error('Usuário não autenticado')
+
+    const { error } = await supabase
+        .from('discussion_comments')
+        .insert([{
+            discussion_id: discussionId,
+            author_id: user.id,
+            text,
+            created_at: new Date().toISOString()
+        }])
+    
+    if (error) throw error
+    return true
+}
+
+// Curtir discussão
+export async function toggleLikeDiscussion(discussionId, currentLikes) {
+    const { error } = await supabase
+        .from('discussions')
+        .update({ likes: currentLikes + 1 })
+        .eq('id', discussionId)
+    
+    if (error) throw error
+    return true
+}

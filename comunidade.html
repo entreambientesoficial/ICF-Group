@@ -421,7 +421,7 @@
 
     <!-- Community Stats -->
     <section class="bg-surface/50 border border-outline rounded-3xl p-8 animate-fade-in" style="animation-delay: 0.3s">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="grid grid-cols-3 gap-8">
         <div class="text-center space-y-1">
           <p id="stat-members" class="text-3xl font-black text-primary">1.2k</p>
           <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Membros</p>
@@ -431,12 +431,8 @@
           <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Discussões</p>
         </div>
         <div class="text-center space-y-1">
-          <p id="stat-experts" class="text-3xl font-black text-primary">18</p>
+          <p id="stat-experts" class="text-3xl font-black text-primary">0</p>
           <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Credenciados</p>
-        </div>
-        <div class="text-center space-y-1">
-          <p class="text-3xl font-black text-white">96%</p>
-          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Sucesso</p>
         </div>
       </div>
     </section>
@@ -596,7 +592,32 @@
   </div>
 
   <script type="module">
-    import { logout, getUser } from './assets/js/supabase.js';
+    import { 
+        logout, getUser, getExperts, registerExpert, 
+        getDiscussions, createDiscussion, getComments, addComment, toggleLikeDiscussion 
+    } from './assets/js/supabase.js';
+
+    let currentCategory = '';
+    let currentThreadId = null;
+    let localDiscussions = [];
+    let localExperts = [];
+
+    // Formatação de data amigável
+    function timeAgo(date) {
+        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+        if (seconds < 60) return "agora mesmo";
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + " anos atrás";
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + " meses atrás";
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + " dias atrás";
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + "h atrás";
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + " min atrás";
+        return Math.floor(seconds) + " segundos atrás";
+    }
 
     window.closeLogoutModal = () => {
       const modal = document.getElementById('logoutModal');
@@ -633,22 +654,22 @@
       }
     }
 
-    window.toggleLike = (btn) => {
+    window.toggleLike = async (btn, discussionId) => {
       const icon = btn.querySelector('.material-symbols-outlined');
       const count = btn.querySelector('.text-xs');
       let current = parseInt(count.textContent);
       
       const isFilled = icon.style.fontVariationSettings.includes("'FILL' 1");
-      if (isFilled) {
-        icon.style.fontVariationSettings = "'FILL' 0";
-        count.textContent = current - 1;
-        btn.classList.remove('text-primary');
-        btn.classList.add('text-on-surface-variant');
-      } else {
+      if (isFilled) return; // Por enquanto apenas permite curtir (1 vez por sessão visual)
+
+      try {
+        await toggleLikeDiscussion(discussionId, current);
         icon.style.fontVariationSettings = "'FILL' 1";
         count.textContent = current + 1;
         btn.classList.remove('text-on-surface-variant');
         btn.classList.add('text-primary');
+      } catch (err) {
+        console.error('Erro ao curtir:', err);
       }
     }
 
@@ -662,75 +683,45 @@
       document.getElementById('expertModal').classList.remove('flex');
     }
 
-    window.submitExpert = () => {
+    window.submitExpert = async () => {
       const name = document.getElementById('expertName').value;
-      const cat = document.getElementById('expertCategory').value;
+      const category = document.getElementById('expertCategory').value;
       const phone = document.getElementById('expertPhone').value;
       const city = document.getElementById('expertCity').value;
 
-      if (!name || !cat || !phone || !city) {
+      if (!name || !category || !phone || !city) {
         alert('Por favor, preencha todos os campos.');
         return;
       }
 
-      const notification = document.getElementById('successNotification');
-      notification.classList.remove('hidden');
-      setTimeout(() => notification.classList.add('hidden'), 3000);
-      
-      window.closeExpertModal();
-      document.getElementById('expertName').value = '';
-      document.getElementById('expertPhone').value = '';
-      document.getElementById('expertCity').value = '';
+      try {
+        await registerExpert({ full_name: name, category, phone, city });
+        const notification = document.getElementById('successNotification');
+        notification.classList.remove('hidden');
+        setTimeout(() => notification.classList.add('hidden'), 3000);
+        
+        window.closeExpertModal();
+        document.getElementById('expertName').value = '';
+        document.getElementById('expertPhone').value = '';
+        document.getElementById('expertCity').value = '';
+        
+        // Recarregar dados
+        const updated = await getExperts();
+        localExperts = updated;
+        updateStats();
+      } catch (err) {
+        alert('Erro ao cadastrar. Verifique sua conexão.');
+      }
     }
 
-    // Mock Data for demonstration
-    const professionals = [
-      { name: "Arq. Juliana F.", cat: "Arquitetura", city: "Joinville, SC", icon: "architecture", phone: "47999999999" },
-      { name: "Eng. Ricardo M.", cat: "Engenharia", city: "São Paulo, SP", icon: "engineering", phone: "11999999999" },
-      { name: "Mestre Silas", cat: "Obras", city: "Curitiba, PR", icon: "construction", phone: "41999999999" },
-      { name: "Pedro Pedreiro", cat: "Obras", city: "Florianópolis, SC", icon: "construction", phone: "48999999999" },
-      { name: "Eletro Volt", cat: "Elétrica", city: "Curitiba, PR", icon: "bolt", phone: "41888888888" },
-      { name: "Água & Vida", cat: "Hidráulica", city: "Joinville, SC", icon: "water_drop", phone: "47888888888" },
-      { name: "João Montagens", cat: "Montadores", city: "Blumenau, SC", icon: "build", phone: "47777777777" },
-      { name: "Clima Bom", cat: "Ar Condicionado", city: "São Paulo, SP", icon: "ac_unit", phone: "11888888888" }
-    ];
-
-    const discussions = [
-      { 
-        id: 1, 
-        title: "Dicas para Avaliação do DATEC", 
-        author: "Admin", 
-        time: "2h atrás", 
-        content: "Documentação necessária para aprovação de crédito na Caixa usando o sistema Iforms. Confira o checklist...",
-        likes: 156,
-        comments: [
-          { author: "Eng. Ricardo", text: "Muito bom! O checklist ajudou muito no último projeto." },
-          { author: "Arq. Juliana", text: "Tem alguma atualização sobre os prazos de resposta da Caixa?" }
-        ],
-        fixed: true
-      },
-      { 
-        id: 2, 
-        title: "Montagem do Kit Casas no canteiro", 
-        author: "Carlos Eng.", 
-        time: "5h atrás", 
-        content: "Gostaria de saber a experiência de vocês com a logística de entrega dos painéis no canteiro. Alguma dica?",
-        likes: 32,
-        comments: [
-          { author: "Mestre Silas", text: "O segredo é nivelar bem a base antes da chegada do caminhão." }
-        ],
-        fixed: false
-      }
-    ];
-
-    let currentCategory = '';
-    let currentThreadId = null;
-
-    window.openDirectory = (category) => {
+    window.openDirectory = async (category) => {
       currentCategory = category;
       document.getElementById('directoryTitle').textContent = `Profissionais de ${category}`;
       document.getElementById('directoryModal').classList.remove('hidden');
       document.getElementById('directoryModal').classList.add('flex');
+      
+      // Busca real por categoria
+      localExperts = await getExperts(category);
       renderDirectory();
     }
 
@@ -744,9 +735,8 @@
       const list = document.getElementById('directoryList');
       const filter = document.getElementById('regionFilter').value.toLowerCase();
       
-      const filtered = professionals.filter(p => 
-        p.cat === currentCategory && 
-        (p.city.toLowerCase().includes(filter) || p.name.toLowerCase().includes(filter))
+      const filtered = localExperts.filter(p => 
+        p.city.toLowerCase().includes(filter) || p.full_name.toLowerCase().includes(filter)
       );
 
       document.getElementById('directoryCount').textContent = `${filtered.length} Encontrados`;
@@ -762,15 +752,27 @@
       }
 
       list.innerHTML = filtered.map(p => {
-        const waLink = `https://wa.me/55${p.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(p.name)},%20vi%20seu%20perfil%20no%20App%20ICF%20e%20gostaria%20de%20um%20orçamento%20para%20${encodeURIComponent(p.cat)}.`;
-        
+        const waLink = `https://wa.me/55${p.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(p.full_name)},%20vi%20seu%20perfil%20no%20App%20ICF%20e%20gostaria%20de%20um%20orçamento%20para%20${encodeURIComponent(p.category)}.`;
+        const icons = {
+            'Arquitetura': 'architecture',
+            'Engenharia': 'engineering',
+            'Obras': 'construction',
+            'Elétrica': 'bolt',
+            'Hidráulica': 'water_drop',
+            'Montadores': 'build',
+            'Ar Condicionado': 'ac_unit',
+            'Pintura': 'format_paint',
+            'Gesso': 'texture'
+        };
+        const icon = icons[p.category] || 'person';
+
         return `
           <div class="flex items-center gap-4 bg-surface border border-outline p-4 rounded-2xl active:scale-[0.98] transition-all cursor-pointer">
             <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
-              <span class="material-symbols-outlined text-primary text-2xl">${p.icon}</span>
+              <span class="material-symbols-outlined text-primary text-2xl">${icon}</span>
             </div>
             <div class="flex-1">
-              <h4 class="text-sm font-bold text-white">${p.name}</h4>
+              <h4 class="text-sm font-bold text-white">${p.full_name}</h4>
               <div class="flex items-center gap-1 text-[10px] text-on-surface-variant mt-1">
                 <span class="material-symbols-outlined text-[12px]">location_on</span>
                 ${p.city}
@@ -788,28 +790,31 @@
       renderDirectory();
     }
 
-    window.openThread = (id) => {
+    window.openThread = async (id) => {
       currentThreadId = id;
-      const discussion = discussions.find(d => d.id === id);
+      const discussion = localDiscussions.find(d => d.id === id);
       if (!discussion) return;
 
       document.getElementById('threadModal').classList.remove('hidden');
       document.getElementById('threadModal').classList.add('flex');
+
+      const authorName = discussion.profiles?.full_name || "Membro";
+      const authorAvatar = discussion.profiles?.avatar_url || `https://ui-avatars.com/api/?name=${authorName}&background=00C2A0&color=fff`;
 
       // Render Original Post
       document.getElementById('threadOriginalPost').innerHTML = `
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                <span class="material-symbols-outlined text-primary">person</span>
+              <div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline">
+                <img src="${authorAvatar}" class="w-full h-full object-cover">
               </div>
               <div>
                 <h4 class="text-sm font-bold text-white">${discussion.title}</h4>
-                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${discussion.author}</span> • ${discussion.time}</p>
+                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${authorName}</span> • ${timeAgo(discussion.created_at)}</p>
               </div>
             </div>
-            ${discussion.fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
+            ${discussion.is_fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
           </div>
           <p class="text-sm text-white leading-relaxed">${discussion.content}</p>
           <div class="flex items-center gap-4 pt-2">
@@ -819,30 +824,42 @@
             </div>
             <div class="flex items-center gap-1 text-on-surface-variant">
               <span class="material-symbols-outlined text-lg">chat_bubble</span>
-              <span class="text-xs font-bold">${discussion.comments.length} Respostas</span>
+              <span class="text-xs font-bold" id="threadCommentCount">Buscando respostas...</span>
             </div>
           </div>
         </div>
       `;
 
-      renderReplies();
+      await renderReplies();
     }
 
-    function renderReplies() {
-      const discussion = discussions.find(d => d.id === currentThreadId);
+    async function renderReplies() {
       const list = document.getElementById('repliesList');
+      const comments = await getComments(currentThreadId);
       
-      list.innerHTML = discussion.comments.map(c => `
-        <div class="flex gap-4">
-          <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center border border-outline flex-shrink-0">
-            <span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
-          </div>
-          <div class="space-y-1">
-            <p class="text-[10px] text-primary font-bold uppercase tracking-wider">${c.author}</p>
-            <p class="text-xs text-on-surface-variant bg-surface border border-outline p-3 rounded-2xl rounded-tl-none leading-relaxed">${c.text}</p>
-          </div>
-        </div>
-      `).join('');
+      document.getElementById('threadCommentCount').textContent = `${comments.length} Respostas`;
+
+      if (comments.length === 0) {
+          list.innerHTML = `<p class="text-center text-xs text-on-surface-variant py-4">Ainda não há respostas. Seja o primeiro!</p>`;
+          return;
+      }
+
+      list.innerHTML = comments.map(c => {
+        const authorName = c.profiles?.full_name || "Membro";
+        const authorAvatar = c.profiles?.avatar_url || `https://ui-avatars.com/api/?name=${authorName}&background=00C2A0&color=fff`;
+
+        return `
+            <div class="flex gap-4">
+            <div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline flex-shrink-0">
+                <img src="${authorAvatar}" class="w-full h-full object-cover">
+            </div>
+            <div class="space-y-1">
+                <p class="text-[10px] text-primary font-bold uppercase tracking-wider">${authorName} • ${timeAgo(c.created_at)}</p>
+                <p class="text-xs text-on-surface-variant bg-surface border border-outline p-3 rounded-2xl rounded-tl-none leading-relaxed">${c.text}</p>
+            </div>
+            </div>
+        `;
+      }).join('');
     }
 
     window.closeThread = () => {
@@ -850,17 +867,22 @@
       document.getElementById('threadModal').classList.remove('flex');
     }
 
-    window.submitReply = () => {
+    window.submitReply = async () => {
       const input = document.getElementById('replyInput');
       const text = input.value;
       if (!text) return;
 
-      const discussion = discussions.find(d => d.id === currentThreadId);
-      discussion.comments.push({ author: "Você", text: text });
-      
-      input.value = '';
-      renderReplies();
-      renderDiscussionsList(); // Update count on main screen
+      try {
+        await addComment(currentThreadId, text);
+        input.value = '';
+        await renderReplies();
+        // Atualizar lista principal silenciosamente
+        const updated = await getDiscussions();
+        localDiscussions = updated;
+        renderDiscussionsList();
+      } catch (err) {
+        alert('Erro ao enviar resposta.');
+      }
     }
 
     window.openNewDiscussionModal = () => {
@@ -873,7 +895,7 @@
       document.getElementById('discussionModal').classList.remove('flex');
     }
 
-    window.submitNewDiscussion = () => {
+    window.submitNewDiscussion = async () => {
       const title = document.getElementById('postTitle').value;
       const content = document.getElementById('postContent').value;
 
@@ -882,67 +904,81 @@
         return;
       }
 
-      const newId = discussions.length + 1;
-      discussions.unshift({
-        id: newId,
-        title: title,
-        author: "Você",
-        time: "Agora",
-        content: content,
-        likes: 0,
-        comments: [],
-        fixed: false
-      });
+      try {
+        await createDiscussion(title, content);
+        
+        closeNewDiscussionModal();
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postContent').value = '';
 
-      renderDiscussionsList();
-      
-      closeNewDiscussionModal();
-      document.getElementById('postTitle').value = '';
-      document.getElementById('postContent').value = '';
+        const notification = document.getElementById('successNotification');
+        notification.textContent = '✓ Publicado com sucesso!';
+        notification.classList.remove('hidden');
+        setTimeout(() => notification.classList.add('hidden'), 3000);
 
-      const notification = document.getElementById('successNotification');
-      notification.textContent = '✓ Publicado com sucesso!';
-      notification.classList.remove('hidden');
-      setTimeout(() => notification.classList.add('hidden'), 3000);
+        // Recarregar dados reais
+        const updated = await getDiscussions();
+        localDiscussions = updated;
+        renderDiscussionsList();
+      } catch (err) {
+        alert('Erro ao publicar. Verifique sua conexão.');
+      }
     }
 
-    function renderDiscussionsList() {
+    async function renderDiscussionsList() {
       const list = document.getElementById('discussions-list');
       if (!list) return;
-      list.innerHTML = discussions.map(d => `
-        <article onclick="window.openThread(${d.id})" class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group cursor-pointer active:scale-[0.98]">
-          <div class="flex items-start justify-between">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
-                <span class="material-symbols-outlined text-primary">person</span>
-              </div>
-              <div>
-                <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">${d.title}</h4>
-                <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${d.author}</span> • ${d.time}</p>
-              </div>
-            </div>
-            ${d.fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
+
+      if (localDiscussions.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-20 bg-surface/30 rounded-3xl border border-dashed border-outline">
+            <span class="material-symbols-outlined text-5xl text-on-surface-variant opacity-20 mb-2">forum</span>
+            <p class="text-on-surface-variant text-sm">O mural está vazio.<br>Seja o primeiro a iniciar uma discussão!</p>
           </div>
-          <p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">${d.content}</p>
-          <div class="pt-4 border-t border-outline flex items-center gap-6">
-            <div onclick="event.stopPropagation(); window.toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
-              <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
-              <span class="text-xs font-bold">${d.likes}</span>
+        `;
+        updateStats();
+        return;
+      }
+
+      list.innerHTML = localDiscussions.map(d => {
+        const authorName = d.profiles?.full_name || "Membro";
+        const commentCount = d.discussion_comments?.[0]?.count || 0;
+
+        return `
+            <article onclick="window.openThread(${d.id})" class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group cursor-pointer active:scale-[0.98]">
+            <div class="flex items-start justify-between">
+                <div class="flex items-start gap-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20 overflow-hidden">
+                    <img src="${d.profiles?.avatar_url || 'https://ui-avatars.com/api/?name='+authorName}" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white group-hover:text-primary transition-colors">${d.title}</h4>
+                    <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${authorName}</span> • ${timeAgo(d.created_at)}</p>
+                </div>
+                </div>
+                ${d.is_fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
             </div>
-            <div class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
-              <span class="material-symbols-outlined text-xl">chat_bubble</span>
-              <span class="text-xs font-bold">${d.comments.length}</span>
+            <p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">${d.content}</p>
+            <div class="pt-4 border-t border-outline flex items-center gap-6">
+                <div onclick="event.stopPropagation(); window.toggleLike(this, ${d.id})" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
+                <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
+                <span class="text-xs font-bold">${d.likes}</span>
+                </div>
+                <div class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-xl">chat_bubble</span>
+                <span class="text-xs font-bold">${commentCount}</span>
+                </div>
             </div>
-          </div>
-        </article>
-      `).join('');
+            </article>
+        `;
+      }).join('');
       updateStats();
     }
 
     function updateStats() {
-      document.getElementById('stat-discussions').textContent = discussions.length + 338;
-      document.getElementById('stat-members').textContent = (1.2 + (discussions.length * 0.01)).toFixed(1) + 'k';
-      document.getElementById('stat-experts').textContent = professionals.length + 12;
+      document.getElementById('stat-discussions').textContent = localDiscussions.length;
+      document.getElementById('stat-members').textContent = 'Ativo';
+      document.getElementById('stat-experts').textContent = localExperts.length;
     }
 
     function startHeroCarousel() {
@@ -954,19 +990,30 @@
       setInterval(() => {
         items[current].classList.replace('opacity-100', 'opacity-0');
         dots[current].classList.replace('bg-primary', 'bg-white/20');
-
         current = (current + 1) % items.length;
-
         items[current].classList.replace('opacity-0', 'opacity-100');
         dots[current].classList.replace('bg-white/20', 'bg-primary');
       }, 5000);
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      renderDiscussionsList();
-      updateStats();
       startHeroCarousel();
       
+      // Carregar dados reais iniciais
+      try {
+        const [discs, exp] = await Promise.all([
+            getDiscussions(),
+            getExperts()
+        ]);
+        localDiscussions = discs;
+        localExperts = exp;
+        
+        renderDiscussionsList();
+        updateStats();
+      } catch (err) {
+        console.error('Erro ao carregar dados da comunidade:', err);
+      }
+
       const user = await getUser();
       if (user) {
         const name = user.user_metadata?.full_name || 'Aluno Iforms';
