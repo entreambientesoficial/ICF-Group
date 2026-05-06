@@ -156,68 +156,82 @@
   <div class="mb-6">
     <p class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Grupo ICF · Ferramentas Técnicas</p>
     <h1 class="text-3xl font-black text-white">Calculadora ICF</h1>
-    <p class="text-on-surface-variant text-sm mt-1">Gere o memorial descritivo completo de materiais.</p>
+    <p class="text-on-surface-variant text-sm mt-1">Orçamento misto — paredes externas (18cm) e internas (12cm).</p>
   </div>
 
   <!-- FORMULÁRIO DE ENTRADA -->
   <div id="formSection" class="space-y-4">
 
-    <!-- Seletor de Tipo -->
+    <!-- Chips de tipo (informativo) -->
     <div class="grid grid-cols-2 gap-3">
-      <button id="btn12" onclick="setType('12')"
-        class="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-primary bg-primary/10 text-white transition-all active:scale-[0.98]"
-        aria-pressed="true">
-        <span class="material-symbols-outlined text-primary text-2xl mb-1">view_column</span>
-        <span class="text-sm font-bold">12cm Veda</span>
-        <span class="text-[10px] text-on-surface-variant mt-0.5">Seção 7×6cm</span>
-      </button>
-      <button id="btn18" onclick="setType('18')"
-        class="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-white/10 bg-surface-variant text-white/60 hover:border-white/20 transition-all active:scale-[0.98]"
-        aria-pressed="false">
-        <span class="material-symbols-outlined text-2xl mb-1">view_column</span>
-        <span class="text-sm font-bold">18cm Estrutural</span>
-        <span class="text-[10px] mt-0.5">Seção 10cm</span>
-      </button>
-    </div>
-
-    <!-- Inputs -->
-    <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
-      <div class="grid grid-cols-2 gap-4">
+      <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-primary/40 bg-primary/5">
+        <span class="material-symbols-outlined text-primary text-xl shrink-0">domain</span>
         <div>
-          <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Área Total da Parede</label>
-          <div class="relative">
-            <input id="inAreaParede" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 150"
-              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-on-surface-variant font-bold">m²</span>
-          </div>
-        </div>
-        <div>
-          <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Área dos Vãos</label>
-          <div class="relative">
-            <input id="inAreaVaos" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 20"
-              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-on-surface-variant font-bold">m²</span>
-          </div>
-        </div>
-        <div>
-          <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Altura da Parede</label>
-          <div class="relative">
-            <input id="inAltura" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 3.0"
-              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-on-surface-variant font-bold">m</span>
-          </div>
-        </div>
-        <div>
-          <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Qtd. de Cantos</label>
-          <input id="inCantos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 4"
-            class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
-        </div>
-        <div class="col-span-2">
-          <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Total de Vãos (portas + janelas)</label>
-          <input id="inVaos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 8"
-            class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
+          <p class="text-xs font-black text-primary uppercase tracking-wider">18cm Estrutural</p>
+          <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes Externas</p>
         </div>
       </div>
+      <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-white/10 bg-surface-variant/50">
+        <span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0">splitscreen</span>
+        <div>
+          <p class="text-xs font-black text-on-surface-variant uppercase tracking-wider">12cm Veda</p>
+          <p class="text-[10px] text-on-surface-variant/60 mt-0.5">Paredes Internas</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs de Geometria -->
+    <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
+
+      <!-- Áreas -->
+      <div>
+        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Geometria da Obra</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Externas</label>
+            <div class="relative">
+              <input id="inArea18" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 120"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+            </div>
+            <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Forma 18cm</p>
+          </div>
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes Internas</label>
+            <div class="relative">
+              <input id="inArea12" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 60"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+            </div>
+            <p class="text-[9px] text-on-surface-variant/70 mt-1 font-bold">→ Forma 12cm</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-white/5 pt-4">
+        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Peças Especiais & Pé-Direito</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Altura (Pé-Direito)</label>
+            <div class="relative">
+              <input id="inAltura" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 3.0"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Cantos (90°)</label>
+            <input id="inCantos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 4"
+              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Total de Vãos (Portas + Janelas)</label>
+            <input id="inVaos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 8"
+              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
+          </div>
+        </div>
+      </div>
+
       <button onclick="calculate()"
         class="w-full h-14 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
         <span class="material-symbols-outlined">calculate</span>
@@ -229,9 +243,9 @@
   <!-- MEMORIAL DESCRITIVO -->
   <div id="memorial" class="hidden space-y-4">
 
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho do Memorial -->
     <div class="bg-gradient-to-br from-primary/10 to-surface rounded-2xl p-5 border border-primary/30">
-      <div class="flex items-center gap-3 mb-2">
+      <div class="flex items-center gap-3 mb-3">
         <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">description</span>
         </div>
@@ -240,7 +254,20 @@
           <h2 class="text-lg font-black text-white">Memorial Descritivo de Materiais</h2>
         </div>
       </div>
-      <p id="memResumo" class="text-[11px] text-on-surface-variant mt-2 leading-relaxed"></p>
+      <div id="memResumo" class="grid grid-cols-3 gap-2 text-center">
+        <div class="bg-background/40 rounded-xl p-3">
+          <p class="text-lg font-black text-primary" id="memArea18">—</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m² Ext. (18cm)</p>
+        </div>
+        <div class="bg-background/40 rounded-xl p-3">
+          <p class="text-lg font-black text-white" id="memArea12">—</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m² Int. (12cm)</p>
+        </div>
+        <div class="bg-background/40 rounded-xl p-3">
+          <p class="text-lg font-black text-white" id="memAltura">—</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m Pé-Direito</p>
+        </div>
+      </div>
     </div>
 
     <!-- Logística -->
@@ -252,18 +279,28 @@
       <div class="divide-y divide-white/5">
         <div class="flex items-center justify-between p-4">
           <div>
-            <p class="text-sm font-bold text-on-surface">Formas Retas</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes lineares</p>
+            <p class="text-sm font-bold text-on-surface">Formas 18cm <span class="text-[10px] text-primary font-black ml-1">ESTRUTURAL</span></p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes externas · 1,1 kg/un</p>
           </div>
           <div class="text-right">
-            <p class="text-2xl font-black text-white" id="resFormasRetas">—</p>
+            <p class="text-2xl font-black text-white" id="resFormas18">—</p>
             <p class="text-[10px] text-on-surface-variant">unidades</p>
           </div>
         </div>
         <div class="flex items-center justify-between p-4">
           <div>
-            <p class="text-sm font-bold text-on-surface">Formas de Canto</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5">Cantos + contornos de vãos</p>
+            <p class="text-sm font-bold text-on-surface">Formas 12cm <span class="text-[10px] text-on-surface-variant font-black ml-1">VEDA</span></p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes internas · 0,9 kg/un</p>
+          </div>
+          <div class="text-right">
+            <p class="text-2xl font-black text-white" id="resFormas12">—</p>
+            <p class="text-[10px] text-on-surface-variant">unidades</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-4">
+          <div>
+            <p class="text-sm font-bold text-on-surface">Peças de Canto (90°)</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">((Cantos + Vãos×2) × Altura) ÷ 0,40</p>
           </div>
           <div class="text-right">
             <p class="text-2xl font-black text-white" id="resFormasCanto">—</p>
@@ -272,8 +309,8 @@
         </div>
         <div class="flex items-center justify-between p-4 bg-primary/5">
           <div>
-            <p class="text-sm font-bold text-primary">Peso Estimado da Carga</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5">Retas × 0,9 kg + Cantos × 1,1 kg</p>
+            <p class="text-sm font-bold text-primary">Peso Total da Carga</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">18cm × 1,1 kg + 12cm × 0,9 kg + Cantos × 1,1 kg</p>
           </div>
           <div class="text-right">
             <p class="text-2xl font-black text-primary" id="resPeso">—</p>
@@ -293,7 +330,7 @@
         <div class="flex items-center justify-between p-4 bg-primary/5">
           <div>
             <p class="text-sm font-bold text-primary">Volume de Concreto</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5" id="concretoLabel">Incl. 5% de margem de segurança</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5" id="concretoLabel">Misto 18cm+12cm · incl. 5% margem</p>
           </div>
           <div class="text-right">
             <p class="text-2xl font-black text-primary" id="resConcreto">—</p>
@@ -303,7 +340,7 @@
         <div class="flex items-center justify-between p-4">
           <div>
             <p class="text-sm font-bold text-on-surface">Aço Vertical Ø8mm (CA-50)</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5">Barras a cada 25cm</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Barras a cada 25cm — área total</p>
           </div>
           <div class="text-right">
             <p class="text-2xl font-black text-white" id="resAco8">—</p>
@@ -351,6 +388,15 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Aviso Técnico -->
+    <div class="flex gap-3 p-4 bg-surface rounded-2xl border border-yellow-500/20">
+      <span class="material-symbols-outlined text-yellow-400 shrink-0 mt-0.5" style="font-size:18px">warning</span>
+      <p class="text-[11px] text-on-surface-variant leading-relaxed">
+        <span class="font-black text-yellow-400 uppercase tracking-wide">Aviso Técnico</span><br>
+        Estimativa baseada na modulação Iforms e normas IPT/DATEC. Obrigatória a conferência com o projeto estrutural para detalhes específicos e ângulos especiais.
+      </p>
     </div>
 
     <!-- Nova Simulação -->
@@ -435,21 +481,9 @@
     }
   }
 
-  let currentType = '12';
-
-  function setType(type) {
-    currentType = type;
-    const on  = 'flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-primary bg-primary/10 text-white transition-all active:scale-[0.98]';
-    const off = 'flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-white/10 bg-surface-variant text-white/60 hover:border-white/20 transition-all active:scale-[0.98]';
-    const btn12 = document.getElementById('btn12');
-    const btn18 = document.getElementById('btn18');
-    btn12.className = type === '12' ? on : off;  btn12.setAttribute('aria-pressed', type === '12');
-    btn18.className = type === '18' ? on : off;  btn18.setAttribute('aria-pressed', type === '18');
-  }
-
   function getNum(id) {
     const val = parseFloat(document.getElementById(id).value);
-    return isNaN(val) || val < 0 ? null : val;
+    return (isNaN(val) || val < 0) ? 0 : val;
   }
 
   function markError(id) {
@@ -460,47 +494,46 @@
   }
 
   function calculate() {
-    const areaParede = getNum('inAreaParede');
-    const altura     = getNum('inAltura');
-    if (!areaParede || areaParede <= 0) { markError('inAreaParede'); return; }
-    if (!altura || altura <= 0)         { markError('inAltura');     return; }
+    const area18  = getNum('inArea18');
+    const area12  = getNum('inArea12');
+    const altura  = getNum('inAltura');
+    const cantos  = getNum('inCantos');
+    const vaos    = getNum('inVaos');
 
-    const areaVaos = getNum('inAreaVaos') ?? 0;
-    const cantos   = getNum('inCantos')   ?? 0;
-    const vaos     = getNum('inVaos')     ?? 0;
+    if (area18 <= 0 && area12 <= 0) { markError('inArea18'); return; }
+    if (altura <= 0)                { markError('inAltura'); return; }
 
-    // --- Motor de Cálculo ---
-    const areaReal     = Math.max(0, areaParede - areaVaos);
-    const formasCanto  = Math.ceil(((cantos + vaos * 2) * altura) / 0.40);
-    const formasRetas  = Math.max(0, Math.ceil(areaReal * 2) - formasCanto);
-    const concretoBase = areaReal * (currentType === '12' ? 0.042 : 0.048);
-    const concreto     = concretoBase * 1.05;
-    const icflexKg     = areaReal * 2.8;
-    const icflexSacos  = Math.ceil(icflexKg / 20);
-    const pesoTotal    = (formasRetas * 0.9) + (formasCanto * 1.1);
-    const mLinear      = altura > 0 ? areaReal / altura : 0;
-    const aco8         = Math.ceil(Math.ceil(mLinear / 0.25) * altura);
-    const aco63        = Math.ceil(Math.ceil(altura / 0.40) * mLinear);
-    const tela         = Math.max(1, Math.ceil((areaReal * 2) / 50));
+    // ── Motor de Cálculo (Engenharia ICF) ──────────────────────────
+    const somaAreas   = area18 + area12;
+    const formas18    = Math.ceil(area18 * 2);
+    const formas12    = Math.ceil(area12 * 2);
+    const formasCanto = Math.ceil(((cantos + vaos * 2) * altura) / 0.40);
+    const concreto    = ((area18 * 0.048) + (area12 * 0.042)) * 1.05;
+    const icflexKg    = somaAreas * 2.8;
+    const icflexSacos = Math.ceil(icflexKg / 20);
+    const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
+    const mLinear     = somaAreas / altura;
+    const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * altura);
+    const aco63       = Math.ceil(Math.ceil(altura / 0.40) * mLinear);
+    const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
-    const tipoLabel = currentType === '12' ? '12cm Veda (Seção 7×6cm)' : '18cm Estrutural (Seção 10cm)';
+    // ── Preencher Memorial ─────────────────────────────────────────
+    document.getElementById('memArea18').textContent = area18.toFixed(1);
+    document.getElementById('memArea12').textContent = area12.toFixed(1);
+    document.getElementById('memAltura').textContent = altura.toFixed(2);
 
-    // --- Preencher Memorial ---
-    document.getElementById('memResumo').textContent =
-      `Tipo: ${tipoLabel}  ·  Área parede: ${areaParede.toFixed(2)} m²  ·  Vãos: ${areaVaos.toFixed(2)} m²  ·  Área real: ${areaReal.toFixed(2)} m²`;
-
-    document.getElementById('resFormasRetas').textContent = formasRetas.toLocaleString('pt-BR');
+    document.getElementById('resFormas18').textContent    = formas18.toLocaleString('pt-BR');
+    document.getElementById('resFormas12').textContent    = formas12.toLocaleString('pt-BR');
     document.getElementById('resFormasCanto').textContent = formasCanto.toLocaleString('pt-BR');
     document.getElementById('resPeso').textContent        = pesoTotal.toFixed(0);
     document.getElementById('resConcreto').textContent    = concreto.toFixed(3);
-    document.getElementById('concretoLabel').textContent  = `${tipoLabel} · incl. 5% de margem`;
     document.getElementById('resAco8').textContent        = aco8.toLocaleString('pt-BR');
     document.getElementById('resAco63').textContent       = aco63.toLocaleString('pt-BR');
     document.getElementById('resICFlex').textContent      = icflexSacos;
     document.getElementById('icflexKgLabel').textContent  = `${icflexKg.toFixed(1)} kg total · sacos de 20 kg`;
     document.getElementById('resTela').textContent        = tela;
 
-    // --- Transição ---
+    // ── Transição ──────────────────────────────────────────────────
     document.getElementById('formSection').classList.add('hidden');
     document.getElementById('memorial').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -512,7 +545,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Protocolo de Montagem Anti-Erro
+  // ── Protocolo de Montagem Anti-Erro ───────────────────────────────
   const toolCheckboxes = document.querySelectorAll('#toolChecklist input');
   const toolStatusEl   = document.getElementById('toolCheckStatus');
   const CHECKLIST_KEY  = 'iforms_protocolo_checklist';
