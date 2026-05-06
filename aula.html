@@ -222,23 +222,6 @@
         </div>
       </div>
 
-      <!-- Anotações -->
-      <div class="bg-surface p-gutter rounded-xl border border-outline/30 shadow-xl">
-        <div class="flex items-center gap-2 mb-stack-md">
-          <span class="material-symbols-outlined text-primary">notes</span>
-          <h3 class="font-h3 text-h3 text-on-surface">Minhas Anotações</h3>
-        </div>
-        <textarea
-          id="notesArea"
-          class="w-full min-h-[160px] p-4 bg-surface-container-low border border-outline rounded-lg font-body-md text-on-surface focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none resize-none placeholder:text-on-surface-variant/40"
-          placeholder="Escreva aqui suas principais percepções desta aula..."></textarea>
-        <div class="mt-stack-sm flex justify-end">
-          <span id="saveIndicator" class="text-caption text-on-surface-variant/60 flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">sync</span>
-            Salvo automaticamente
-          </span>
-        </div>
-      </div>
     </div>
 
     <!-- Right: Sidebar -->
@@ -300,72 +283,111 @@
   </a>
 </nav>
 
-<script>
-  // Auto-save de anotações no localStorage
-  const notesArea = document.getElementById('notesArea');
-  const saveIndicator = document.getElementById('saveIndicator');
-  const NOTES_KEY = 'iforms_aula1_notes';
+  <script type="module">
+    import { logout, getUser, getProgress, updateProgress } from './assets/js/supabase.js';
 
-  notesArea.value = localStorage.getItem(NOTES_KEY) || '';
-
-  let saveTimer;
-  notesArea.addEventListener('input', () => {
-    saveIndicator.innerHTML = '<span class="material-symbols-outlined text-[14px]">sync</span> Salvando...';
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      localStorage.setItem(NOTES_KEY, notesArea.value);
-      saveIndicator.innerHTML = '<span class="material-symbols-outlined text-[14px]">check_circle</span> Salvo automaticamente';
-    }, 800);
-  });
-
-  // Checklist state persistence
-  const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
-  const statusEl = document.getElementById('checklistStatus');
-  const CHECKLIST_KEY = 'iforms_aula1_checklist';
-  const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
-
-  // Handle Completion Logic
-  const urlParams = new URLSearchParams(window.location.search);
-  const lessonId = urlParams.get('id') || "1";
-  const btnConcluir = document.getElementById('btnConcluir');
-  const successModal = document.getElementById('successModal');
-  const actionContainer = btnConcluir ? btnConcluir.parentElement : null;
-
-  // 1. Initial Check on Load
-  if (localStorage.getItem(`lesson_${lessonId}_completed`) === 'true') {
-    if (actionContainer) actionContainer.style.display = 'none';
-  }
-
-  // 2. Click Event
-  if (btnConcluir) {
-    btnConcluir.addEventListener('click', function() {
-      localStorage.setItem(`lesson_${lessonId}_completed`, 'true');
-      
-      // Update UI immediately
-      updateModuleProgress();
-      loadLesson();
-      
-      // Hide button container
-      if (actionContainer) actionContainer.style.display = 'none';
-      
-      // Show Premium Modal
-      if (successModal) {
-        successModal.classList.remove('hidden');
-        successModal.classList.add('flex');
-      }
-    });
-  }
-
-  // Close modal function
-  window.closeSuccessModal = () => {
+    // Handle Completion Logic
+    const urlParams = new URLSearchParams(window.location.search);
+    const lessonId = urlParams.get('id') || "1";
+    const btnConcluir = document.getElementById('btnConcluir');
     const successModal = document.getElementById('successModal');
-    if (successModal) {
-      successModal.classList.add('hidden');
-      successModal.classList.remove('flex');
+
+    async function checkInitialStatus() {
+      const user = await getUser();
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Update Header Profile
+      const name = user.user_metadata?.full_name || 'Aluno';
+      const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+      const profileImg = document.querySelector('header .w-8.h-8');
+      if (profileImg) {
+        profileImg.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+      }
+
+      const progressData = await getProgress(user.id);
+      
+      // Update UI with real data
+      loadLesson(progressData);
+      updateModuleProgress(progressData);
+
+      const isCompleted = progressData.some(p => Number(p.lesson_id) === Number(lessonId));
+      if (isCompleted) {
+        if (btnConcluir) {
+          btnConcluir.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Aula Concluída';
+          btnConcluir.className = "w-full py-4 bg-white/10 text-white/40 border border-white/10 rounded-2xl font-bold flex items-center justify-center gap-2 pointer-events-none transition-all";
+        }
+      }
     }
-    window.location.href = './dashboard.html';
-  };
-</script>
+
+    if (btnConcluir) {
+      btnConcluir.addEventListener('click', async function() {
+        const user = await getUser();
+        if (!user) return;
+
+        const originalHTML = btnConcluir.innerHTML;
+        btnConcluir.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Salvando...';
+        btnConcluir.classList.add('pointer-events-none', 'opacity-70');
+        
+        try {
+          await updateProgress(`lesson_${lessonId}`, 'completed');
+          
+          // Update button immediately
+          btnConcluir.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Aula Concluída';
+          btnConcluir.className = "w-full py-4 bg-white/10 text-white/40 border border-white/10 rounded-2xl font-bold flex items-center justify-center gap-2 pointer-events-none transition-all";
+          
+          // Refresh other UI elements
+          const newData = await getProgress(user.id);
+          updateModuleProgress(newData);
+          loadLesson(newData);
+
+          // Show Premium Modal
+          if (successModal) {
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+          }
+        } catch (err) {
+          console.error("Erro ao salvar progresso:", err);
+          alert("Erro ao salvar: " + (err.message || err.details || "Erro desconhecido"));
+          btnConcluir.innerHTML = originalHTML;
+          btnConcluir.classList.remove('pointer-events-none', 'opacity-70');
+        }
+      });
+    }
+
+    window.closeSuccessModal = () => {
+      window.location.href = './dashboard.html';
+    };
+
+    window.addEventListener('DOMContentLoaded', checkInitialStatus);
+    
+    // Export needed functions to window for the other script tag
+    window.updateProgressSupabase = async (id, status) => {
+        await updateProgress(`lesson_${id}`, status);
+    };
+  </script>
+
+  <script>
+    // Auto-save de anotações no localStorage (Mantido local por enquanto)
+    const notesArea = document.getElementById('notesArea');
+    const saveIndicator = document.getElementById('saveIndicator');
+    const urlParamsForNotes = new URLSearchParams(window.location.search);
+    const idForNotes = urlParamsForNotes.get('id') || "1";
+    const NOTES_KEY = `iforms_aula${idForNotes}_notes`;
+
+    notesArea.value = localStorage.getItem(NOTES_KEY) || '';
+
+    let saveTimer;
+    notesArea.addEventListener('input', () => {
+      saveIndicator.innerHTML = '<span class="material-symbols-outlined text-[14px]">sync</span> Salvando...';
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        localStorage.setItem(NOTES_KEY, notesArea.value);
+        saveIndicator.innerHTML = '<span class="material-symbols-outlined text-[14px]">check_circle</span> Salvo automaticamente';
+      }, 800);
+    });
 
   <!-- Premium Success Modal -->
   <div id="successModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-md animate-in fade-in duration-300">
@@ -440,7 +462,7 @@
 
     // Load dynamic content
     // Load dynamic content
-    function loadLesson() {
+    function loadLesson(progressData = []) {
       const urlParams = new URLSearchParams(window.location.search);
       const lessonId = urlParams.get('id') || "1";
       const lesson = lessons[lessonId];
@@ -526,8 +548,10 @@
           const l = lessons[id];
           const isActive = id === lessonId;
           const isActuallyReleased = l.released;
-          const prevLessonQuizPassed = id === "1" || localStorage.getItem(`lesson_${parseInt(id)-1}_quiz_passed`) === 'true';
-          const isLocked = !isActuallyReleased || (!prevLessonQuizPassed && !isActive);
+          const isCompleted = progressData.some(p => Number(p.lesson_id) === Number(id));
+          
+          // Lógica de bloqueio: Aulas 1 e 2 são liberadas, 3+ bloqueadas (simulando lançamento)
+          const isLocked = !isActuallyReleased;
 
           const item = document.createElement('div');
           item.className = `p-3 rounded-xl border transition-all flex items-center gap-3 ${isActive ? 'bg-primary/5 border-primary shadow-[0_0_15px_rgba(0,194,160,0.1) ]' : 'bg-surface border-outline/20 hover:border-outline'} ${isLocked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`;
@@ -541,11 +565,9 @@
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-[9px] font-black uppercase tracking-widest text-primary">Aula ${id}</span>
                 ${isActive ? 
-                  (localStorage.getItem(`lesson_${id}_quiz_passed`) === 'true' ? 
-                    '<span class="text-[8px] px-1.5 py-0.5 bg-primary/20 text-primary border border-primary/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">visibility</span>Assistida</span>' : 
-                    '<span class="text-[8px] px-1.5 py-0.5 bg-primary text-on-primary rounded font-bold uppercase tracking-tighter">Assistindo</span>') 
+                    '<span class="text-[8px] px-1.5 py-0.5 bg-primary text-on-primary rounded font-bold uppercase tracking-tighter">Assistindo</span>' 
                   : ''}
-                ${!isActive && localStorage.getItem(`lesson_${id}_quiz_passed`) === 'true' ? '<span class="text-[8px] px-1.5 py-0.5 bg-[#00C2A0]/20 text-[#00C2A0] border border-[#00C2A0]/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">check</span>Concluída</span>' : ''}
+                ${isCompleted ? '<span class="text-[8px] px-1.5 py-0.5 bg-[#00C2A0]/20 text-[#00C2A0] border border-[#00C2A0]/30 rounded font-bold uppercase tracking-tighter flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">check</span>Concluída</span>' : ''}
               </div>
               <h5 class="text-xs font-bold text-on-surface leading-tight">
                 ${l.title.includes(': ') ? l.title.split(': ')[1] : l.title}
@@ -562,12 +584,9 @@
       }
     }
 
-    function updateModuleProgress() {
+    function updateModuleProgress(progressData = []) {
       const totalLessons = 5;
-      let completedCount = 0;
-      for (let i = 1; i <= totalLessons; i++) {
-        if (localStorage.getItem(`lesson_${i}_completed`) === 'true') completedCount++;
-      }
+      const completedCount = progressData.length;
       
       const percent = (completedCount / totalLessons) * 100;
       const bar = document.getElementById('moduleProgressBar');
@@ -717,8 +736,8 @@
         resultText.innerHTML = `Você acertou <strong>${score} de 12</strong> (${percent.toFixed(0)}%). Domínio técnico demonstrado. A próxima aula foi desbloqueada!`;
         btnFinish.classList.remove('hidden');
         
-        localStorage.setItem(`lesson_${lessonId}_quiz_passed`, 'true');
-        localStorage.setItem(`lesson_${lessonId}_completed`, 'true'); // Marca a aula como concluída automaticamente ao passar no quiz
+        // Salvar progresso no Supabase
+        window.updateProgressSupabase(lessonId, 'completed');
       } else {
         resultIcon.className = "w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mb-4 text-red-500";
         resultIcon.innerHTML = '<span class="material-symbols-outlined text-5xl">history_edu</span>';
@@ -737,8 +756,7 @@
     };
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadLesson();
-      updateModuleProgress();
+      loadLesson(); // Will be updated by checkInitialStatus later with real data
     });
   </script>
 </body>

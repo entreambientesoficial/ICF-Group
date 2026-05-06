@@ -572,8 +572,49 @@
     </div>
   </div>
 
-  <script>
-    function toggleMenu(show) {
+  <!-- Modal de Confirmação de Logout -->
+  <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+    <div class="bg-surface border border-outline-variant w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+      <div class="p-6 text-center">
+        <div class="w-16 h-16 bg-red-400/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-red-400 text-3xl">logout</span>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Encerrar Sessão?</h3>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Sua sessão será encerrada com segurança e seu progresso continuará salvo no ecossistema Grupo ICF.
+        </p>
+      </div>
+      <div class="flex border-t border-outline-variant">
+        <button onclick="closeLogoutModal()" class="flex-1 px-4 py-4 text-sm font-bold text-on-surface-variant hover:bg-white/5 transition-colors border-r border-outline-variant">
+          CANCELAR
+        </button>
+        <button id="confirmLogoutBtn" class="flex-1 px-4 py-4 text-sm font-bold text-red-400 hover:bg-red-400/5 transition-colors">
+          SAIR AGORA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { logout, getUser } from './assets/js/supabase.js';
+
+    window.closeLogoutModal = () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.logout = async () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      document.getElementById('confirmLogoutBtn').onclick = async () => {
+        await logout();
+      };
+    };
+
+    window.toggleMenu = (show) => {
       const menu = document.getElementById('sideMenu');
       const overlay = document.getElementById('menuOverlay');
       if (show) {
@@ -634,7 +675,7 @@
     let currentCategory = '';
     let currentThreadId = null;
 
-    function openDirectory(category) {
+    window.openDirectory = (category) => {
       currentCategory = category;
       document.getElementById('directoryTitle').textContent = `Profissionais de ${category}`;
       document.getElementById('directoryModal').classList.remove('hidden');
@@ -642,7 +683,7 @@
       renderDirectory();
     }
 
-    function closeDirectory() {
+    window.closeDirectory = () => {
       document.getElementById('directoryModal').classList.add('hidden');
       document.getElementById('directoryModal').classList.remove('flex');
       document.getElementById('regionFilter').value = '';
@@ -692,12 +733,11 @@
       }).join('');
     }
 
-    function filterByRegion() {
+    window.filterByRegion = () => {
       renderDirectory();
     }
 
-    // Discussion Thread Logic
-    function openThread(id) {
+    window.openThread = (id) => {
       currentThreadId = id;
       const discussion = discussions.find(d => d.id === id);
       if (!discussion) return;
@@ -723,7 +763,7 @@
           <p class="text-sm text-white leading-relaxed">${discussion.content}</p>
           <div class="flex items-center gap-4 pt-2">
             <div class="flex items-center gap-1 text-primary">
-              <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1">favorite</span>
+              <span class="material-symbols-outlined text-lg" style="font-variation-settings:\'FILL\' 1">favorite</span>
               <span class="text-xs font-bold">${discussion.likes}</span>
             </div>
             <div class="flex items-center gap-1 text-on-surface-variant">
@@ -754,12 +794,12 @@
       `).join('');
     }
 
-    function closeThread() {
+    window.closeThread = () => {
       document.getElementById('threadModal').classList.add('hidden');
       document.getElementById('threadModal').classList.remove('flex');
     }
 
-    function submitReply() {
+    window.submitReply = () => {
       const input = document.getElementById('replyInput');
       const text = input.value;
       if (!text) return;
@@ -772,18 +812,17 @@
       renderDiscussionsList(); // Update count on main screen
     }
 
-    // Modal Controls for New Discussion
-    function openNewDiscussionModal() {
+    window.openNewDiscussionModal = () => {
       document.getElementById('discussionModal').classList.remove('hidden');
       document.getElementById('discussionModal').classList.add('flex');
     }
 
-    function closeNewDiscussionModal() {
+    window.closeNewDiscussionModal = () => {
       document.getElementById('discussionModal').classList.add('hidden');
       document.getElementById('discussionModal').classList.remove('flex');
     }
 
-    function submitNewDiscussion() {
+    window.submitNewDiscussion = () => {
       const title = document.getElementById('postTitle').value;
       const content = document.getElementById('postContent').value;
 
@@ -830,7 +869,7 @@
                 <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${d.author}</span> • ${d.time}</p>
               </div>
             </div>
-            ${d.fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
+            ${d.fixed ? \'<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>\' : \'\'}
           </div>
           <p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">${d.content}</p>
           <div class="pt-4 border-t border-outline flex items-center gap-6">
@@ -849,36 +888,46 @@
     }
 
     function updateStats() {
-      // Sincroniza com os dados reais do app
-      document.getElementById('stat-discussions').textContent = discussions.length + 338; // 338 é a base inicial
-      document.getElementById('stat-members').textContent = (1.2 + (discussions.length * 0.01)).toFixed(1) + 'k';
-      document.getElementById('stat-experts').textContent = professionals.length + 12; // 12 é a base de experts offline simulada
+      document.getElementById('stat-discussions').textContent = discussions.length + 338;
+      document.getElementById('stat-members').textContent = (1.2 + (discussions.length * 0.01)).toFixed(1) + \'k\';
+      document.getElementById('stat-experts').textContent = professionals.length + 12;
     }
-
-    // Initialize list
-    renderDiscussionsList();
-    updateStats();
 
     function startHeroCarousel() {
       const items = document.querySelectorAll('.carousel-item');
       const dots = document.querySelectorAll('.carousel-dot');
+      if (!items.length) return;
       let current = 0;
 
       setInterval(() => {
-        // Fade out current
         items[current].classList.replace('opacity-100', 'opacity-0');
         dots[current].classList.replace('bg-primary', 'bg-white/20');
 
         current = (current + 1) % items.length;
 
-        // Fade in next
         items[current].classList.replace('opacity-0', 'opacity-100');
         dots[current].classList.replace('bg-white/20', 'bg-primary');
       }, 5000);
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      renderDiscussionsList();
+      updateStats();
       startHeroCarousel();
+      
+      const user = await getUser();
+      if (user) {
+        const name = user.user_metadata?.full_name || 'Aluno Iforms';
+        const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+        
+        const sideName = document.querySelector('#sideMenu .text-white');
+        if (sideName) sideName.textContent = name;
+        
+        const sideAvatar = document.querySelector('#sideMenu .w-12.h-12');
+        if (sideAvatar) {
+            sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+        }
+      }
     });
   </script>
   <script src="./assets/js/pwa.js"></script>

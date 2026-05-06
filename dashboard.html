@@ -205,9 +205,8 @@
         </a>
       </nav>
 
-      <!-- Rodapé do Menu -->
       <div class="p-4 border-t border-outline-variant">
-        <button class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
+        <button onclick="logout()" class="w-full flex items-center gap-4 p-3 text-red-400 hover:bg-red-400/5 rounded-xl transition-all">
           <span class="material-symbols-outlined">logout</span>
           <span class="text-sm font-bold uppercase tracking-widest">Sair da Conta</span>
         </button>
@@ -217,28 +216,9 @@
 
   <main class="max-w-[1200px] mx-auto px-4 pt-24 space-y-stack-lg">
 
-    <!-- Trust Seal -->
-    <!-- Trust Seal (Authority Badge) -->
-    <div
-      class="relative overflow-hidden bg-primary/10 border-l-4 border-primary p-4 rounded-r-xl flex items-center gap-4 group shadow-[0_0_20px_rgba(0,194,160,0.1)]">
-      <div class="shrink-0 w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center shadow-inner">
-        <span class="material-symbols-outlined text-primary text-3xl">verified</span>
-      </div>
-      <div class="flex-grow">
-        <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-0.5">Sistema Validado e Homologado
-        </h4>
-        <p class="text-sm text-primary leading-tight font-medium">
-          Único sistema ICF com <span class="font-bold underline decoration-primary/40">DATEC</span> financiável pela <span
-            class="font-bold underline decoration-primary/40">Caixa Econômica</span> e validado pelo <span class="font-bold underline decoration-primary/40">IPT</span>.
-        </p>
-      </div>
-      <span
-        class="material-symbols-outlined absolute right-2 opacity-5 text-6xl rotate-12 group-hover:scale-110 transition-transform">security</span>
-    </div>
 
-    <!-- Welcome Section -->
-    <section class="flex flex-col gap-unit">
-      <h2 class="font-h1 text-h1 text-on-background">Olá, Aluno!</h2>
+    <section class="flex flex-col gap-1">
+      <h2 id="userGreeting" class="text-3xl font-bold text-on-background">Olá, Aluno!</h2>
       <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
         Sua jornada técnica rumo à excelência na construção em ICF começa aqui.
       </p>
@@ -249,22 +229,23 @@
 
       <!-- Vídeo de Conceito + Atalho de Aula -->
       <div class="md:col-span-8 space-y-gutter">
-        <!-- YouTube Player -->
-        <div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-2xl group">
-          <div class="relative w-full" style="aspect-ratio:16/9;">
-            <iframe src="https://www.youtube.com/embed/z-X1F_9xRIE?rel=0&modestbranding=1"
-              title="O que é o Sistema ICF? Entenda o conceito" class="absolute inset-0 w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen></iframe>
+        <div id="introVideoContainer" class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-2xl group cursor-pointer" onclick="playIntroVideo()">
+          <div class="relative w-full aspect-video bg-cover bg-center flex items-center justify-center transition-all duration-500" 
+               style="background-image: linear-gradient(rgba(2,8,23,0.4), rgba(2,8,23,0.7)), url('https://img.youtube.com/vi/z-X1F_9xRIE/maxresdefault.jpg');">
+            
+            <!-- Custom Play Button Overlay -->
+            <div id="introPlayBtn" class="w-16 h-16 bg-primary/90 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 active:scale-95 transition-all text-on-primary relative z-20">
+              <span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' 1;">play_arrow</span>
+            </div>
+
+            <!-- YouTube Iframe (Hidden initially) -->
+            <div id="introIframeContainer" class="absolute inset-0 w-full h-full hidden z-10"></div>
           </div>
           <div class="p-gutter bg-gradient-to-b from-surface to-surface/50">
             <div class="flex items-center gap-2 mb-2">
-
-              <span class="text-[9px] text-on-surface-variant font-bold uppercase tracking-widest">Introdução
-                Estratégica</span>
+              <span class="text-[9px] text-primary font-bold uppercase tracking-widest">Introdução Estratégica</span>
             </div>
-            <h3 class="font-h2 text-xl text-on-surface leading-tight group-hover:text-primary transition-colors">O que é
-              o Sistema ICF? Entenda o conceito</h3>
+            <h3 class="text-lg font-bold text-on-surface leading-tight group-hover:text-primary transition-colors">O que é o Sistema ICF? Entenda o conceito</h3>
           </div>
         </div>
       </div>
@@ -293,19 +274,19 @@
                     stroke-width="6" />
                   <circle class="text-primary stroke-current progress-ring__circle" cx="40" cy="40" fill="transparent"
                     r="34" stroke-linecap="round" stroke-width="6"
-                    style="stroke-dasharray:213.6;stroke-dashoffset:170.88;" />
+                    style="stroke-dasharray:213.6;stroke-dashoffset:213.6;" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span class="font-bold text-primary text-lg leading-none">20%</span>
+                  <span id="globalProgressPerc" class="font-black text-white text-lg leading-none">0%</span>
                   <span class="text-[8px] text-on-surface-variant font-bold uppercase tracking-tighter">Geral</span>
                 </div>
               </div>
               <div class="space-y-1">
                 <p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Nível Atual</p>
-                <p id="currentLevelText" class="text-lg font-bold text-white leading-tight">Iniciando Jornada</p>
+                <p id="currentLevelText" class="text-lg font-bold text-white leading-tight">Carregando...</p>
                 <div class="flex items-center gap-1 text-primary">
                   <span class="material-symbols-outlined text-[14px]">stars</span>
-                  <span class="text-[11px] font-bold">Rumo ao Expert</span>
+                  <span class="text-[11px] font-bold">Sincronizando...</span>
                 </div>
               </div>
             </div>
@@ -314,10 +295,9 @@
               <div
                 class="flex items-center gap-2 py-2.5 px-3 bg-surface-container rounded-lg border border-outline-variant/50">
                 <span class="material-symbols-outlined text-primary text-sm">lock_open</span>
-                <span class="text-[11px] text-on-surface-variant">Faltam <span class="text-primary font-bold">4 aulas</span> para o selo <span
-                    class="text-primary font-bold">ICF Expert</span></span>
+                <span id="lessonsRemainingText" class="text-[11px] text-on-surface-variant">Atualizando seu progresso...</span>
               </div>
-              <button onclick="openRequirementsModal()"
+              <button onclick="openRequirements()"
                 class="w-full bg-surface-container text-on-surface border border-outline-variant py-3 rounded-lg font-bold hover:border-primary/50 transition-all active:scale-[0.98] text-xs uppercase tracking-widest">
                 Ver requisitos do selo
               </button>
@@ -336,81 +316,71 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-gutter">
         <!-- AULA 01 -->
         <a href="./aula.html?id=1"
-          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block">
+          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-1">
           <div class="flex justify-between items-start mb-4">
             <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #01</span>
-            <span class="material-symbols-outlined text-primary"
-              style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <span class="material-symbols-outlined text-on-surface-variant">play_circle</span>
           </div>
-          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Conhecendo o novo mercado bilionário da Construção Civil: As formas de isopor</h5>
+          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Conhecendo o mercado bilionário da Construção Civil</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 1</span>
-            <span class="text-[9px] font-bold text-primary uppercase">Assistir</span>
+            <span class="text-[9px] font-bold text-primary uppercase">Assistir Aula</span>
           </div>
         </a>
 
         <!-- AULA 02 -->
         <a href="./aula.html?id=2"
-          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block">
+          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-2">
           <div class="flex justify-between items-start mb-4">
             <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #02</span>
-            <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <span class="material-symbols-outlined text-on-surface-variant">play_circle</span>
           </div>
-          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Construindo 50% mais rápido: todas as etapas da Construção com as Formas de Isopor</h5>
+          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Construindo 50% mais rápido com as Formas de Isopor</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 2</span>
-            <span class="text-[9px] font-bold text-primary uppercase">Assistir</span>
+            <span class="text-[9px] font-bold text-primary uppercase">Assistir Aula</span>
           </div>
         </a>
 
-        <!-- AULA 03 (LOCK) -->
+        <!-- AULA 03 -->
         <a href="./aula.html?id=3"
-          class="bg-surface/20 border border-outline-variant p-gutter rounded-xl opacity-40 cursor-pointer relative group overflow-hidden block hover:opacity-100 transition-all">
-          <div class="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <span class="material-symbols-outlined text-white text-3xl">lock</span>
+          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-3">
+          <div class="flex justify-between items-start mb-4">
+            <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #03</span>
+            <span class="material-symbols-outlined text-on-surface-variant">lock</span>
           </div>
-          <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #03</span>
-          <h5 class="font-bold text-base text-on-surface mt-1 leading-tight">Aprendendo tudo sobre preço e custos de obra com as Formas de Isopor</h5>
+          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Tudo sobre preço e custos de obra com ICF</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 3</span>
-            <div class="flex items-center gap-1 text-[9px] text-on-surface-variant/50 font-bold uppercase">
-              <span class="material-symbols-outlined text-xs">calendar_month</span>
-              06/05
-            </div>
+            <span class="text-[9px] font-bold text-on-surface-variant uppercase">Bloqueado</span>
           </div>
         </a>
 
-        <!-- AULA 04 (LOCK) -->
+        <!-- AULA 04 -->
         <a href="./aula.html?id=4"
-          class="bg-surface/20 border border-outline-variant p-gutter rounded-xl opacity-40 cursor-pointer relative group overflow-hidden block hover:opacity-100 transition-all">
-          <div class="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <span class="material-symbols-outlined text-white text-3xl">lock</span>
+          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-4">
+          <div class="flex justify-between items-start mb-4">
+            <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #04</span>
+            <span class="material-symbols-outlined text-on-surface-variant">lock</span>
           </div>
-          <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #04</span>
-          <h5 class="font-bold text-base text-on-surface mt-1 leading-tight">O passo a passo para ganhar a partir de R$15.000 por mês com as Formas de Isopor</h5>
+          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">O passo a passo para ganhar R$15.000/mês com ICF</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 4</span>
-            <div class="flex items-center gap-1 text-[9px] text-on-surface-variant/50 font-bold uppercase">
-              <span class="material-symbols-outlined text-xs">calendar_month</span>
-              07/05
-            </div>
+            <span class="text-[9px] font-bold text-on-surface-variant uppercase">Bloqueado</span>
           </div>
         </a>
 
-        <!-- AULA 05 (LOCK) -->
+        <!-- AULA 05 -->
         <a href="./aula.html?id=5"
-          class="bg-surface/20 border border-outline-variant p-gutter rounded-xl opacity-40 cursor-pointer relative group overflow-hidden block hover:opacity-100 transition-all">
-          <div class="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <span class="material-symbols-outlined text-white text-3xl">lock</span>
+          class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-5">
+          <div class="flex justify-between items-start mb-4">
+            <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #05</span>
+            <span class="material-symbols-outlined text-on-surface-variant">lock</span>
           </div>
-          <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #05</span>
-          <h5 class="font-bold text-base text-on-surface mt-1 leading-tight">Avançando 4 anos em 3 meses com a Construção das Formas de Isopor</h5>
+          <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Avançando 4 anos em 3 meses com a Construção ICF</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 5</span>
-            <div class="flex items-center gap-1 text-[9px] text-on-surface-variant/50 font-bold uppercase">
-              <span class="material-symbols-outlined text-xs">stars</span>
-              08/05
-            </div>
+            <span class="text-[9px] font-bold text-on-surface-variant uppercase">Bloqueado</span>
           </div>
         </a>
       </div>
@@ -565,6 +535,20 @@
       </div>
     </section>
 
+    <!-- Trust Seal (Moved to Bottom) -->
+    <div class="relative overflow-hidden bg-primary/10 border-l-4 border-primary p-4 rounded-r-xl flex items-center gap-4 group shadow-[0_0_20px_rgba(0,194,160,0.1)] mb-12">
+      <div class="shrink-0 w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center shadow-inner">
+        <span class="material-symbols-outlined text-primary text-3xl">verified</span>
+      </div>
+      <div class="flex-grow">
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-0.5">Sistema Validado e Homologado</h4>
+        <p class="text-sm text-primary leading-tight font-medium">
+          Único sistema ICF com <span class="font-bold underline decoration-primary/40">DATEC</span> financiável pela <span class="font-bold underline decoration-primary/40">Caixa Econômica</span> e validado pelo <span class="font-bold underline decoration-primary/40">IPT</span>.
+        </p>
+      </div>
+      <span class="material-symbols-outlined absolute right-2 opacity-5 text-6xl rotate-12 group-hover:scale-110 transition-transform">security</span>
+    </div>
+
   </main>
 
   <!-- Bottom Navigation -->
@@ -619,14 +603,55 @@
             </div>
           </div>
         </div>
-        <button onclick="closeRequirementsModal()" class="w-full py-4 bg-primary text-on-primary font-bold rounded-2xl uppercase tracking-widest text-xs">
+        <button onclick="closeRequirements()" class="w-full py-4 bg-primary text-on-primary font-bold rounded-2xl uppercase tracking-widest text-xs">
           Entendi, vamos lá!
         </button>
       </div>
     </div>
 
-  <script>
-    function toggleMenu(show) {
+  <!-- Modal de Confirmação de Logout -->
+  <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+    <div class="bg-surface border border-outline-variant w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+      <div class="p-6 text-center">
+        <div class="w-16 h-16 bg-red-400/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-red-400 text-3xl">logout</span>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Encerrar Sessão?</h3>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Sua sessão será encerrada com segurança e seu progresso continuará salvo no ecossistema Grupo ICF.
+        </p>
+      </div>
+      <div class="flex border-t border-outline-variant">
+        <button onclick="closeLogoutModal()" class="flex-1 px-4 py-4 text-sm font-bold text-on-surface-variant hover:bg-white/5 transition-colors border-r border-outline-variant">
+          CANCELAR
+        </button>
+        <button id="confirmLogoutBtn" class="flex-1 px-4 py-4 text-sm font-bold text-red-400 hover:bg-red-400/5 transition-colors">
+          SAIR AGORA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { logout, getUser, syncProfile, getProgress, updateProgress } from './assets/js/supabase.js';
+
+    window.closeLogoutModal = () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.logout = async () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      document.getElementById('confirmLogoutBtn').onclick = async () => {
+        await logout();
+      };
+    };
+
+    window.toggleMenu = (show) => {
       const menu = document.getElementById('sideMenu');
       const overlay = document.getElementById('menuOverlay');
       if (show) {
@@ -644,95 +669,190 @@
       }
     }
 
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', () => {
-      // 0. User Profile Loading
-      const userName = localStorage.getItem('user_name') || 'Mestre';
-      const userPhoto = localStorage.getItem('user_photo') || 'https://ui-avatars.com/api/?name=Mestre+ICF&background=00C2A0&color=fff';
-      
-      const userNameEl = document.getElementById('userName');
-      if (userNameEl) userNameEl.textContent = userName;
+    window.logout = async () => {
+      if(confirm("Deseja realmente sair da conta? Sua sessão será encerrada com segurança.")) {
+        await logout();
+      }
+    };
 
-      const profileImg = document.querySelector('header .w-10.h-10 img');
-      if (profileImg) profileImg.src = userPhoto;
+    window.openRequirements = () => {
+      document.getElementById('requirementsModal').classList.remove('hidden');
+      document.getElementById('requirementsModal').classList.add('flex');
+    }
 
-      const totalLessons = 5;
-      let completedCount = 0;
-      
-      // 1. Calculate Progress
-      for (let i = 1; i <= totalLessons; i++) {
-        if (localStorage.getItem(`lesson_${i}_completed`) === 'true') {
-          completedCount++;
+    window.closeRequirements = () => {
+      document.getElementById('requirementsModal').classList.add('hidden');
+      document.getElementById('requirementsModal').classList.remove('flex');
+    }
+
+    // Alerta para recursos em desenvolvimento
+    window.comingSoon = (feature) => {
+        alert(`O recurso "${feature}" está sendo preparado para o lançamento oficial do Grupo ICF e estará disponível em breve!`);
+    };
+
+    window.playIntroVideo = () => {
+        const playBtn = document.getElementById('introPlayBtn');
+        const iframeContainer = document.getElementById('introIframeContainer');
+        const container = document.getElementById('introVideoContainer');
+        
+        if (playBtn && iframeContainer) {
+            playBtn.classList.add('hidden');
+            iframeContainer.classList.remove('hidden');
+            iframeContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/z-X1F_9xRIE?autoplay=1&rel=0&modestbranding=1" class="absolute inset-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            // Remove o background do container para o vídeo aparecer limpo
+            container.querySelector('.aspect-video').style.backgroundImage = 'none';
         }
-      }
-      
-      const percentage = (completedCount / totalLessons) * 100;
-      
-      // 2. Update Progress UI
-      const percentText = document.querySelector('.font-bold.text-primary.text-lg.leading-none');
-      if (percentText) percentText.textContent = `${percentage}%`;
-      
-      const circle = document.querySelector('.progress-ring__circle');
-      if (circle) {
-        const radius = circle.r.baseVal.value;
-        const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (percentage / 100) * circumference;
-        circle.style.strokeDasharray = `${circumference} ${circumference}`;
-        circle.style.strokeDashoffset = offset;
-      }
+    };
 
-      const pendingText = document.querySelector('.text-[11px].text-on-surface-variant span.text-primary.font-bold');
-      if (pendingText) pendingText.textContent = `${totalLessons - completedCount} aulas`;
+    async function refreshProgressUI() {
+        const user = await getUser();
+        if (!user) return;
 
-      // 3. Sequential Unlocking & Visual Status
-      for (let i = 1; i <= totalLessons; i++) {
-        const isQuizPassed = localStorage.getItem(`lesson_${i}_quiz_passed`) === 'true';
-        const prevQuizPassed = i === 1 || localStorage.getItem(`lesson_${i-1}_quiz_passed`) === 'true';
-        
-        const cards = document.querySelectorAll('main section:nth-of-type(2) .grid a');
-        const card = cards[i-1];
-        
-        if (card) {
-          const checkIcon = card.querySelector('.material-symbols-outlined.text-primary');
-          if (checkIcon) {
-            checkIcon.style.opacity = isQuizPassed ? '1' : '0';
-          }
+        // Atualiza saudação com nome do Google
+        const greeting = document.getElementById('userGreeting');
+        if (greeting && user.user_metadata?.full_name) {
+            const firstName = user.user_metadata.full_name.split(' ')[0];
+            greeting.textContent = `Olá, ${firstName}!`;
+        }
 
-          if (!prevQuizPassed && i > 1) {
-            card.classList.add('opacity-30', 'pointer-events-none', 'grayscale');
-            const statusDiv = card.querySelector('.mt-8') || card.querySelector('.mt-4');
-            if (statusDiv) {
-              statusDiv.innerHTML = `<span class="material-symbols-outlined text-sm">lock</span> BLOQUEADO`;
+        const progressData = await getProgress(user.id);
+        const totalLessons = 5;
+        // Se existe o registro na tabela, consideramos como concluída
+        const completedCount = progressData.length;
+        const percentage = Math.round((completedCount / totalLessons) * 100);
+
+        // 1. Atualiza contadores de texto
+        const globalPercElement = document.getElementById('globalProgressPerc');
+        if (globalPercElement) globalPercElement.textContent = `${percentage}%`;
+
+        const lessonsRemainingElement = document.getElementById('lessonsRemainingText');
+        if (lessonsRemainingElement) {
+            const remaining = totalLessons - completedCount;
+            if (remaining > 0) {
+                lessonsRemainingElement.innerHTML = `Faltam <span class="text-primary font-bold">${remaining} aulas</span> para o selo <span class="text-primary font-bold">ICF Expert</span>`;
+            } else {
+                lessonsRemainingElement.innerHTML = `<span class="text-primary font-bold">Parabéns!</span> Você completou todos os requisitos.`;
             }
-          } else {
-            card.classList.remove('opacity-30', 'pointer-events-none', 'grayscale');
-          }
         }
-      }
-      // 4. Dynamic Level Text & Catchphrase
-      const levelText = document.getElementById('currentLevelText');
-      if (levelText) {
-        const savedLevel = localStorage.getItem('cert_level');
-        if (savedLevel) {
-          levelText.textContent = savedLevel;
-          if (savedLevel === 'Expert ICF') {
-            levelText.innerHTML = `${savedLevel} <span class="text-primary ml-1 animate-pulse">| Uauu! Eeeita glória!</span>`;
-          }
+
+        // 2. Atualiza Círculo de Progresso (SVG)
+        const circle = document.querySelector('.progress-ring__circle');
+        if (circle) {
+            const circumference = 213.6;
+            const offset = circumference - (percentage / 100 * circumference);
+            circle.style.strokeDashoffset = offset;
         }
+
+        // 3. Atualiza Nível Atual e Texto Motivacional
+        const levelText = document.getElementById('currentLevelText');
+        const motivationSpan = document.querySelector('.flex.items-center.gap-1.text-primary span:last-child');
+        
+        let level = 'Iniciando Jornada';
+        let motivation = 'Rumo ao Expert';
+        
+        if (completedCount >= 5) {
+            level = 'Expert ICF';
+            motivation = 'Nível Máximo Alcançado!';
+        } else if (completedCount >= 3) {
+            level = 'Intermediário';
+            motivation = 'Quase lá, Mestre!';
+        } else if (completedCount >= 1) {
+            level = 'Iniciante';
+            motivation = 'Ótimo começo!';
+        }
+
+        if (levelText) levelText.textContent = level;
+        if (motivationSpan) motivationSpan.textContent = motivation;
+
+        // 4. Atualiza os cards das aulas (Bloqueio e Status)
+        for (let i = 1; i <= totalLessons; i++) {
+            const card = document.getElementById(`lesson-card-${i}`);
+            if (!card) continue;
+
+            const isCompleted = progressData.some(p => Number(p.lesson_id) === i);
+            const icon = card.querySelector('.material-symbols-outlined');
+            const label = card.querySelector('.text-primary, .text-on-surface-variant');
+
+            // Lógica de Bloqueio: Aula 1 e 2 liberadas, demais trancadas
+            if (i > 2) {
+                card.classList.add('opacity-40', 'grayscale', 'pointer-events-none');
+                card.style.cursor = 'default';
+                if (icon) icon.textContent = 'lock';
+                if (label) {
+                    label.textContent = 'Bloqueado';
+                    label.className = 'text-[9px] font-bold text-on-surface-variant uppercase';
+                }
+            } else {
+                card.classList.remove('opacity-40', 'grayscale', 'pointer-events-none');
+                card.style.cursor = 'pointer';
+                if (isCompleted) {
+                    if (icon) {
+                        icon.textContent = 'check_circle';
+                        icon.classList.add('text-primary');
+                    }
+                    if (label) {
+                        label.textContent = 'Concluída';
+                        label.className = 'text-[9px] font-bold text-on-surface-variant uppercase';
+                    }
+                } else {
+                    if (icon) {
+                        icon.textContent = 'play_circle';
+                        icon.classList.remove('text-primary');
+                    }
+                    if (label) {
+                        label.textContent = 'Assistir Aula';
+                        label.className = 'text-[9px] font-bold text-primary uppercase';
+                    }
+                }
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await getUser();
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
       }
+
+      await syncProfile(user);
+      
+      const name = user.user_metadata?.full_name || 'Aluno Iforms';
+      const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+      
+      // Update Top Profile
+      const userNameEl = document.getElementById('userName');
+      if (userNameEl) userNameEl.textContent = name;
+
+      const profileImg = document.getElementById('userPhoto');
+      if (profileImg) profileImg.src = photo;
+      
+      // Update Side Menu
+      const sideName = document.querySelector('#sideMenu .text-white');
+      if (sideName) sideName.textContent = name;
+      
+      const sideAvatar = document.querySelector('#sideMenu .w-12.h-12');
+      if (sideAvatar) {
+          sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+      }
+
+      // Adicionar evento de logout no menu lateral
+      const btnLogout = document.querySelector('#sideMenu button.text-red-400');
+      if (btnLogout) {
+          btnLogout.onclick = async () => await logout();
+      }
+
+      // Carrega o progresso real do banco
+      await refreshProgressUI();
+
+      // Configura os botões do Ecossistema com alerta de "Em breve"
+      const ecosystemButtons = document.querySelectorAll('section:nth-of-type(3) .grid > div');
+      ecosystemButtons.forEach(btn => {
+          const title = btn.querySelector('.font-black').textContent;
+          btn.style.cursor = 'pointer';
+          btn.onclick = () => comingSoon(title);
+      });
     });
-
-    window.openRequirementsModal = () => {
-      const modal = document.getElementById('requirementsModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    };
-
-    window.closeRequirementsModal = () => {
-      const modal = document.getElementById('requirementsModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    };
   </script>
   <script src="./assets/js/pwa.js"></script>
 </body>

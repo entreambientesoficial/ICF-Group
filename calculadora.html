@@ -232,7 +232,7 @@
         </div>
       </div>
 
-      <button onclick="calculate()"
+      <button onclick="calcularICF()"
         class="w-full h-14 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
         <span class="material-symbols-outlined">calculate</span>
         Gerar Memorial Descritivo
@@ -556,121 +556,177 @@
   </a>
 </nav>
 
-<script>
-  function toggleMenu(show) {
-    const menu = document.getElementById('sideMenu');
-    const overlay = document.getElementById('menuOverlay');
-    if (show) {
-      overlay.classList.remove('hidden');
-      setTimeout(() => { overlay.classList.add('opacity-100'); menu.classList.remove('-translate-x-full'); }, 10);
-    } else {
-      overlay.classList.remove('opacity-100');
-      menu.classList.add('-translate-x-full');
-      setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+  <!-- Modal de Confirmação de Logout -->
+  <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+    <div class="bg-surface border border-outline-variant w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+      <div class="p-6 text-center">
+        <div class="w-16 h-16 bg-red-400/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-red-400 text-3xl">logout</span>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Encerrar Sessão?</h3>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Sua sessão será encerrada com segurança e seu progresso continuará salvo no ecossistema Grupo ICF.
+        </p>
+      </div>
+      <div class="flex border-t border-outline-variant">
+        <button onclick="closeLogoutModal()" class="flex-1 px-4 py-4 text-sm font-bold text-on-surface-variant hover:bg-white/5 transition-colors border-r border-outline-variant">
+          CANCELAR
+        </button>
+        <button id="confirmLogoutBtn" class="flex-1 px-4 py-4 text-sm font-bold text-red-400 hover:bg-red-400/5 transition-colors">
+          SAIR AGORA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { logout, getUser } from './assets/js/supabase.js';
+
+    window.closeLogoutModal = () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.logout = async () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      document.getElementById('confirmLogoutBtn').onclick = async () => {
+        await logout();
+      };
+    };
+
+    window.toggleMenu = (show) => {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('menuOverlay');
+      if (show) {
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+          overlay.classList.add('opacity-100');
+          menu.classList.remove('-translate-x-full');
+        }, 10);
+      } else {
+        overlay.classList.remove('opacity-100');
+        menu.classList.add('-translate-x-full');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+        }, 300);
+      }
     }
-  }
 
-  function getNum(id) {
-    const val = parseFloat(document.getElementById(id).value);
-    return (isNaN(val) || val < 0) ? 0 : val;
-  }
+    // ── Lógica da Calculadora ──────────────────────────────────────────
+    window.calcularICF = () => {
+      const area18 = parseFloat(document.getElementById('inArea18').value) || 0;
+      const area12 = parseFloat(document.getElementById('inArea12').value) || 0;
+      const altura = parseFloat(document.getElementById('inAltura').value) || 0;
+      const cantos = parseFloat(document.getElementById('inCantos').value) || 0;
+      const vaos   = parseFloat(document.getElementById('inVaos').value) || 0;
 
-  function markError(id) {
-    const el = document.getElementById(id);
-    el.classList.add('border-red-500');
-    el.focus();
-    setTimeout(() => el.classList.remove('border-red-500'), 1500);
-  }
+      if (area18 <= 0 && area12 <= 0) {
+        alert("Por favor, insira a área das paredes.");
+        return;
+      }
+      if (altura <= 0) {
+        alert("Por favor, insira a altura (pé-direito).");
+        return;
+      }
 
-  function calculate() {
-    const area18  = getNum('inArea18');
-    const area12  = getNum('inArea12');
-    const altura  = getNum('inAltura');
-    const cantos  = getNum('inCantos');
-    const vaos    = getNum('inVaos');
+      const somaAreas   = area18 + area12;
+      const formas18    = Math.ceil(area18 * 2);
+      const formas12    = Math.ceil(area12 * 2);
+      const formasCanto = Math.ceil(((cantos + vaos * 2) * altura) / 0.40);
+      
+      const concreto    = ((area18 * 0.048) + (area12 * 0.042)) * 1.05;
+      const icflexKg    = somaAreas * 2.8;
+      const icflexSacos = Math.ceil(icflexKg / 20);
+      const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
+      
+      const mLinear     = somaAreas / altura;
+      const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * altura);
+      const aco63       = Math.ceil(Math.ceil(altura / 0.40) * mLinear);
+      const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
-    if (area18 <= 0 && area12 <= 0) { markError('inArea18'); return; }
-    if (altura <= 0)                { markError('inAltura'); return; }
+      document.getElementById('memArea18').textContent = area18.toFixed(1);
+      document.getElementById('memArea12').textContent = area12.toFixed(1);
+      document.getElementById('memAltura').textContent = altura.toFixed(2);
 
-    // ── Motor de Cálculo (Engenharia ICF) ──────────────────────────
-    const somaAreas   = area18 + area12;
-    const formas18    = Math.ceil(area18 * 2);
-    const formas12    = Math.ceil(area12 * 2);
-    const formasCanto = Math.ceil(((cantos + vaos * 2) * altura) / 0.40);
-    const concreto    = ((area18 * 0.048) + (area12 * 0.042)) * 1.05;
-    const icflexKg    = somaAreas * 2.8;
-    const icflexSacos = Math.ceil(icflexKg / 20);
-    const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
-    const mLinear     = somaAreas / altura;
-    const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * altura);
-    const aco63       = Math.ceil(Math.ceil(altura / 0.40) * mLinear);
-    const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
+      document.getElementById('resFormas18').textContent    = formas18.toLocaleString('pt-BR');
+      document.getElementById('resFormas12').textContent    = formas12.toLocaleString('pt-BR');
+      document.getElementById('resFormasCanto').textContent = formasCanto.toLocaleString('pt-BR');
+      document.getElementById('resPeso').textContent        = pesoTotal.toFixed(0);
+      document.getElementById('resConcreto').textContent    = concreto.toFixed(3);
+      document.getElementById('resAco8').textContent        = aco8.toLocaleString('pt-BR');
+      document.getElementById('resAco63').textContent       = aco63.toLocaleString('pt-BR');
+      document.getElementById('resICFlex').textContent      = icflexSacos;
+      document.getElementById('icflexKgLabel').textContent  = `${icflexKg.toFixed(1)} kg total · sacos de 20 kg`;
+      document.getElementById('resTela').textContent        = tela;
 
-    // ── Preencher Memorial ─────────────────────────────────────────
-    document.getElementById('memArea18').textContent = area18.toFixed(1);
-    document.getElementById('memArea12').textContent = area12.toFixed(1);
-    document.getElementById('memAltura').textContent = altura.toFixed(2);
+      document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('memorial').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-    document.getElementById('resFormas18').textContent    = formas18.toLocaleString('pt-BR');
-    document.getElementById('resFormas12').textContent    = formas12.toLocaleString('pt-BR');
-    document.getElementById('resFormasCanto').textContent = formasCanto.toLocaleString('pt-BR');
-    document.getElementById('resPeso').textContent        = pesoTotal.toFixed(0);
-    document.getElementById('resConcreto').textContent    = concreto.toFixed(3);
-    document.getElementById('resAco8').textContent        = aco8.toLocaleString('pt-BR');
-    document.getElementById('resAco63').textContent       = aco63.toLocaleString('pt-BR');
-    document.getElementById('resICFlex').textContent      = icflexSacos;
-    document.getElementById('icflexKgLabel').textContent  = `${icflexKg.toFixed(1)} kg total · sacos de 20 kg`;
-    document.getElementById('resTela').textContent        = tela;
+    window.resetForm = () => {
+      document.getElementById('memorial').classList.add('hidden');
+      document.getElementById('formSection').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-    // ── Transição ──────────────────────────────────────────────────
-    document.getElementById('formSection').classList.add('hidden');
-    document.getElementById('memorial').classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+    // ── Protocolo de Montagem Anti-Erro ───────────────────────────────
+    const toolCheckboxes  = document.querySelectorAll('#toolChecklist input[type="checkbox"]');
+    const toolStatusEl    = document.getElementById('toolCheckStatus');
+    const protocoloOk     = document.getElementById('protocoloSucesso');
+    const CHECKLIST_KEY   = 'iforms_protocolo_checklist';
 
-  function resetForm() {
-    document.getElementById('memorial').classList.add('hidden');
-    document.getElementById('formSection').classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ── Protocolo de Montagem Anti-Erro ───────────────────────────────
-  const toolCheckboxes  = document.querySelectorAll('#toolChecklist input[type="checkbox"]');
-  const toolStatusEl    = document.getElementById('toolCheckStatus');
-  const protocoloOk     = document.getElementById('protocoloSucesso');
-  const CHECKLIST_KEY   = 'iforms_protocolo_checklist';
-
-  const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
-  toolCheckboxes.forEach((cb, i) => {
-    cb.checked = saved[i] || false;
-    cb.addEventListener('change', () => {
-      const states = Array.from(toolCheckboxes).map(c => c.checked);
-      localStorage.setItem(CHECKLIST_KEY, JSON.stringify(states));
-      updateStatus(states);
+    const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
+    toolCheckboxes.forEach((cb, i) => {
+      cb.checked = saved[i] || false;
+      cb.addEventListener('change', () => {
+        const states = Array.from(toolCheckboxes).map(c => c.checked);
+        localStorage.setItem(CHECKLIST_KEY, JSON.stringify(states));
+        updateStatus(states);
+      });
     });
-  });
 
-  function updateStatus(states) {
-    const done  = states.filter(Boolean).length;
-    const total = toolCheckboxes.length;
-    const all   = done === total;
+    function updateStatus(states) {
+      const done  = states.filter(Boolean).length;
+      const total = toolCheckboxes.length;
+      const all   = done === total;
 
-    if (all) {
-      toolStatusEl.textContent = '✓ Concluído';
-      toolStatusEl.classList.remove('hidden');
-      protocoloOk.classList.remove('hidden');
-    } else if (done > 0) {
-      toolStatusEl.textContent = `${done}/${total} itens`;
-      toolStatusEl.classList.remove('hidden');
-      protocoloOk.classList.add('hidden');
-    } else {
-      toolStatusEl.classList.add('hidden');
-      protocoloOk.classList.add('hidden');
+      if (all) {
+        toolStatusEl.textContent = '✓ Concluído';
+        toolStatusEl.classList.remove('hidden');
+        protocoloOk.classList.remove('hidden');
+      } else if (done > 0) {
+        toolStatusEl.textContent = `${done}/${total} itens`;
+        toolStatusEl.classList.remove('hidden');
+        protocoloOk.classList.add('hidden');
+      } else {
+        toolStatusEl.classList.add('hidden');
+        protocoloOk.classList.add('hidden');
+      }
     }
-  }
 
-  updateStatus(saved.map(Boolean));
-</script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateStatus(saved.map(Boolean));
+      
+      const user = await getUser();
+      if (user) {
+        const name = user.user_metadata?.full_name || 'Aluno Iforms';
+        const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+        
+        const sideName = document.querySelector('#sideMenu .text-white');
+        if (sideName) sideName.textContent = name;
+        
+        const sideAvatar = document.querySelector('#sideMenu .w-12.h-12');
+        if (sideAvatar) {
+            sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+        }
+      }
+    });
+  </script>
 
 <script src="./assets/js/pwa.js"></script>
 </body>

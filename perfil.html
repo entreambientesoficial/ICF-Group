@@ -267,8 +267,49 @@
     </a>
   </nav>
 
-  <script>
-    function toggleMenu(show) {
+  <!-- Modal de Confirmação de Logout -->
+  <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+    <div class="bg-surface border border-outline-variant w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+      <div class="p-6 text-center">
+        <div class="w-16 h-16 bg-red-400/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-red-400 text-3xl">logout</span>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Encerrar Sessão?</h3>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Sua sessão será encerrada com segurança e seu progresso continuará salvo no ecossistema Grupo ICF.
+        </p>
+      </div>
+      <div class="flex border-t border-outline-variant">
+        <button onclick="closeLogoutModal()" class="flex-1 px-4 py-4 text-sm font-bold text-on-surface-variant hover:bg-white/5 transition-colors border-r border-outline-variant">
+          CANCELAR
+        </button>
+        <button id="confirmLogoutBtn" class="flex-1 px-4 py-4 text-sm font-bold text-red-400 hover:bg-red-400/5 transition-colors">
+          SAIR AGORA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { logout, getUser, getProgress } from './assets/js/supabase.js';
+
+    window.closeLogoutModal = () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.logout = async () => {
+      const modal = document.getElementById('logoutModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      document.getElementById('confirmLogoutBtn').onclick = async () => {
+        await logout();
+      };
+    };
+
+    window.toggleMenu = (show) => {
       const menu = document.getElementById('sideMenu');
       const overlay = document.getElementById('menuOverlay');
       if (show) {
@@ -286,44 +327,43 @@
       }
     }
 
-    // Função para editar perfil (Simulação)
-    window.editProfile = () => {
-      const newName = prompt("Digite seu nome completo:", localStorage.getItem('user_name') || "Aluno Iforms");
-      if (newName) {
-        localStorage.setItem('user_name', newName);
-        location.reload();
-      }
+    // Alerta para recursos em desenvolvimento
+    window.comingSoon = (feature) => {
+        alert(`O recurso "${feature}" está sendo preparado para o lançamento oficial do Grupo ICF e estará disponível em breve!`);
     };
 
-    window.logout = () => {
-      if(confirm("Deseja realmente sair da conta? Os dados locais serão mantidos, mas a sessão será encerrada.")) {
-        window.location.href = './index.html';
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await getUser();
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
       }
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1. Carregar Dados do Usuário
-      const name = localStorage.getItem('user_name') || 'Mestre';
-      const photo = localStorage.getItem('user_photo') || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
       
-      // Atualizar Nome e Foto na página
+      const name = user.user_metadata?.full_name || 'Mestre';
+      const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+      
       document.querySelector('h2.text-2xl').textContent = name;
-      document.querySelector('.w-24.h-24 img, .w-24.h-24 span').outerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
-      
-      // Atualizar no Menu Lateral
-      document.querySelector('#sideMenu .text-white').textContent = name;
-      document.querySelector('#sideMenu .w-12.h-12').innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
-
-      // 2. Sincronizar Progresso Real
-      const totalLessons = 5;
-      let completedCount = 0;
-      for (let i = 1; i <= totalLessons; i++) {
-        if (localStorage.getItem(`lesson_${i}_completed`) === 'true') completedCount++;
+      const avatarContainer = document.querySelector('.w-24.h-24');
+      if (avatarContainer) {
+          avatarContainer.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
       }
+      
+      const sideName = document.querySelector('#sideMenu .text-white');
+      if (sideName) sideName.textContent = name;
+      
+      const sideAvatar = document.querySelector('#sideMenu .w-12.h-12');
+      if (sideAvatar) {
+          sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+      }
+
+      // Sincronizar Progresso Real do Banco
+      const progressData = await getProgress();
+      const totalLessons = 5;
+      const completedCount = progressData.filter(p => p.status === 'completed').length;
       
       document.getElementById('stats-lessons').textContent = `${completedCount}/${totalLessons}`;
 
-      // 3. Sincronizar Nível e Selo
+      // Nível baseado no progresso real
       const levelElement = document.getElementById('profile-level');
       const sideLevel = document.querySelector('#sideMenu .text-primary');
       
@@ -335,6 +375,21 @@
       levelElement.textContent = currentLevel;
       if(sideLevel) sideLevel.textContent = `Nível ${currentLevel}`;
 
+      // Configurar botões com alerta de "Em breve"
+      const actionButtons = document.querySelectorAll('section:nth-of-type(2) button');
+      actionButtons.forEach(btn => {
+          const title = btn.querySelector('p.text-sm')?.textContent;
+          if (title && !btn.onclick) {
+              btn.onclick = () => comingSoon(title);
+          }
+      });
+      
+      // Suporte também
+      const supportBtn = document.querySelector('section:nth-of-type(3) button:first-child');
+      if (supportBtn) {
+          supportBtn.onclick = () => comingSoon("Suporte ao Licenciado");
+      }
+
       if (completedCount >= 5) {
         const badge = document.getElementById('badge-expert');
         if (badge) {
@@ -344,5 +399,6 @@
       }
     });
   </script>
+  <script src="./assets/js/pwa.js"></script>
 </body>
 </html>
