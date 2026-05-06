@@ -185,53 +185,43 @@
     <section class="space-y-4">
       <h3 class="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em]">Configurações Profissionais</h3>
       <div class="bg-surface border border-outline/20 rounded-3xl overflow-hidden">
-        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
-          <div class="flex items-center gap-4">
-            <span class="material-symbols-outlined text-primary">badge</span>
-            <div class="text-left">
-              <p class="text-sm font-bold text-white">Dados do Credenciado</p>
-              <p class="text-[10px] text-on-surface-variant">Como você aparece na rede de profissionais</p>
-            </div>
-          </div>
-          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
-        </button>
         
-        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
+        <button onclick="window.location.href='comunidade.html'" class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
           <div class="flex items-center gap-4">
             <span class="material-symbols-outlined text-primary">chat_bubble</span>
             <div class="text-left">
               <p class="text-sm font-bold text-white">Minhas Discussões</p>
-              <p class="text-[10px] text-on-surface-variant">Tópicos que você criou no fórum</p>
+              <p class="text-[10px] text-on-surface-variant">Tópicos e respostas no fórum</p>
             </div>
           </div>
           <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
         </button>
 
-        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors group">
+        <div class="w-full flex items-center justify-between p-5 transition-colors">
           <div class="flex items-center gap-4">
             <span class="material-symbols-outlined text-primary">notifications</span>
             <div class="text-left">
               <p class="text-sm font-bold text-white">Notificações</p>
-              <p class="text-[10px] text-on-surface-variant">Gerenciar alertas de obras e mensagens</p>
+              <p class="text-[10px] text-on-surface-variant">Alertas de mensagens e avisos</p>
             </div>
           </div>
-          <div class="w-10 h-6 bg-primary/20 rounded-full relative">
-            <div class="absolute right-1 top-1 w-4 h-4 bg-primary rounded-full"></div>
-          </div>
-        </button>
+          <button id="notifyToggle" class="w-10 h-6 bg-outline/20 rounded-full relative transition-colors">
+            <div class="absolute left-1 top-1 w-4 h-4 bg-on-surface-variant rounded-full transition-all"></div>
+          </button>
+        </div>
       </div>
     </section>
 
     <!-- Support & Logout -->
     <section class="space-y-4">
       <div class="bg-surface border border-outline/20 rounded-3xl overflow-hidden">
-        <button class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
+        <a href="https://wa.me/5511963079436?text=Olá,%20sou%20aluno%20do%20Grupo%20ICF%20e%20preciso%20de%20suporte%20no%20app." target="_blank" class="w-full flex items-center justify-between p-5 hover:bg-white/5 border-b border-white/5 transition-colors group">
           <div class="flex items-center gap-4">
             <span class="material-symbols-outlined text-on-surface-variant">support_agent</span>
             <p class="text-sm font-bold text-white">Suporte ao Licenciado</p>
           </div>
-          <span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
-        </button>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">open_in_new</span>
+        </a>
         
         <button onclick="logout()" class="w-full flex items-center p-5 text-red-400 hover:bg-red-400/5 transition-colors">
           <div class="flex items-center gap-4">
@@ -278,7 +268,6 @@
         <p class="text-on-surface-variant text-sm leading-relaxed">
           Sua sessão será encerrada com segurança e seu progresso continuará salvo no ecossistema Grupo ICF.
         </p>
-      </div>
       <div class="flex border-t border-outline-variant">
         <button onclick="closeLogoutModal()" class="flex-1 px-4 py-4 text-sm font-bold text-on-surface-variant hover:bg-white/5 transition-colors border-r border-outline-variant">
           CANCELAR
@@ -291,7 +280,9 @@
   </div>
 
   <script type="module">
-    import { logout, getUser, getProgress } from './assets/js/supabase.js';
+    import { 
+        logout, getUser, getProgress, getUserStats, getUserExpertData 
+    } from './assets/js/supabase.js';
 
     window.closeLogoutModal = () => {
       const modal = document.getElementById('logoutModal');
@@ -327,11 +318,6 @@
       }
     }
 
-    // Alerta para recursos em desenvolvimento
-    window.comingSoon = (feature) => {
-        alert(`O recurso "${feature}" está sendo preparado para o lançamento oficial do Grupo ICF e estará disponível em breve!`);
-    };
-
     document.addEventListener('DOMContentLoaded', async () => {
       const user = await getUser();
       if (!user) {
@@ -343,7 +329,7 @@
       const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
       
       document.querySelector('h2.text-2xl').textContent = name;
-      const avatarContainer = document.querySelector('.w-24.h-24');
+      const avatarContainer = document.querySelector('.w-24.h-24 .rounded-full.bg-surface-variant');
       if (avatarContainer) {
           avatarContainer.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
       }
@@ -356,39 +342,21 @@
           sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
       }
 
-      // Sincronizar Progresso Real do Banco
       const progressData = await getProgress();
       const totalLessons = 5;
-      const completedCount = progressData.filter(p => p.status === 'completed').length;
-      
+      const completedCount = progressData.filter(p => p.lesson_id).length;
       document.getElementById('stats-lessons').textContent = `${completedCount}/${totalLessons}`;
 
-      // Nível baseado no progresso real
+      const stats = await getUserStats();
+      const contribElement = document.querySelector('p.text-lg.font-bold.text-white:not(#stats-lessons)');
+      if (contribElement) contribElement.textContent = stats.total;
+
       const levelElement = document.getElementById('profile-level');
-      const sideLevel = document.querySelector('#sideMenu .text-primary');
-      
       let currentLevel = 'Iniciando Jornada';
-      if (completedCount >= 5) currentLevel = 'Expert ICF';
-      else if (completedCount >= 3) currentLevel = 'Intermediário';
-      else if (completedCount >= 1) currentLevel = 'Iniciante';
-
+      if (completedCount >= 5) currentLevel = 'Mestre ICF';
+      else if (completedCount >= 3) currentLevel = 'Expert em Formação';
+      else if (completedCount >= 1) currentLevel = 'Aluno Iniciante';
       levelElement.textContent = currentLevel;
-      if(sideLevel) sideLevel.textContent = `Nível ${currentLevel}`;
-
-      // Configurar botões com alerta de "Em breve"
-      const actionButtons = document.querySelectorAll('section:nth-of-type(2) button');
-      actionButtons.forEach(btn => {
-          const title = btn.querySelector('p.text-sm')?.textContent;
-          if (title && !btn.onclick) {
-              btn.onclick = () => comingSoon(title);
-          }
-      });
-      
-      // Suporte também
-      const supportBtn = document.querySelector('section:nth-of-type(3) button:first-child');
-      if (supportBtn) {
-          supportBtn.onclick = () => comingSoon("Suporte ao Licenciado");
-      }
 
       if (completedCount >= 5) {
         const badge = document.getElementById('badge-expert');
@@ -396,6 +364,33 @@
           badge.classList.remove('grayscale', 'opacity-30');
           badge.classList.add('badge-glow', 'border-primary/40', 'bg-primary/5');
         }
+      }
+
+      const expertData = await getUserExpertData();
+      if (expertData) {
+        const homologBadge = document.querySelector('section:nth-of-type(1) .grid > div:nth-child(2)');
+        if (homologBadge) {
+            homologBadge.classList.remove('grayscale', 'opacity-30');
+            homologBadge.classList.add('badge-glow', 'border-primary/40', 'bg-primary/5');
+        }
+      }
+
+      const notifyBtn = document.getElementById('notifyToggle');
+      if (notifyBtn) {
+          notifyBtn.onclick = () => {
+              const dot = notifyBtn.querySelector('div');
+              const isOff = notifyBtn.classList.contains('bg-outline/20');
+              
+              if (isOff) {
+                  notifyBtn.classList.replace('bg-outline/20', 'bg-primary/20');
+                  dot.classList.replace('left-1', 'right-1');
+                  dot.classList.replace('bg-on-surface-variant', 'bg-primary');
+              } else {
+                  notifyBtn.classList.replace('bg-primary/20', 'bg-outline/20');
+                  dot.classList.replace('right-1', 'left-1');
+                  dot.classList.replace('bg-primary', 'bg-on-surface-variant');
+              }
+          };
       }
     });
   </script>

@@ -225,3 +225,47 @@ export async function toggleLikeDiscussion(discussionId, currentLikes) {
     if (error) throw error
     return true
 }
+
+// --- PERFIL ---
+
+/**
+ * Busca dados do credenciado vinculado ao usuário (se existir)
+ */
+export async function getUserExpertData() {
+    const user = await getUser()
+    if (!user) return null
+    
+    // Tenta buscar pelo nome completo (que é o que temos do Google)
+    const { data, error } = await supabase
+        .from('experts')
+        .select('*')
+        .eq('full_name', user.user_metadata.full_name)
+        .maybeSingle()
+        
+    if (error && error.code !== 'PGRST116') {
+        console.error('Erro ao buscar dados de expert:', error.message)
+    }
+    return data
+}
+
+/**
+ * Retorna estatísticas de contribuição do usuário (Discussões + Comentários)
+ */
+export async function getUserStats() {
+    const user = await getUser()
+    if (!user) return { discussions: 0, comments: 0, total: 0 }
+
+    const [discussions, comments] = await Promise.all([
+        supabase.from('discussions').select('id', { count: 'exact', head: true }).eq('author_id', user.id),
+        supabase.from('discussion_comments').select('id', { count: 'exact', head: true }).eq('author_id', user.id)
+    ])
+
+    const dCount = discussions.count || 0
+    const cCount = comments.count || 0
+
+    return {
+        discussions: dCount,
+        comments: cCount,
+        total: dCount + cCount
+    }
+}
