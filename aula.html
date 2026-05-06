@@ -120,7 +120,7 @@
       <div class="bg-surface p-gutter rounded-xl border border-outline/30 shadow-xl">
         <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-stack-md">
           <div>
-            <span class="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full uppercase tracking-[0.1em]">Fundamentos do Mercado</span>
+            <span id="lessonBadge" class="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full uppercase tracking-[0.1em]">Aula 01</span>
             <h2 id="mainLessonTitle" class="mt-3 font-bold text-3xl md:text-5xl text-on-surface leading-tight tracking-tighter">Conhecendo o novo mercado bilionário da Construção Civil</h2>
           </div>
           <div class="flex gap-2 shrink-0">
@@ -399,15 +399,14 @@
         ]
       },
       "2": {
-        title: "AULA 2: Implementação Prática I",
+        title: "Todas as Etapas da Contrução com Formas de Isopor",
         duration: "Hoje às 20h",
         videoUrl: "https://www.youtube.com/embed/It7Rl5HaoOM?autoplay=0&rel=0&modestbranding=1", 
         thumbnail: "https://img.youtube.com/vi/It7Rl5HaoOM/maxresdefault.jpg",
         description: "Técnicas reais de montagem, travamento e concretagem com o sistema Iforms (Parte 1).",
         released: true,
         resources: [
-          { name: "Checklist de Obra - Aula 2", type: "pdf" },
-          { name: "Guia de Montagem Iforms", type: "pdf" }
+          { name: "EBOOK 2 - Aula 2 Intensivão ICF", type: "pdf", url: "https://drive.google.com/file/d/1kVym2QvvvDD7XiTuVaBkA6heRM6fnGIn/view" }
         ]
       },
       "3": {
@@ -451,6 +450,9 @@
         document.title = `${lesson.title} - Intensivão ICF`;
         const titleElement = document.getElementById('mainLessonTitle');
         if (titleElement) titleElement.textContent = lesson.title;
+
+        const badgeElement = document.getElementById('lessonBadge');
+        if (badgeElement) badgeElement.textContent = `Aula ${String(lessonId).padStart(2, '0')}`;
 
         const durationElement = document.querySelector('.text-on-surface-variant.text-sm.font-medium');
         if (durationElement) durationElement.textContent = `Aula ${lessonId} · ${lesson.duration}`;
