@@ -54,7 +54,7 @@
   </header>
 
   <!-- Side Drawer Overlay -->
-  <div id="menuOverlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-background/60 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+  <div id="menuOverlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-background/60 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
 
   <!-- Side Drawer Content -->
   <aside id="sideMenu" class="fixed top-0 left-0 h-full w-[280px] bg-surface z-[70] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-out border-r border-outline-variant">
@@ -470,7 +470,7 @@
     <!-- Header -->
     <div class="p-6 border-b border-outline flex items-center justify-between bg-surface/50 backdrop-blur-md sticky top-0">
       <div class="flex items-center gap-3">
-        <button onclick="closeDirectory()" class="material-symbols-outlined text-on-surface-variant">arrow_back</button>
+        <button onclick="window.closeDirectory()" class="material-symbols-outlined text-on-surface-variant">arrow_back</button>
         <h3 id="directoryTitle" class="text-lg font-bold">Profissionais</h3>
       </div>
       <div class="bg-primary/10 px-3 py-1 rounded-full">
@@ -482,7 +482,7 @@
     <div class="p-6 space-y-4 border-b border-outline">
       <div class="relative">
         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
-        <input type="text" id="regionFilter" oninput="filterByRegion()" placeholder="Buscar por Cidade ou Estado..." class="w-full bg-surface border border-outline rounded-2xl py-4 pl-12 pr-4 text-sm text-white focus:border-primary outline-none transition-all">
+        <input type="text" id="regionFilter" oninput="window.filterByRegion()" placeholder="Buscar por Cidade ou Estado..." class="w-full bg-surface border border-outline rounded-2xl py-4 pl-12 pr-4 text-sm text-white focus:border-primary outline-none transition-all">
       </div>
     </div>
 
@@ -514,8 +514,8 @@
         <input type="tel" id="expertPhone" placeholder="WhatsApp (com DDD)" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
         <input type="text" id="expertCity" placeholder="Cidade / Estado" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-colors">
       </div>
-      <button onclick="submitExpert()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">ENVIAR CADASTRO</button>
-      <button onclick="closeExpertModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Voltar</button>
+      <button onclick="window.submitExpert()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">ENVIAR CADASTRO</button>
+      <button onclick="window.closeExpertModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Voltar</button>
     </div>
   </div>
 
@@ -533,8 +533,8 @@
         <input type="text" id="postTitle" placeholder="Título da Discussão" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-all">
         <textarea id="postContent" rows="4" placeholder="O que você quer compartilhar?" class="w-full bg-background border border-outline rounded-xl p-4 text-sm text-white focus:border-primary outline-none transition-all resize-none"></textarea>
       </div>
-      <button onclick="submitNewDiscussion()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">PUBLICAR NO MURAL</button>
-      <button onclick="closeNewDiscussionModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Cancelar</button>
+      <button onclick="window.submitNewDiscussion()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">PUBLICAR NO MURAL</button>
+      <button onclick="window.closeNewDiscussionModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest">Cancelar</button>
     </div>
   </div>
 
@@ -617,6 +617,7 @@
     window.toggleMenu = (show) => {
       const menu = document.getElementById('sideMenu');
       const overlay = document.getElementById('menuOverlay');
+      if (!menu || !overlay) return;
       if (show) {
         overlay.classList.remove('hidden');
         setTimeout(() => {
@@ -630,6 +631,56 @@
           overlay.classList.add('hidden');
         }, 300);
       }
+    }
+
+    window.toggleLike = (btn) => {
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const count = btn.querySelector('.text-xs');
+      let current = parseInt(count.textContent);
+      
+      const isFilled = icon.style.fontVariationSettings.includes("'FILL' 1");
+      if (isFilled) {
+        icon.style.fontVariationSettings = "'FILL' 0";
+        count.textContent = current - 1;
+        btn.classList.remove('text-primary');
+        btn.classList.add('text-on-surface-variant');
+      } else {
+        icon.style.fontVariationSettings = "'FILL' 1";
+        count.textContent = current + 1;
+        btn.classList.remove('text-on-surface-variant');
+        btn.classList.add('text-primary');
+      }
+    }
+
+    window.openExpertModal = () => {
+      document.getElementById('expertModal').classList.remove('hidden');
+      document.getElementById('expertModal').classList.add('flex');
+    }
+
+    window.closeExpertModal = () => {
+      document.getElementById('expertModal').classList.add('hidden');
+      document.getElementById('expertModal').classList.remove('flex');
+    }
+
+    window.submitExpert = () => {
+      const name = document.getElementById('expertName').value;
+      const cat = document.getElementById('expertCategory').value;
+      const phone = document.getElementById('expertPhone').value;
+      const city = document.getElementById('expertCity').value;
+
+      if (!name || !cat || !phone || !city) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      const notification = document.getElementById('successNotification');
+      notification.classList.remove('hidden');
+      setTimeout(() => notification.classList.add('hidden'), 3000);
+      
+      window.closeExpertModal();
+      document.getElementById('expertName').value = '';
+      document.getElementById('expertPhone').value = '';
+      document.getElementById('expertCity').value = '';
     }
 
     // Mock Data for demonstration
@@ -857,10 +908,11 @@
 
     function renderDiscussionsList() {
       const list = document.getElementById('discussions-list');
+      if (!list) return;
       list.innerHTML = discussions.map(d => `
-        <article onclick="openThread(${d.id})" class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group cursor-pointer active:scale-[0.98]">
+        <article onclick="window.openThread(${d.id})" class="bg-surface border border-outline rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-all group cursor-pointer active:scale-[0.98]">
           <div class="flex items-start justify-between">
-            <div class="flex items-center gap-3">
+            <div class="flex items-start gap-3">
               <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
                 <span class="material-symbols-outlined text-primary">person</span>
               </div>
@@ -869,11 +921,11 @@
                 <p class="text-[10px] text-on-surface-variant">Postado por <span class="text-primary font-bold">${d.author}</span> • ${d.time}</p>
               </div>
             </div>
-            ${d.fixed ? \'<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>\' : \'\'}
+            ${d.fixed ? '<span class="bg-primary/20 text-primary text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Fixado</span>' : ''}
           </div>
           <p class="text-xs text-on-surface-variant leading-relaxed line-clamp-2">${d.content}</p>
           <div class="pt-4 border-t border-outline flex items-center gap-6">
-            <div onclick="event.stopPropagation(); toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
+            <div onclick="event.stopPropagation(); window.toggleLike(this)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group/btn">
               <span class="material-symbols-outlined text-xl group-active/btn:scale-125 transition-transform">favorite</span>
               <span class="text-xs font-bold">${d.likes}</span>
             </div>
@@ -889,7 +941,7 @@
 
     function updateStats() {
       document.getElementById('stat-discussions').textContent = discussions.length + 338;
-      document.getElementById('stat-members').textContent = (1.2 + (discussions.length * 0.01)).toFixed(1) + \'k\';
+      document.getElementById('stat-members').textContent = (1.2 + (discussions.length * 0.01)).toFixed(1) + 'k';
       document.getElementById('stat-experts').textContent = professionals.length + 12;
     }
 
