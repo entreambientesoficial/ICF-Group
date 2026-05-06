@@ -408,39 +408,104 @@
   </div>
 
   <!-- Protocolo de Montagem Anti-Erro -->
-  <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden mt-4">
-    <div class="p-5 border-b border-white/10">
-      <div class="flex items-center justify-between">
+  <div class="rounded-2xl border border-primary/30 overflow-hidden mt-4" style="background:#020f22;">
+
+    <!-- Cabeçalho -->
+    <div class="p-5 border-b border-primary/20" style="background:linear-gradient(135deg,rgba(0,194,160,0.08) 0%,transparent 100%);">
+      <div class="flex items-start justify-between gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary">verified</span>
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-primary/30" style="background:rgba(0,194,160,0.12);">
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">shield_check</span>
           </div>
           <div>
-            <h3 class="font-bold text-white">Protocolo de Montagem Anti-Erro</h3>
-            <p class="text-[10px] text-on-surface-variant">Itens da Aula 2 — verificar antes da concretagem</p>
+            <h3 class="font-black text-white text-base">Protocolo de Montagem Anti-Erro</h3>
+            <p class="text-[10px] text-primary/80 font-bold uppercase tracking-widest mt-0.5">Conferência obrigatória antes da concretagem</p>
           </div>
         </div>
-        <span id="toolCheckStatus" class="hidden text-[10px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full"></span>
+        <span id="toolCheckStatus" class="hidden text-[10px] font-black text-primary bg-primary/10 border border-primary/30 px-3 py-1 rounded-full whitespace-nowrap shrink-0"></span>
       </div>
     </div>
-    <ul id="toolChecklist" class="divide-y divide-white/5">
-      <li class="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors">
-        <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-surface-variant text-primary focus:ring-primary focus:ring-offset-0 shrink-0" />
-        <span class="text-sm text-on-surface">Encaixe Bolinha com Bolinha / Logo com Logo</span>
-      </li>
-      <li class="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors">
-        <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-surface-variant text-primary focus:ring-primary focus:ring-offset-0 shrink-0" />
-        <span class="text-sm text-on-surface">Montagem Amarrada (fiadas desencontradas)</span>
-      </li>
-      <li class="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors">
-        <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-surface-variant text-primary focus:ring-primary focus:ring-offset-0 shrink-0" />
-        <span class="text-sm text-on-surface">Corte de gomos seguindo a marcação de 12,5 cm</span>
-      </li>
-      <li class="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors">
-        <input type="checkbox" class="w-5 h-5 rounded border-white/20 bg-surface-variant text-primary focus:ring-primary focus:ring-offset-0 shrink-0" />
-        <span class="text-sm text-on-surface">Travamento reforçado em cantos e bonecas</span>
-      </li>
-    </ul>
+
+    <!-- Categoria 1: Fundamentos Geométricos -->
+    <div>
+      <div class="flex items-center gap-2 px-5 pt-5 pb-2">
+        <span class="material-symbols-outlined text-primary text-base" style="font-variation-settings:'FILL' 1;">straighten</span>
+        <p class="text-[10px] font-black text-primary uppercase tracking-[0.18em]">Fundamentos Geométricos</p>
+      </div>
+      <ul id="toolChecklist" class="divide-y divide-white/5">
+        <li class="flex items-start gap-4 px-5 py-4 hover:bg-white/3 transition-colors">
+          <input type="checkbox" class="w-5 h-5 rounded border-primary/40 bg-background/60 text-primary focus:ring-primary focus:ring-offset-0 shrink-0 mt-0.5" style="accent-color:#00C2A0;" />
+          <div>
+            <span class="text-sm font-bold text-on-surface">Prumo, Nível, Alinhamento e Esquadro conferidos</span>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Os 4 pilares básicos de controle geométrico</p>
+          </div>
+        </li>
+
+        <!-- Categoria 2: Padrão de Montagem Iforms -->
+        <li class="pt-2">
+          <div class="flex items-center gap-2 px-5 pt-3 pb-2">
+            <span class="material-symbols-outlined text-primary text-base" style="font-variation-settings:'FILL' 1;">view_in_ar</span>
+            <p class="text-[10px] font-black text-primary uppercase tracking-[0.18em]">Padrão de Montagem Iforms</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 px-5 py-4 hover:bg-white/3 transition-colors">
+          <input type="checkbox" class="w-5 h-5 rounded border-primary/40 bg-background/60 text-primary focus:ring-primary focus:ring-offset-0 shrink-0 mt-0.5" style="accent-color:#00C2A0;" />
+          <div>
+            <span class="text-sm font-bold text-on-surface">Encaixe Bolinha com Bolinha / Logo com Logo</span>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Sistema Anti-Erro — impede montagem invertida</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 px-5 py-4 hover:bg-white/3 transition-colors">
+          <input type="checkbox" class="w-5 h-5 rounded border-primary/40 bg-background/60 text-primary focus:ring-primary focus:ring-offset-0 shrink-0 mt-0.5" style="accent-color:#00C2A0;" />
+          <div>
+            <span class="text-sm font-bold text-on-surface">Montagem Amarrada / Desencontrada</span>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Garante a estabilidade estrutural das fiadas</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 px-5 py-4 hover:bg-white/3 transition-colors">
+          <input type="checkbox" class="w-5 h-5 rounded border-primary/40 bg-background/60 text-primary focus:ring-primary focus:ring-offset-0 shrink-0 mt-0.5" style="accent-color:#00C2A0;" />
+          <div>
+            <span class="text-sm font-bold text-on-surface">Ajustes de gomos respeitando modulação de 12,5 cm</span>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Modulação técnica Iforms — não improvise os cortes</p>
+          </div>
+        </li>
+
+        <!-- Categoria 3: Segurança de Concretagem -->
+        <li class="pt-2">
+          <div class="flex items-center gap-2 px-5 pt-3 pb-2">
+            <span class="material-symbols-outlined text-primary text-base" style="font-variation-settings:'FILL' 1;">warning</span>
+            <p class="text-[10px] font-black text-primary uppercase tracking-[0.18em]">Segurança de Concretagem</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 px-5 py-4 hover:bg-white/3 transition-colors">
+          <input type="checkbox" class="w-5 h-5 rounded border-primary/40 bg-background/60 text-primary focus:ring-primary focus:ring-offset-0 shrink-0 mt-0.5" style="accent-color:#00C2A0;" />
+          <div>
+            <span class="text-sm font-bold text-on-surface">Travamento extra em Cantos e Bonecas de vãos</span>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Pontos de maior pressão hidrostática do concreto</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 px-5 py-4 hover:bg-white/3 transition-colors">
+          <input type="checkbox" class="w-5 h-5 rounded border-primary/40 bg-background/60 text-primary focus:ring-primary focus:ring-offset-0 shrink-0 mt-0.5" style="accent-color:#00C2A0;" />
+          <div>
+            <span class="text-sm font-bold text-on-surface">Armação de aço posicionada conforme cálculo estrutural</span>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Bitola, espaçamento e cobrimento conforme projeto</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mensagem de Sucesso -->
+    <div id="protocoloSucesso" class="hidden mx-5 mb-4 mt-2 flex items-center gap-3 p-4 rounded-xl border border-primary/40" style="background:rgba(0,194,160,0.08);">
+      <span class="material-symbols-outlined text-primary shrink-0" style="font-variation-settings:'FILL' 1;">check_circle</span>
+      <p class="text-sm font-bold text-primary leading-snug">Protocolo Concluído. Obra pronta para concretar conforme o método ICF.</p>
+    </div>
+
+    <!-- Rodapé Técnico -->
+    <div class="px-5 py-4 border-t border-primary/10">
+      <p class="text-[10px] text-on-surface-variant leading-relaxed">
+        Este protocolo baseia-se nas diretrizes técnicas da Aula 2 e no Manual Iforms. Não substitui a inspeção do Responsável Técnico (RT).
+      </p>
+    </div>
   </div>
 
 </main>
@@ -546,9 +611,10 @@
   }
 
   // ── Protocolo de Montagem Anti-Erro ───────────────────────────────
-  const toolCheckboxes = document.querySelectorAll('#toolChecklist input');
-  const toolStatusEl   = document.getElementById('toolCheckStatus');
-  const CHECKLIST_KEY  = 'iforms_protocolo_checklist';
+  const toolCheckboxes  = document.querySelectorAll('#toolChecklist input[type="checkbox"]');
+  const toolStatusEl    = document.getElementById('toolCheckStatus');
+  const protocoloOk     = document.getElementById('protocoloSucesso');
+  const CHECKLIST_KEY   = 'iforms_protocolo_checklist';
 
   const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]');
   toolCheckboxes.forEach((cb, i) => {
@@ -561,15 +627,21 @@
   });
 
   function updateStatus(states) {
-    const done = states.filter(Boolean).length;
-    if (done === toolCheckboxes.length) {
-      toolStatusEl.textContent = '✓ Protocolo completo!';
+    const done  = states.filter(Boolean).length;
+    const total = toolCheckboxes.length;
+    const all   = done === total;
+
+    if (all) {
+      toolStatusEl.textContent = '✓ Concluído';
       toolStatusEl.classList.remove('hidden');
+      protocoloOk.classList.remove('hidden');
     } else if (done > 0) {
-      toolStatusEl.textContent = `${done}/${toolCheckboxes.length} itens`;
+      toolStatusEl.textContent = `${done}/${total} itens`;
       toolStatusEl.classList.remove('hidden');
+      protocoloOk.classList.add('hidden');
     } else {
       toolStatusEl.classList.add('hidden');
+      protocoloOk.classList.add('hidden');
     }
   }
 
