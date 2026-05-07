@@ -1,3 +1,14 @@
+# STATUS DO PROJETO - GRUPO ICF
+
+> [!CAUTION]
+> # ⚠️ REGRA DE OURO: NÃO ALTERAR O QUE JÁ ESTÁ FUNCIONANDO OU FOI APROVADO! ⚠️
+> **QUALQUER PROBLEMA ENCONTRADO É RESULTADO DE MEXER EM ALGO QUE NÃO DEVERIA TER SIDO TOCADO. MANTENHA A ESTABILIDADE DAS TELAS JÁ FINALIZADAS.**
+
+## Histórico de Restauração (07/05/2026)
+- **ROLLBACK TOTAL**: O projeto foi revertido para o commit estável `4d62e53` para descartar automações de admin não solicitadas.
+- **RESTAURAÇÃO DE CONEXÕES**: Funções críticas de Perfil e Comunidade foram reintegradas ao `supabase.js`.
+- **ADMIN ORIGINAL**: Mantido o arquivo `admin.html` com a adição apenas do campo PDF.
+
 # STATUS DO PROJETO — Iforms Grupo ICF PWA
 
 > Última atualização: 2026-05-07 (Manhã - Lançamento Aula 3)
