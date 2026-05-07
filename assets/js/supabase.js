@@ -45,11 +45,11 @@ export async function syncProfile(user) {
 export async function getProgress() {
     const user = await getUser()
     if (!user) return []
-    const { data, error } = await supabase.from('user_progress').select('*').eq('user_id', user.id)
+    const { data } = await supabase.from('user_progress').select('*').eq('user_id', user.id)
     return data || []
 }
 
-export async function updateProgress(lessonId, status) {
+export async function updateProgress(lessonId) {
     const user = await getUser()
     if (!user) return
     const numericId = typeof lessonId === 'string' ? parseInt(lessonId.replace('lesson_', '')) : lessonId;
@@ -62,21 +62,6 @@ export async function updateProgress(lessonId, status) {
     return true
 }
 
-// --- ADMIN ---
-export async function getBatches() {
-    const { data } = await supabase.from('batches').select('*').order('created_at', { ascending: false });
-    return data || [];
-}
-export async function updateLessonAdmin(id, lessonData) {
-    await supabase.from('lessons').update(lessonData).eq('id', id);
-}
-export async function updateBatchAdmin(id, batchData) {
-    await supabase.from('batches').update(batchData).eq('id', id);
-}
-export async function createBatch(name, status) {
-    await supabase.from('batches').insert([{ name, status, created_at: new Date().toISOString() }]);
-}
-
 // --- COMUNIDADE & EXPERTS ---
 export async function getExperts(category = '') {
     let query = supabase.from('experts').select('*').order('created_at', { ascending: false })
@@ -86,7 +71,9 @@ export async function getExperts(category = '') {
 }
 
 export async function registerExpert(expertData) {
-    await supabase.from('experts').insert([{ ...expertData, created_at: new Date().toISOString() }])
+    const user = await getUser()
+    if (!user) throw new Error('Não autenticado')
+    await supabase.from('experts').insert([{ ...expertData, user_id: user.id, created_at: new Date().toISOString() }])
 }
 
 export async function getDiscussions() {
@@ -112,14 +99,19 @@ export async function addComment(discussionId, text) {
 }
 
 export async function toggleLikeDiscussion(discussionId, currentLikes) {
+    const user = await getUser()
+    if (!user) return
+    const key = `liked_${discussionId}_${user.id}`
+    if (localStorage.getItem(key)) return
     await supabase.from('discussions').update({ likes: currentLikes + 1 }).eq('id', discussionId)
+    localStorage.setItem(key, '1')
 }
 
 // --- PERFIL & STATS ---
 export async function getUserExpertData() {
     const user = await getUser()
     if (!user) return null
-    const { data } = await supabase.from('experts').select('*').eq('full_name', user.user_metadata.full_name).maybeSingle()
+    const { data } = await supabase.from('experts').select('*').eq('user_id', user.id).maybeSingle()
     return data
 }
 

@@ -3,15 +3,17 @@
 > [!CAUTION]
 > # ⚠️ REGRA DE OURO: NÃO ALTERAR O QUE JÁ ESTÁ FUNCIONANDO OU FOI APROVADO! ⚠️
 > **QUALQUER PROBLEMA ENCONTRADO É RESULTADO DE MEXER EM ALGO QUE NÃO DEVERIA TER SIDO TOCADO. MANTENHA A ESTABILIDADE DAS TELAS JÁ FINALIZADAS.**
+>
+> **ATENÇÃO CLAUDE:** O `supabase.js` importa via CDN (`cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm`). NÃO trocar para import npm (`@supabase/supabase-js`) — o browser não resolve bare imports sem o Vite. A mudança quebra o app silenciosamente.
 
 ## Histórico de Restauração (07/05/2026)
 - **ROLLBACK TOTAL**: O projeto foi revertido para o commit estável `4d62e53` para descartar automações de admin não solicitadas.
 - **RESTAURAÇÃO DE CONEXÕES**: Funções críticas de Perfil e Comunidade foram reintegradas ao `supabase.js`.
-- **ADMIN ORIGINAL**: Mantido o arquivo `admin.html` com a adição apenas do campo PDF.
+- **ADMIN DELETADO**: `admin.html` removido definitivamente em 07/05/2026 (tarde). Estava quebrado e sem suporte no `supabase.js`.
 
 # STATUS DO PROJETO — Iforms Grupo ICF PWA
 
-> Última atualização: 2026-05-07 (Manhã - Lançamento Aula 3)
+> Última atualização: 2026-05-07 (Tarde - Auditoria de Código)
 > Projeto: `c:\APP-SITE-SAAS\ICF-GROUP\iforms-pwa\`
 
 ---
@@ -105,11 +107,54 @@ iforms-pwa/
 - [x] **Sincronização Global de Níveis**: Unificação dos termos "Iniciante", "Intermediário" e "Expert" em todas as sidebars do app (`dashboard`, `calculadora`, `perfil`).
 - [x] **Ajuste de Fluxo**: Corrigida a estrutura HTML do modal de logout para garantir UX premium e sem quebras de layout.
 
+---
+
+## Auditoria de Código — 07/05/2026 (Tarde)
+
+Auditoria completa realizada por desenvolvedor sênior após incidente com painel admin do Gemini.
+
+### Problemas Encontrados e Corrigidos ✅
+
+| Severidade | Problema | Arquivo | Ação |
+|------------|----------|---------|------|
+| CRÍTICO | Funções admin orphaned (`getBatches`, `updateLessonAdmin`, etc.) | `supabase.js` | Removidas |
+| CRÍTICO | `toggleLikeDiscussion` sem controle de duplicatas | `supabase.js` | Dedup via `localStorage` |
+| GRAVE | `perfil.html` ausente no build de produção | `vite.config.js` | Adicionado ao rollup |
+| GRAVE | Service Worker com `CACHE_NAME` desatualizado (`v1`) | `sw.js` | Bumped para `v2` |
+| MODERADO | `getUserExpertData` buscava expert por nome em vez de `user_id` | `supabase.js` | Corrigido + coluna `user_id` adicionada no banco |
+| MODERADO | `registerExpert` não vinculava o expert ao usuário autenticado | `supabase.js` | Corrigido para incluir `user_id` no insert |
+| BAIXO | Variáveis órfãs (`error`, `status`) declaradas mas não usadas | `supabase.js` | Limpas |
+| UX | Botão FAB de suporte flutuante sem ação no Dashboard | `dashboard.html` | Removido |
+| ARQUIVO | `admin.html` quebrado (importava funções deletadas) | raiz | Deletado |
+
+### Problemas NÃO Alterados (funcionando, baixo risco)
+
+| Item | Motivo para manter |
+|------|-------------------|
+| `supabase.js` importa via CDN jsDelivr | **NÃO trocar para npm** — browser não resolve bare imports sem Vite. CDN é a abordagem correta para este projeto. |
+| `updateProgress` faz 2 queries (select + insert/update) | Funciona corretamente. Upsert seria mais elegante mas requer confirmar constraint única no banco. |
+
+### Estado do Banco de Dados (mapeado em 07/05/2026)
+
+Tabelas ativas e em uso pelo app:
+- `profiles` — auth, nome, avatar, nível, batch_id
+- `user_progress` — progresso por aula (user_id + lesson_id + updated_at)
+- `discussions` + `discussion_comments` — mural da comunidade
+- `experts` — diretório de especialistas (**agora com coluna `user_id`**)
+- `calculation_history` — histórico da calculadora
+
+Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
+- `batches` — sistema de turmas do admin (inativo). `profiles.batch_id` aponta para ela.
+- `lessons` — aulas gerenciadas pelo banco (inativo). App usa conteúdo hardcoded no HTML.
+
+---
+
 ## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
 - [x] Módulo Financeiro (Viabilidade) na Calculadora.
+- [x] Auditoria de Código e Estabilização.
 - [ ] Refinamento Financeiro: Utilizar Área da Laje como base principal para CUB (Aguardando Aulas 04/05).
 - [ ] Geração de Certificado em PDF (Próximo Módulo).
 - [ ] Conteúdo e Quiz das Aulas 04 e 05.
-- [ ] Painel Administrativo do Mentor.
+- [ ] Painel Administrativo do Mentor (reescrever do zero, com módulo JS separado e auth via Supabase).
 - [ ] Módulo Offline: Melhorar cache de vídeos para acesso sem internet.

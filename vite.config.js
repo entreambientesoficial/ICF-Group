@@ -26,6 +26,7 @@ export default defineConfig({
         aula:        resolve(__dirname, 'aula.html'),
         calculadora: resolve(__dirname, 'calculadora.html'),
         comunidade:  resolve(__dirname, 'comunidade.html'),
+        perfil:      resolve(__dirname, 'perfil.html'),
         offline:     resolve(__dirname, 'offline.html'),
       },
     },
