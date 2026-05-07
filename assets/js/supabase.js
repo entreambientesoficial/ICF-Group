@@ -269,3 +269,36 @@ export async function getUserStats() {
         total: dCount + cCount
     }
 }
+
+/**
+ * Atualiza os metadados do perfil do usuário
+ */
+export async function updateProfile(metadata) {
+    const { data, error } = await supabase.auth.updateUser({
+        data: metadata
+    })
+    if (error) throw error
+    return data
+}
+
+/**
+ * Salva um cálculo completo (Técnico + Financeiro) no histórico
+ */
+export async function saveCalculation(calcData) {
+    const user = await getUser();
+    if (!user) return null;
+
+    const { data, error } = await supabase
+        .from('calculation_history')
+        .insert([{
+            user_id: user.id,
+            ...calcData,
+            created_at: new Date().toISOString()
+        }]);
+
+    if (error) {
+        console.error('Erro ao salvar cálculo:', error.message);
+        throw error;
+    }
+    return data;
+}

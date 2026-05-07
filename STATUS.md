@@ -1,6 +1,6 @@
 # STATUS DO PROJETO — Iforms Grupo ICF PWA
 
-> Última atualização: 2026-05-06 (Noite - Profissionalização e Ecossistema)
+> Última atualização: 2026-05-07 (Manhã - Lançamento Aula 3)
 > Projeto: `c:\APP-SITE-SAAS\ICF-GROUP\iforms-pwa\`
 
 ---
@@ -68,23 +68,37 @@ iforms-pwa/
 
 ## Changelog — Sessão 06/05 (Final)
 
-### Profissionalização & UX
-- **[FEAT]** **Perfil Dinâmico**: Integração das funções `getUserStats` e `getUserExpertData` para exibir dados reais de engajamento do aluno.
-- **[FIX]** **Ecosystem Links**: Correção de todos os links 404 nos cards do Dashboard, apontando para as URLs oficiais do ecossistema Grupo ICF.
-- **[CLEAN]** **Interface Minimalista**: Removida a seção "Dados do Credenciado" e otimizado o toggle de notificações (corrigida a lógica de cores e estado inicial).
-- **[FIX]** **Suporte Técnico**: Redirecionamento do botão de suporte diretamente para o WhatsApp oficial, removendo fluxos desnecessários.
+### Lançamento & Conteúdo (07/05)
+- **[FEAT]** **Aula 3 Liberada**: Vídeo e material de apoio (Ebook 3) integrados e disponíveis no app.
+- **[UX]** **Desbloqueio Progressivo**: Atualizada a lógica do Dashboard para permitir acesso à Aula 3.
+
+### Profissionalização & UX (06/05)
 
 ---
 
-## Roadmap Atualizado
+### 2026-05-07 - Lançamento da Aula 03 & Calculadora de Negócios
+- [x] Liberação oficial da Aula 03 (Vídeo e Ebook).
+- [x] Implementação de 12 novas questões de Quiz técnico da Aula 03.
+- [x] Evolução da `calculadora.html` para ferramenta de negócios:
+    - Ajuste de terminologia técnica: "Paredes Estruturais (18cm)" e "Paredes de Vedação (12cm)".
+    - Adição de parâmetros CUB e BDI com correção para "Resultado Bruto Estimado (BDI)".
+    - Módulo de Estudo de Viabilidade Financeira (Custo Obra Cinza + Preço de Venda).
+    - Módulo de Superestrutura: Cálculo de Vigotas, EPS de laje e Concreto de capa.
+    - Nota Técnica de Execução: Inclusão do "Corte em J" no memorial.
+    - Persistência de CUB local e salvamento no Supabase (`calculation_history`).
+- [x] Design Premium do Memorial Descritivo para "Print and Send" (Relatório Executivo em nova janela).
 
-- [x] Integrar Supabase para Autenticação (Google Login)
+### Estabilidade & Refatoração do Perfil (07/05 - Manhã)
+- [x] **Correção Crítica de Sintaxe**: Resolvido erro de declaração duplicada (`sideName`) que travava o script do `perfil.html`.
+- [x] **Restauração do Perfil**: Re-implementação da função `editProfile()` com integração real ao Supabase (`auth.updateUser`) para alteração de nome.
+- [x] **Sincronização Global de Níveis**: Unificação dos termos "Iniciante", "Intermediário" e "Expert" em todas as sidebars do app (`dashboard`, `calculadora`, `perfil`).
+- [x] **Ajuste de Fluxo**: Corrigida a estrutura HTML do modal de logout para garantir UX premium e sem quebras de layout.
+
+## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
-- [x] Correção Crítica: Motor de Cálculo de Concreto
-- [x] Comunidade Real (Mural + Diretório Supabase)
-- [x] Perfil Dinâmico com Estatísticas de Engajamento
-- [x] Ativação Total do Ecossistema (Links Reais)
-- [ ] Criar Painel de Admin para o Mentor (Fase 4 - Gerenciamento de Alunos)
-- [ ] Inserir perguntas e respostas das Aulas 03 a 05
-- [ ] Implementar geração de Certificado PDF (Pós-conclusão do curso)
-- [ ] Módulo Offline: Melhorar cache de vídeos para acesso sem internet
+- [x] Módulo Financeiro (Viabilidade) na Calculadora.
+- [ ] Refinamento Financeiro: Utilizar Área da Laje como base principal para CUB (Aguardando Aulas 04/05).
+- [ ] Geração de Certificado em PDF (Próximo Módulo).
+- [ ] Conteúdo e Quiz das Aulas 04 e 05.
+- [ ] Painel Administrativo do Mentor.
+- [ ] Módulo Offline: Melhorar cache de vídeos para acesso sem internet.

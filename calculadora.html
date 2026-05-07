@@ -91,15 +91,15 @@
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full border-2 border-primary/30 bg-surface-variant flex items-center justify-center overflow-hidden">
-          <span class="material-symbols-outlined text-primary text-2xl">person</span>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full border-2 border-primary/30 bg-surface-variant flex items-center justify-center overflow-hidden">
+            <span class="material-symbols-outlined text-primary text-2xl">person</span>
+          </div>
+          <div>
+            <p id="side-menu-name" class="text-sm font-bold text-white">Aluno Iforms</p>
+            <p id="side-menu-level" class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
+          </div>
         </div>
-        <div>
-          <p class="text-sm font-bold text-white">Aluno Iforms</p>
-          <p class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
-        </div>
-      </div>
     </div>
 
     <!-- Links de Navegação -->
@@ -156,7 +156,7 @@
   <div class="mb-6">
     <p class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Grupo ICF · Ferramentas Técnicas</p>
     <h1 class="text-3xl font-black text-white">Calculadora ICF</h1>
-    <p class="text-on-surface-variant text-sm mt-1">Orçamento misto — paredes externas (18cm) e internas (12cm).</p>
+    <p class="text-on-surface-variant text-sm mt-1">Orçamento misto — paredes estruturais (18cm) e de vedação (12cm).</p>
   </div>
 
   <!-- FORMULÁRIO DE ENTRADA -->
@@ -167,15 +167,15 @@
       <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-primary/40 bg-primary/5">
         <span class="material-symbols-outlined text-primary text-xl shrink-0">domain</span>
         <div>
-          <p class="text-xs font-black text-primary uppercase tracking-wider">18cm Estrutural</p>
-          <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes Externas</p>
+          <p class="text-xs font-black text-primary uppercase tracking-wider">Estrutural (18cm)</p>
+          <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes de Carga</p>
         </div>
       </div>
       <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-white/10 bg-surface-variant/50">
         <span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0">splitscreen</span>
         <div>
-          <p class="text-xs font-black text-on-surface-variant uppercase tracking-wider">12cm Veda</p>
-          <p class="text-[10px] text-on-surface-variant/60 mt-0.5">Paredes Internas</p>
+          <p class="text-xs font-black text-on-surface-variant uppercase tracking-wider">Vedação (12cm)</p>
+          <p class="text-[10px] text-on-surface-variant/60 mt-0.5">Paredes Divisórias</p>
         </div>
       </div>
     </div>
@@ -188,7 +188,7 @@
         <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Geometria da Obra</p>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Externas</label>
+            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Estruturais</label>
             <div class="relative">
               <input id="inArea18" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 120"
                 class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
@@ -197,13 +197,35 @@
             <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Forma 18cm</p>
           </div>
           <div>
-            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes Internas</label>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes de Vedação</label>
             <div class="relative">
               <input id="inArea12" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 60"
                 class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
               <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
             </div>
             <p class="text-[9px] text-on-surface-variant/70 mt-1 font-bold">→ Forma 12cm</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-white/5 pt-4">
+        <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Parâmetros Financeiros (Aula 03)</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">CUB do Estado (m²)</label>
+            <div class="relative">
+              <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 2500"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem BDI (%)</label>
+            <div class="relative">
+              <input id="inBDI" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Sugestão: 35"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -223,6 +245,15 @@
             <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Cantos (90°)</label>
             <input id="inCantos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 4"
               class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Área Total da Laje (Opcional)</label>
+            <div class="relative">
+              <input id="inLaje" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 100"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+            </div>
+            <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Vigotas + Lajotas EPS + Capa Concreto</p>
           </div>
           <div class="col-span-2">
             <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Total de Vãos (Portas + Janelas)</label>
@@ -258,11 +289,11 @@
       <div id="memResumo" class="grid grid-cols-3 gap-2 text-center">
         <div class="bg-background/40 rounded-xl p-3">
           <p class="text-lg font-black text-primary" id="memArea18">—</p>
-          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m² Ext. (18cm)</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m² Estrutural (18)</p>
         </div>
         <div class="bg-background/40 rounded-xl p-3">
           <p class="text-lg font-black text-white" id="memArea12">—</p>
-          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m² Int. (12cm)</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">m² Vedação (12)</p>
         </div>
         <div class="bg-background/40 rounded-xl p-3">
           <p class="text-lg font-black text-white" id="memAltura">—</p>
@@ -361,31 +392,139 @@
       </div>
     </div>
 
-    <!-- Acabamento -->
-    <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden">
+    <!-- Laje e Cobertura -->
+    <div id="sectionLaje" class="hidden bg-surface rounded-2xl border border-white/10 overflow-hidden">
       <div class="flex items-center gap-3 p-4 border-b border-white/10 bg-white/5">
-        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">format_paint</span>
-        <h3 class="font-black text-sm text-white uppercase tracking-widest">Acabamento — ICFlex & Tela</h3>
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">Roofing</span>
+        <h3 class="font-black text-sm text-white uppercase tracking-widest">Laje — Superestrutura</h3>
       </div>
       <div class="divide-y divide-white/5">
         <div class="flex items-center justify-between p-4">
           <div>
-            <p class="text-sm font-bold text-on-surface">ICFlex (Reboco 4 em 1)</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5" id="icflexKgLabel">— kg total · sacos de 20 kg</p>
+            <p class="text-sm font-bold text-on-surface">Vigotas Treliçadas</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Consumo est.: 1,5m por m² de laje</p>
           </div>
           <div class="text-right">
-            <p class="text-2xl font-black text-white" id="resICFlex">—</p>
-            <p class="text-[10px] text-on-surface-variant">sacos</p>
+            <p class="text-2xl font-black text-white" id="resVigota">—</p>
+            <p class="text-[10px] text-on-surface-variant">metros</p>
           </div>
         </div>
         <div class="flex items-center justify-between p-4">
           <div>
-            <p class="text-sm font-bold text-on-surface">Tela de Fibra de Vidro</p>
-            <p class="text-[10px] text-on-surface-variant mt-0.5">Ambas as faces · rolo 1m × 50m</p>
+            <p class="text-sm font-bold text-on-surface">Lajotas de EPS para Laje</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Consumo est.: 3 unidades por m²</p>
+          </div>
+          <div class="text-right">
+            <p class="text-2xl font-black text-white" id="resEpsLaje">—</p>
+            <p class="text-[10px] text-on-surface-variant">unidades</p>
+          </div>
+        </div>
+        <div class="p-4 bg-primary/5 border-t border-primary/20">
+          <div class="flex gap-2">
+            <span class="material-symbols-outlined text-primary text-sm">construction</span>
+            <p class="text-[10px] text-on-surface-variant leading-tight">
+              <span class="text-primary font-black uppercase">Nota Técnica:</span> O topo das paredes estruturais (18cm) deve receber o <span class="text-white font-bold underline">Corte em J</span> para garantir o apoio e o travamento monolítico com a laje.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acabamento Premium -->
+    <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden shadow-lg">
+      <div class="flex items-center gap-3 p-4 border-b border-white/10 bg-white/5">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">format_paint</span>
+        <h3 class="font-black text-sm text-white uppercase tracking-widest">Acabamento Técnico — Sistema ICFlex</h3>
+      </div>
+      <div class="divide-y divide-white/5">
+        <div class="flex items-center justify-between p-4">
+          <div>
+            <p class="text-sm font-bold text-green-400">ICFlex Balde Verde (1ª Demão)</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Base flexível 4 em 1 · Rendimento: 4 m²/balde</p>
+          </div>
+          <div class="text-right">
+            <p class="text-2xl font-black text-white" id="resICFlexVerde">—</p>
+            <p class="text-[10px] text-on-surface-variant">baldes</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-4">
+          <div>
+            <p class="text-sm font-bold text-orange-400">ICFlex Balde Laranja (2ª Demão)</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Acabamento e proteção · Rendimento: 4 m²/balde</p>
+          </div>
+          <div class="text-right">
+            <p class="text-2xl font-black text-white" id="resICFlexLaranja">—</p>
+            <p class="text-[10px] text-on-surface-variant">baldes</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-4">
+          <div>
+            <p class="text-sm font-bold text-on-surface">ICFibra (Tela de Vidro)</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Estruturante de reboco · Rolo 50m²</p>
           </div>
           <div class="text-right">
             <p class="text-2xl font-black text-white" id="resTela">—</p>
             <p class="text-[10px] text-on-surface-variant">rolos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTUDO DE VIABILIDADE FINANCEIRA (Refinamento Premium) -->
+    <div class="bg-gradient-to-br from-background via-surface to-background rounded-3xl border-2 border-primary/40 overflow-hidden shadow-[0_20px_50px_rgba(0,194,160,0.15)]">
+      <div class="p-6 border-b border-primary/20 bg-primary/5 flex justify-between items-center">
+        <div>
+          <p class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Negócios & Estratégia</p>
+          <h3 class="text-xl font-black text-white">Estudo de Viabilidade</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-3xl">analytics</span>
+        </div>
+      </div>
+      
+      <div class="p-6 space-y-6">
+        <!-- Grid de Valores -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Custo Est. Obra Cinza</p>
+            <p class="text-2xl font-black text-white" id="resCustoObra">R$ 0,00</p>
+            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase">Fórmula: CUB + 30%</p>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Preço Sugerido Venda</p>
+            <p class="text-2xl font-black text-primary" id="resPrecoVenda">R$ 0,00</p>
+            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase" id="bdiLabel">BDI Aplicado: 35%</p>
+          </div>
+        </div>
+
+        <!-- Barra de Lucratividade -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-end">
+            <p class="text-[11px] font-bold text-white uppercase tracking-wide">Resultado Bruto Estimado (BDI)</p>
+            <p class="text-lg font-black text-primary" id="resLucroAbsoluto">R$ 0,00</p>
+          </div>
+          <div class="h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
+            <div class="h-full bg-gradient-to-r from-primary/40 to-primary rounded-full" style="width: 100%"></div>
+          </div>
+          <p class="text-[10px] text-on-surface-variant italic leading-relaxed">
+            *Nota: O lucro real no sistema ICF costuma ser superior devido ao giro de capital 50% mais rápido que o convencional.
+          </p>
+        </div>
+
+        <button onclick="window.open('./relatorio.html', '_blank')" class="w-full py-4 bg-primary/10 border border-primary/50 text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+          Gerar Relatório para Cliente
+        </button>
+
+        <!-- Nota de Escopo (Refinamento Aula 03) -->
+        <div class="p-4 rounded-xl bg-primary/5 border border-primary/20">
+          <div class="flex gap-2 items-start">
+            <span class="material-symbols-outlined text-primary text-sm">info</span>
+            <p class="text-[10px] text-on-surface-variant leading-relaxed">
+              <span class="text-primary font-black uppercase">O que está incluso:</span> Esta estimativa contempla a <span class="text-white font-bold">Obra Cinza</span> (Fundação, Paredes ICF, Laje, Telhado e Infraestrutura Bruta). 
+              <br><br>
+              <span class="text-red-400 font-black uppercase">O que não está incluso:</span> Acabamentos finos (pisos, revestimentos), fiação elétrica, metais, louças e projetos. O <span class="text-white font-bold">BDI</span> de 35% refere-se à sua margem de lucro e custos indiretos.
+            </p>
           </div>
         </div>
       </div>
@@ -580,7 +719,32 @@
   </div>
 
   <script type="module">
-    import { logout, getUser } from './assets/js/supabase.js';
+    import { logout, getUser, getProgress } from './assets/js/supabase.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await getUser();
+      if (!user) return;
+
+      const name = user.user_metadata?.full_name || 'Aluno';
+      const firstName = name.split(' ')[0];
+      const photo = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${name}+ICF&background=00C2A0&color=fff`;
+
+      // Sincroniza Sidebar
+      const sideName = document.getElementById('side-menu-name');
+      const sideLevel = document.getElementById('side-menu-level');
+      const sideAvatar = document.querySelector('#sideMenu .w-12.h-12');
+
+      if (sideName) sideName.textContent = firstName;
+      if (sideAvatar) sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
+
+      const progressData = await getProgress(user.id);
+      const completedCount = progressData.length;
+      let level = 'Iniciante';
+      if (completedCount >= 5) level = 'Expert';
+      else if (completedCount >= 3) level = 'Intermediário';
+      
+      if (sideLevel) sideLevel.textContent = `Nível ${level}`;
+    });
 
     window.closeLogoutModal = () => {
       const modal = document.getElementById('logoutModal');
@@ -614,7 +778,7 @@
           overlay.classList.add('hidden');
         }, 300);
       }
-    }
+    };
 
     // ── Lógica da Calculadora ──────────────────────────────────────────
     const SIMULATION_KEY = 'iforms_last_simulation';
@@ -622,9 +786,13 @@
     window.calcularICF = (isAuto = false) => {
       const area18 = parseFloat(document.getElementById('inArea18').value) || 0;
       const area12 = parseFloat(document.getElementById('inArea12').value) || 0;
+      const laje   = parseFloat(document.getElementById('inLaje').value) || 0;
       const altura = parseFloat(document.getElementById('inAltura').value) || 0;
       const cantos = parseFloat(document.getElementById('inCantos').value) || 0;
       const vaos   = parseFloat(document.getElementById('inVaos').value) || 0;
+      
+      const cubValue   = parseFloat(document.getElementById('inCUB').value) || 0;
+      const bdiPercent = parseFloat(document.getElementById('inBDI').value) || 35;
 
       if (!isAuto) {
         if (area18 <= 0 && area12 <= 0) {
@@ -639,30 +807,43 @@
         return; // Silent return for auto-load
       }
 
-      // Salvar para persistência
+      // Salvar para persistência (incluindo CUB e Laje)
       localStorage.setItem(SIMULATION_KEY, JSON.stringify({
-        area18, area12, altura, cantos, vaos
+        area18, area12, laje, altura, cantos, vaos, cubValue, bdiPercent
       }));
+      localStorage.setItem('iforms_cub_padrao', cubValue);
 
       const somaAreas   = area18 + area12;
       const formas18    = Math.ceil(area18 * 2);
       const formas12    = Math.ceil(area12 * 2);
       const formasCanto = Math.ceil(((cantos + vaos * 2) * altura) / 0.40);
       
-      // Cálculo Técnico de Concreto:
-      // 18cm (Externas): 0.072 m³/m² (Núcleo de 10cm)
-      // 12cm (Internas): 0.042 m³/m² (Núcleo de 6cm)
-      const volBruto    = (area18 * 0.072) + (area12 * 0.042);
+      // Cálculo Técnico de Concreto (Aula 03):
+      // Paredes + Capa da Laje (5cm)
+      const volParedes  = (area18 * 0.072) + (area12 * 0.042);
+      const volLaje     = laje * 0.05; 
+      const volBruto    = volParedes + volLaje;
       const concreto    = volBruto * 1.05; // Margem de 5%
       
-      const icflexKg    = somaAreas * 2.8;
-      const icflexSacos = Math.ceil(icflexKg / 20);
+      // Laje Detalhes
+      const vigota      = Math.ceil(laje * 1.5);
+      const epsLaje     = Math.ceil(laje * 3);
+
+      // Acabamento ICFlex (Aula 03): 4 m2 por balde (baldes de 18kg + 3L)
+      const icflexBaldes = Math.ceil(somaAreas / 4);
+      
       const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
       
       const mLinear     = somaAreas / (altura || 1);
       const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * (altura || 1));
       const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear);
       const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
+
+      // Módulo Financeiro (Aula 03)
+      const totalAreaConstrucao = somaAreas / 2; // Estimativa de área construída baseada em paredes
+      const custoObraCinza = (cubValue * 1.3) * totalAreaConstrucao; 
+      const precoSugeridoVenda = custoObraCinza * (1 + (bdiPercent / 100));
+      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza;
 
       document.getElementById('memArea18').textContent = area18.toFixed(1);
       document.getElementById('memArea12').textContent = area12.toFixed(1);
@@ -675,9 +856,26 @@
       document.getElementById('resConcreto').textContent    = concreto.toFixed(3);
       document.getElementById('resAco8').textContent        = aco8.toLocaleString('pt-BR');
       document.getElementById('resAco63').textContent       = aco63.toLocaleString('pt-BR');
-      document.getElementById('resICFlex').textContent      = icflexSacos;
-      document.getElementById('icflexKgLabel').textContent  = `${icflexKg.toFixed(1)} kg total · sacos de 20 kg`;
-      document.getElementById('resTela').textContent        = tela;
+      
+      // Update ICFlex Buckets
+      document.getElementById('resICFlexVerde').textContent   = icflexBaldes;
+      document.getElementById('resICFlexLaranja').textContent = icflexBaldes;
+      document.getElementById('resTela').textContent          = tela;
+
+      // Update Laje
+      if (laje > 0) {
+        document.getElementById('sectionLaje').classList.remove('hidden');
+        document.getElementById('resVigota').textContent = vigota.toLocaleString('pt-BR');
+        document.getElementById('resEpsLaje').textContent = epsLaje.toLocaleString('pt-BR');
+      } else {
+        document.getElementById('sectionLaje').classList.add('hidden');
+      }
+
+      // Update Viabilidade
+      document.getElementById('resCustoObra').textContent = custoObraCinza.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('resPrecoVenda').textContent = precoSugeridoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('resLucroAbsoluto').textContent = lucroAbsoluto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('bdiLabel').textContent = `BDI Aplicado: ${bdiPercent}%`;
 
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('memorial').classList.remove('hidden');
@@ -738,12 +936,20 @@
       
       // Carregar última simulação se existir
       const lastSimulation = JSON.parse(localStorage.getItem(SIMULATION_KEY));
+      const cubPadrao = localStorage.getItem('iforms_cub_padrao') || '';
+      
+      if (cubPadrao) document.getElementById('inCUB').value = cubPadrao;
+      if (!document.getElementById('inBDI').value) document.getElementById('inBDI').value = 35;
+
       if (lastSimulation) {
         document.getElementById('inArea18').value = lastSimulation.area18 || '';
         document.getElementById('inArea12').value = lastSimulation.area12 || '';
+        document.getElementById('inLaje').value   = lastSimulation.laje || '';
         document.getElementById('inAltura').value = lastSimulation.altura || '';
         document.getElementById('inCantos').value = lastSimulation.cantos || '';
         document.getElementById('inVaos').value   = lastSimulation.vaos || '';
+        if (lastSimulation.cubValue) document.getElementById('inCUB').value = lastSimulation.cubValue;
+        if (lastSimulation.bdiPercent) document.getElementById('inBDI').value = lastSimulation.bdiPercent;
         window.calcularICF(true); // Chamada silenciosa
       }
 

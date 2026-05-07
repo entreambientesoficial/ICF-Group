@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relatório Executivo - Iforms Grupo ICF</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    @media print {
+      .no-print { display: none; }
+      body { background: white !important; color: black !important; }
+      .print-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+    }
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+    .print-card { background: white; }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto p-6 md:p-10 rounded-2xl shadow-xl print-card border border-gray-100">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-start border-b-2 border-emerald-500 pb-6 mb-8">
+      <div>
+        <img src="./assets/icons/logo.svg" alt="Grupo ICF" class="h-8 mb-2" style="filter: brightness(0) saturate(100%) invert(39%) sepia(89%) saturate(500%) hue-rotate(130deg) brightness(95%) contrast(101%);">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Relatório Técnico & Viabilidade</p>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-black text-gray-900" id="printDate">--/--/----</p>
+        <p class="text-[10px] text-gray-400">Documento Gerado via App Iforms Tech</p>
+      </div>
+    </div>
+
+    <!-- Título -->
+    <div class="mb-10 text-center">
+      <h1 class="text-2xl md:text-3xl font-black text-gray-900 uppercase">Estudo de Viabilidade de Obra</h1>
+      <p class="text-gray-500 text-sm mt-2 font-medium">Simulação de Materiais e Estimativa Financeira (Método Iforms ICF)</p>
+    </div>
+
+    <!-- Resumo Geométrico -->
+    <div class="grid grid-cols-3 gap-4 mb-10">
+      <div class="bg-emerald-50 p-4 rounded-xl text-center border border-emerald-100">
+        <p class="text-xs font-bold text-emerald-700 uppercase">Estrutural (18cm)</p>
+        <p class="text-xl font-black text-emerald-900" id="valArea18">0 m²</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-xl text-center border border-gray-100">
+        <p class="text-xs font-bold text-gray-700 uppercase">Vedação (12cm)</p>
+        <p class="text-xl font-black text-gray-900" id="valArea12">0 m²</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-xl text-center border border-gray-100">
+        <p class="text-xs font-bold text-gray-700 uppercase">Pé-Direito</p>
+        <p class="text-xl font-black text-gray-900" id="valAltura">0 m</p>
+      </div>
+    </div>
+
+    <!-- Seção de Materiais -->
+    <div class="mb-10">
+      <h3 class="text-base font-black text-gray-900 mb-4 border-l-4 border-emerald-500 pl-3 uppercase tracking-wide">1. Quantitativo de Materiais (Paredes)</h3>
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 uppercase text-[9px] font-black tracking-widest">
+          <tr>
+            <th class="p-3 text-left">Item Descritivo</th>
+            <th class="p-3 text-right">Quantidade</th>
+            <th class="p-3 text-right">Unidade</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 text-gray-700">
+          <tr>
+            <td class="p-3 font-semibold">Formas ICF 18cm (Estruturais)</td>
+            <td class="p-3 text-right font-black" id="valFormas18">0</td>
+            <td class="p-3 text-right text-gray-400">Unidades</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-semibold">Formas ICF 12cm (Vedação)</td>
+            <td class="p-3 text-right font-black" id="valFormas12">0</td>
+            <td class="p-3 text-right text-gray-400">Unidades</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-semibold">Peças de Canto (90°)</td>
+            <td class="p-3 text-right font-black" id="valCantos">0</td>
+            <td class="p-3 text-right text-gray-400">Unidades</td>
+          </tr>
+          <tr class="bg-emerald-50/40">
+            <td class="p-3 font-black text-emerald-800 uppercase text-xs">Volume de Concreto (Estimado)</td>
+            <td class="p-3 text-right font-black text-emerald-900 text-lg" id="valConcreto">0</td>
+            <td class="p-3 text-right text-emerald-700 font-bold">m³</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-semibold">Aço Vertical Ø8mm (CA-50)</td>
+            <td class="p-3 text-right font-black" id="valAco8">0</td>
+            <td class="p-3 text-right text-gray-400">metros</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-semibold">Aço Horizontal Ø6,3mm (CA-60)</td>
+            <td class="p-3 text-right font-black" id="valAco63">0</td>
+            <td class="p-3 text-right text-gray-400">metros</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Seção de Laje -->
+    <div id="printSectionLaje" class="mb-10 hidden">
+      <h3 class="text-base font-black text-gray-900 mb-4 border-l-4 border-emerald-500 pl-3 uppercase tracking-wide">2. Superestrutura (Laje)</h3>
+      <table class="w-full text-sm">
+        <tbody class="divide-y divide-gray-100 text-gray-700 border-t border-gray-100">
+          <tr>
+            <td class="p-3 font-semibold">Vigotas Treliçadas</td>
+            <td class="p-3 text-right font-black" id="valVigota">0</td>
+            <td class="p-3 text-right text-gray-400">metros</td>
+          </tr>
+          <tr>
+            <td class="p-3 font-semibold">Lajotas de EPS para Laje</td>
+            <td class="p-3 text-right font-black" id="valEpsLaje">0</td>
+            <td class="p-3 text-right text-gray-400">unidades</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+        <p class="text-[9px] text-emerald-800 leading-relaxed italic">
+          <strong>Atenção Técnica:</strong> Para garantir o travamento monolítico, as paredes estruturais de 18cm devem receber o <strong>Corte em J</strong> no encontro com a laje, servindo de caixaria para a viga de respaldo.
+        </p>
+      </div>
+    </div>
+
+    <!-- Seção de Acabamento -->
+    <div class="mb-10">
+      <h3 class="text-base font-black text-gray-900 mb-4 border-l-4 border-emerald-500 pl-3 uppercase tracking-wide">3. Sistema de Revestimento (ICFlex)</h3>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="border border-gray-100 bg-gray-50/30 p-4 rounded-xl">
+          <p class="font-bold text-gray-600 text-xs uppercase tracking-wider mb-1">ICFlex Balde Verde (1ª Demão)</p>
+          <div class="flex items-end gap-2">
+            <p class="text-2xl font-black text-emerald-600" id="valVerde">0</p>
+            <p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">Baldes (18kg)</p>
+          </div>
+        </div>
+        <div class="border border-gray-100 bg-gray-50/30 p-4 rounded-xl">
+          <p class="font-bold text-gray-600 text-xs uppercase tracking-wider mb-1">ICFlex Balde Laranja (2ª Demão)</p>
+          <div class="flex items-end gap-2">
+            <p class="text-2xl font-black text-orange-600" id="valLaranja">0</p>
+            <p class="text-[10px] text-gray-400 font-bold mb-1 uppercase">Baldes (18kg)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estudo de Viabilidade -->
+    <div class="bg-slate-900 text-white p-6 md:p-8 rounded-2xl mb-10 shadow-lg">
+      <h3 class="text-sm font-black text-emerald-400 mb-6 uppercase tracking-[0.2em] text-center border-b border-white/5 pb-4">3. Viabilidade Financeira (Estimativa)</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-white/10 pb-8">
+        <div>
+          <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Custo Estimado Obra Cinza</p>
+          <p class="text-2xl font-black text-white" id="valCustoObra">R$ 0,00</p>
+          <p class="text-[8px] text-gray-500 mt-1 uppercase tracking-tighter">Composição: CUB + 30% para Obra Cinza</p>
+        </div>
+        <div class="md:text-right">
+          <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Preço Sugerido de Venda</p>
+          <p class="text-2xl font-black text-emerald-500" id="valPrecoVenda">R$ 0,00</p>
+          <p class="text-[8px] text-gray-500 mt-1 uppercase tracking-tighter" id="valBDI">BDI Aplicado: 35%</p>
+        </div>
+      </div>
+      <div class="text-center">
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Resultado Bruto Estimado (BDI)</p>
+        <p class="text-4xl font-black text-white" id="valLucro">R$ 0,00</p>
+        <p class="text-[9px] text-emerald-400/60 mt-2 italic">*Valor para gestão de impostos, custos indiretos e lucro.</p>
+      </div>
+    </div>
+
+    <!-- Notas de Escopo -->
+    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 text-[9px] text-gray-500 leading-relaxed">
+      <p class="font-black text-gray-700 uppercase mb-2 tracking-widest">Informações Importantes:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li><strong>Escopo:</strong> Esta simulação contempla a <span class="text-gray-900 font-bold">Obra Cinza</span> (Fundação, Paredes, Laje, Telhado e Infra Bruta).</li>
+        <li><strong>Não Incluso:</strong> Acabamentos finos (pisos, metais), fiação elétrica, louças e projetos técnicos específicos.</li>
+        <li><strong>Referencial:</strong> Este documento é uma estimativa baseada nas metragens informadas e no CUB regional. Não substitui o orçamento executivo.</li>
+      </ul>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="mt-12 text-center border-t border-gray-100 pt-8">
+      <img src="./assets/icons/logo.svg" alt="Grupo ICF" class="h-4 mx-auto mb-3 opacity-20" style="filter: grayscale(100%);">
+      <p class="text-[8px] text-gray-400 font-bold uppercase tracking-[0.2em]">Grupo ICF · Tecnologia Construtiva Sustentável</p>
+      <p class="text-[7px] text-gray-300 mt-1">Simulação técnica gerada via Plataforma Iforms Academy em <span id="genTime">--:--</span></p>
+    </div>
+
+  </div>
+
+  <!-- Botões de Ação (no-print) -->
+  <div class="max-w-4xl mx-auto mt-8 flex justify-center gap-4 no-print pb-10">
+    <button onclick="window.print()" class="px-8 py-3 bg-emerald-600 text-white font-black rounded-xl uppercase tracking-widest text-xs shadow-lg hover:bg-emerald-700 active:scale-95 transition-all flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">print</span>
+      Imprimir
+    </button>
+    <button onclick="window.close()" class="px-8 py-3 bg-gray-200 text-gray-600 font-black rounded-xl uppercase tracking-widest text-xs hover:bg-gray-300 active:scale-95 transition-all">
+      Fechar
+    </button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const data = JSON.parse(localStorage.getItem('iforms_last_simulation'));
+      if (!data) return;
+
+      const somaAreas = data.area18 + data.area12;
+      const formas18 = Math.ceil(data.area18 * 2);
+      const formas12 = Math.ceil(data.area12 * 2);
+      const formasCanto = Math.ceil(((data.cantos + data.vaos * 2) * data.altura) / 0.40);
+      const volBruto = (data.area18 * 0.072) + (data.area12 * 0.042);
+      const concreto = volBruto * 1.05;
+      const icflexBaldes = Math.ceil(somaAreas / 4);
+      
+      const mLinear = somaAreas / (data.altura || 1);
+      const aco8 = Math.ceil(Math.ceil(mLinear / 0.25) * (data.altura || 1));
+      const aco63 = Math.ceil(Math.ceil((data.altura || 1) / 0.40) * mLinear);
+
+      // Financeiro
+      const laje = data.laje || 0;
+      const vigota = laje * 1.5;
+      const epsLaje = Math.ceil(laje * 3);
+      const totalAreaConstrucao = somaAreas / 2;
+      const custoObraCinza = (data.cubValue * 1.3) * totalAreaConstrucao;
+      const precoSugeridoVenda = custoObraCinza * (1 + (data.bdiPercent / 100));
+      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza;
+
+      // Preencher campos
+      document.getElementById('printDate').textContent = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('genTime').textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      
+      document.getElementById('valArea18').textContent = data.area18.toFixed(1) + ' m²';
+      document.getElementById('valArea12').textContent = data.area12.toFixed(1) + ' m²';
+      document.getElementById('valAltura').textContent = data.altura.toFixed(2) + ' m';
+      
+      document.getElementById('valFormas18').textContent = formas18.toLocaleString('pt-BR');
+      document.getElementById('valFormas12').textContent = formas12.toLocaleString('pt-BR');
+      document.getElementById('valCantos').textContent = formasCanto.toLocaleString('pt-BR');
+      document.getElementById('valConcreto').textContent = concreto.toFixed(3);
+      document.getElementById('valAco8').textContent = aco8.toLocaleString('pt-BR');
+      document.getElementById('valAco63').textContent = aco63.toLocaleString('pt-BR');
+      
+      // Update Laje UI
+      if (laje > 0) {
+        document.getElementById('printSectionLaje').classList.remove('hidden');
+        document.getElementById('valVigota').textContent = vigota.toLocaleString('pt-BR');
+        document.getElementById('valEpsLaje').textContent = epsLaje.toLocaleString('pt-BR');
+      }
+
+      document.getElementById('valVerde').textContent = icflexBaldes;
+      document.getElementById('valLaranja').textContent = icflexBaldes;
+
+      const fmt = { style: 'currency', currency: 'BRL' };
+      document.getElementById('valCustoObra').textContent = custoObraCinza.toLocaleString('pt-BR', fmt);
+      document.getElementById('valPrecoVenda').textContent = precoSugeridoVenda.toLocaleString('pt-BR', fmt);
+      document.getElementById('valLucro').textContent = lucroAbsoluto.toLocaleString('pt-BR', fmt);
+      document.getElementById('valBDI').textContent = `BDI Aplicado: ${data.bdiPercent}%`;
+    });
+  </script>
+</body>
+</html>

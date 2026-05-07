@@ -161,8 +161,8 @@
             <span class="material-symbols-outlined text-primary text-2xl">person</span>
           </div>
           <div>
-            <p class="text-sm font-bold text-white">Aluno Iforms</p>
-            <p class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
+            <p id="side-menu-name" class="text-sm font-bold text-white">Aluno Iforms</p>
+            <p id="side-menu-level" class="text-[10px] text-primary font-black uppercase tracking-widest">Nível Iniciante</p>
           </div>
         </div>
       </div>
@@ -347,12 +347,12 @@
           class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-3">
           <div class="flex justify-between items-start mb-4">
             <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest">AULA #03</span>
-            <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+            <span class="material-symbols-outlined text-on-surface-variant">play_circle</span>
           </div>
           <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Tudo sobre preço e custos de obra com ICF</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 3</span>
-            <span class="text-[9px] font-bold text-on-surface-variant uppercase">Bloqueado</span>
+            <span class="text-[9px] font-bold text-primary uppercase">Assistir Aula</span>
           </div>
         </a>
 
@@ -763,6 +763,14 @@
 
         if (levelText) levelText.textContent = level;
         if (motivationSpan) motivationSpan.textContent = motivation;
+        
+        // Sincroniza o Menu Lateral
+        const sideLevel = document.getElementById('side-menu-level');
+        const sideName = document.getElementById('side-menu-name');
+        if (sideLevel) sideLevel.textContent = `Nível ${level}`;
+        if (sideName && user.user_metadata?.full_name) {
+            sideName.textContent = user.user_metadata.full_name.split(' ')[0];
+        }
 
         // 4. Atualiza os cards das aulas (Bloqueio e Status)
         for (let i = 1; i <= totalLessons; i++) {
@@ -773,8 +781,8 @@
             const icon = card.querySelector('.material-symbols-outlined');
             const label = card.querySelector('.text-primary, .text-on-surface-variant');
 
-            // Lógica de Bloqueio: Aula 1 e 2 liberadas, demais trancadas
-            if (i > 2) {
+            // Lógica de Bloqueio: Aula 1, 2 e 3 liberadas, demais trancadas
+            if (i > 3) {
                 card.classList.add('opacity-40', 'grayscale', 'pointer-events-none');
                 card.style.cursor = 'default';
                 if (icon) icon.textContent = 'lock';
