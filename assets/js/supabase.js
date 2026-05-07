@@ -5,7 +5,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// Função para Login com Google
+// --- AUTH & PROFILE ---
 export async function loginWithGoogle() {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -16,7 +16,6 @@ export async function loginWithGoogle() {
     if (error) console.error('Erro ao logar:', error.message)
 }
 
-// Função para Logout
 export async function logout() {
     const { error } = await supabase.auth.signOut()
     if (error) console.error('Erro ao deslogar:', error.message)
@@ -24,281 +23,112 @@ export async function logout() {
     window.location.href = 'index.html'
 }
 
-// Função para buscar dados do usuário logado
 export async function getUser() {
     const { data: { user } } = await supabase.auth.getUser()
     return user
 }
 
-// Função para sincronizar perfil com o banco
 export async function syncProfile(user) {
     if (!user) return
-
     const profileData = {
         id: user.id,
         full_name: user.user_metadata.full_name,
         avatar_url: user.user_metadata.avatar_url,
         updated_at: new Date().toISOString()
     }
-
-    const { error } = await supabase
-        .from('profiles')
-        .upsert(profileData)
-
-    if (error) console.error('Erro ao sincronizar perfil:', error.message)
-    
-    // Salva no localStorage para carregamento instantâneo (UX)
+    await supabase.from('profiles').upsert(profileData)
     localStorage.setItem('user_name', user.user_metadata.full_name)
     localStorage.setItem('user_photo', user.user_metadata.avatar_url)
 }
 
-// Função para buscar o progresso do usuário
+// --- PROGRESS ---
 export async function getProgress() {
     const user = await getUser()
     if (!user) return []
-    
-    const { data, error } = await supabase
-        .from('user_progress')
-        .select('*')
-        .eq('user_id', user.id)
-    
-    if (error) {
-        console.error('Erro ao buscar progresso:', error.message)
-        return []
-    }
-    return data
+    const { data, error } = await supabase.from('user_progress').select('*').eq('user_id', user.id)
+    return data || []
 }
 
-// Função para atualizar o progresso de uma aula
 export async function updateProgress(lessonId, status) {
     const user = await getUser()
     if (!user) return
-    
-    // Converte lesson_1, lesson_2 para 1, 2 (caso venha como string)
     const numericId = typeof lessonId === 'string' ? parseInt(lessonId.replace('lesson_', '')) : lessonId;
-
-    try {
-        // Busca se já existe um registro para esta aula (manual upsert)
-        const { data: existing, error: fetchError } = await supabase
-            .from('user_progress')
-            .select('lesson_id')
-            .eq('user_id', user.id)
-            .eq('lesson_id', numericId)
-            .maybeSingle()
-
-        if (fetchError) throw fetchError
-
-        let result;
-        if (existing) {
-            // Se já existe, atualiza apenas o timestamp
-            result = await supabase
-                .from('user_progress')
-                .update({ 
-                    updated_at: new Date().toISOString() 
-                })
-                .eq('user_id', user.id)
-                .eq('lesson_id', numericId)
-        } else {
-            // Se não existe, insere novo (apenas user e lesson)
-            result = await supabase
-                .from('user_progress')
-                .insert({
-                    user_id: user.id,
-                    lesson_id: numericId,
-                    updated_at: new Date().toISOString()
-                })
-        }
-        
-        if (result.error) {
-            console.error('Erro na operação de progresso:', result.error.message)
-            throw result.error
-        }
-        return true
-    } catch (err) {
-        console.error('Falha crítica ao atualizar progresso:', err)
-        throw err
+    const { data: existing } = await supabase.from('user_progress').select('lesson_id').eq('user_id', user.id).eq('lesson_id', numericId).maybeSingle()
+    if (existing) {
+        await supabase.from('user_progress').update({ updated_at: new Date().toISOString() }).eq('user_id', user.id).eq('lesson_id', numericId)
+    } else {
+        await supabase.from('user_progress').insert({ user_id: user.id, lesson_id: numericId, updated_at: new Date().toISOString() })
     }
+    return true
 }
-// ── Funções de Comunidade (Dados Reais) ──────────────────────────
 
-// Buscar todos os especialistas credenciados
+// --- ADMIN ---
+export async function getBatches() {
+    const { data } = await supabase.from('batches').select('*').order('created_at', { ascending: false });
+    return data || [];
+}
+export async function updateLessonAdmin(id, lessonData) {
+    await supabase.from('lessons').update(lessonData).eq('id', id);
+}
+export async function updateBatchAdmin(id, batchData) {
+    await supabase.from('batches').update(batchData).eq('id', id);
+}
+export async function createBatch(name, status) {
+    await supabase.from('batches').insert([{ name, status, created_at: new Date().toISOString() }]);
+}
+
+// --- COMUNIDADE & EXPERTS ---
 export async function getExperts(category = '') {
     let query = supabase.from('experts').select('*').order('created_at', { ascending: false })
     if (category) query = query.eq('category', category)
-    
-    const { data, error } = await query
-    if (error) {
-        console.error('Erro ao buscar especialistas:', error.message)
-        return []
-    }
-    return data
+    const { data } = await query
+    return data || []
 }
 
-// Cadastrar novo especialista
 export async function registerExpert(expertData) {
-    const { data, error } = await supabase
-        .from('experts')
-        .insert([{
-            ...expertData,
-            created_at: new Date().toISOString()
-        }])
-    
-    if (error) throw error
-    return data
+    await supabase.from('experts').insert([{ ...expertData, created_at: new Date().toISOString() }])
 }
 
-// Buscar discussões do mural
 export async function getDiscussions() {
-    const { data, error } = await supabase
-        .from('discussions')
-        .select('*, profiles(full_name, avatar_url), discussion_comments(count)')
-        .order('is_fixed', { ascending: false })
-        .order('created_at', { ascending: false })
-
-    if (error) {
-        console.error('Erro ao buscar discussões:', error.message)
-        return []
-    }
-    return data
+    const { data } = await supabase.from('discussions').select('*, profiles(full_name, avatar_url), discussion_comments(count)').order('is_fixed', { ascending: false }).order('created_at', { ascending: false })
+    return data || []
 }
 
-// Criar nova discussão
 export async function createDiscussion(title, content) {
     const user = await getUser()
-    if (!user) throw new Error('Usuário não autenticado')
-
-    const { data, error } = await supabase
-        .from('discussions')
-        .insert([{
-            title,
-            content,
-            author_id: user.id,
-            likes: 0,
-            is_fixed: false,
-            created_at: new Date().toISOString()
-        }])
-    
-    if (error) throw error
-    return data
+    if (!user) throw new Error('Não autenticado')
+    await supabase.from('discussions').insert([{ title, content, author_id: user.id, likes: 0, is_fixed: false, created_at: new Date().toISOString() }])
 }
 
-// Buscar comentários de uma discussão
 export async function getComments(discussionId) {
-    const { data, error } = await supabase
-        .from('discussion_comments')
-        .select('*, profiles(full_name, avatar_url)')
-        .eq('discussion_id', discussionId)
-        .order('created_at', { ascending: true })
-
-    if (error) {
-        console.error('Erro ao buscar comentários:', error.message)
-        return []
-    }
-    return data
+    const { data } = await supabase.from('discussion_comments').select('*, profiles(full_name, avatar_url)').eq('discussion_id', discussionId).order('created_at', { ascending: true })
+    return data || []
 }
 
-// Adicionar comentário
 export async function addComment(discussionId, text) {
     const user = await getUser()
-    if (!user) throw new Error('Usuário não autenticado')
-
-    const { error } = await supabase
-        .from('discussion_comments')
-        .insert([{
-            discussion_id: discussionId,
-            author_id: user.id,
-            text,
-            created_at: new Date().toISOString()
-        }])
-    
-    if (error) throw error
-    return true
+    if (!user) throw new Error('Não autenticado')
+    await supabase.from('discussion_comments').insert([{ discussion_id: discussionId, author_id: user.id, text, created_at: new Date().toISOString() }])
 }
 
-// Curtir discussão
 export async function toggleLikeDiscussion(discussionId, currentLikes) {
-    const { error } = await supabase
-        .from('discussions')
-        .update({ likes: currentLikes + 1 })
-        .eq('id', discussionId)
-    
-    if (error) throw error
-    return true
+    await supabase.from('discussions').update({ likes: currentLikes + 1 }).eq('id', discussionId)
 }
 
-// --- PERFIL ---
-
-/**
- * Busca dados do credenciado vinculado ao usuário (se existir)
- */
+// --- PERFIL & STATS ---
 export async function getUserExpertData() {
     const user = await getUser()
     if (!user) return null
-    
-    // Tenta buscar pelo nome completo (que é o que temos do Google)
-    const { data, error } = await supabase
-        .from('experts')
-        .select('*')
-        .eq('full_name', user.user_metadata.full_name)
-        .maybeSingle()
-        
-    if (error && error.code !== 'PGRST116') {
-        console.error('Erro ao buscar dados de expert:', error.message)
-    }
+    const { data } = await supabase.from('experts').select('*').eq('full_name', user.user_metadata.full_name).maybeSingle()
     return data
 }
 
-/**
- * Retorna estatísticas de contribuição do usuário (Discussões + Comentários)
- */
 export async function getUserStats() {
     const user = await getUser()
     if (!user) return { discussions: 0, comments: 0, total: 0 }
-
     const [discussions, comments] = await Promise.all([
         supabase.from('discussions').select('id', { count: 'exact', head: true }).eq('author_id', user.id),
         supabase.from('discussion_comments').select('id', { count: 'exact', head: true }).eq('author_id', user.id)
     ])
-
-    const dCount = discussions.count || 0
-    const cCount = comments.count || 0
-
-    return {
-        discussions: dCount,
-        comments: cCount,
-        total: dCount + cCount
-    }
-}
-
-/**
- * Atualiza os metadados do perfil do usuário
- */
-export async function updateProfile(metadata) {
-    const { data, error } = await supabase.auth.updateUser({
-        data: metadata
-    })
-    if (error) throw error
-    return data
-}
-
-/**
- * Salva um cálculo completo (Técnico + Financeiro) no histórico
- */
-export async function saveCalculation(calcData) {
-    const user = await getUser();
-    if (!user) return null;
-
-    const { data, error } = await supabase
-        .from('calculation_history')
-        .insert([{
-            user_id: user.id,
-            ...calcData,
-            created_at: new Date().toISOString()
-        }]);
-
-    if (error) {
-        console.error('Erro ao salvar cálculo:', error.message);
-        throw error;
-    }
-    return data;
+    return { discussions: discussions.count || 0, comments: comments.count || 0, total: (discussions.count || 0) + (comments.count || 0) }
 }

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin ICF | Gestão do Ecossistema</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#00C2A0',
+            secondary: '#031632',
+            background: '#020817',
+            surface: '#0f172a',
+            'surface-variant': '#1e293b',
+            'on-surface': '#f8fafc',
+            'on-surface-variant': '#94a3b8',
+            outline: 'rgba(148, 163, 184, 0.1)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
+    input:focus, select:focus { border-color: #00C2A0 !important; box-shadow: 0 0 0 2px rgba(0, 194, 160, 0.2); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-sans min-h-screen">
+
+  <!-- Password Protection Overlay -->
+  <div id="authOverlay" class="fixed inset-0 z-[100] bg-background flex items-center justify-center p-6">
+    <div class="w-full max-w-sm bg-surface border border-outline p-8 rounded-3xl shadow-2xl text-center space-y-6">
+      <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-primary text-3xl">admin_panel_settings</span>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold">Acesso Administrativo</h2>
+        <p class="text-xs text-on-surface-variant mt-1">Insira a chave mestre para continuar</p>
+      </div>
+      <input type="password" id="adminKey" placeholder="Senha Mestre" class="w-full bg-background border border-outline rounded-xl p-4 text-center text-lg tracking-widest outline-none transition-all">
+      <button onclick="checkAdminKey()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all">Entrar no Painel</button>
+    </div>
+  </div>
+
+  <!-- Main Admin UI (Hidden by default) -->
+  <div id="adminContent" class="hidden">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass border-b border-outline">
+      <div class="px-6 h-16 flex items-center justify-between max-w-6xl mx-auto">
+        <div class="flex items-center gap-4">
+          <img src="./assets/icons/logo.svg" alt="Logo" class="h-5 w-auto" />
+          <div class="h-4 w-px bg-outline mx-2"></div>
+          <h1 class="text-sm font-bold uppercase tracking-widest text-primary">Admin Panel</h1>
+        </div>
+        <button onclick="window.location.href='dashboard.html'" class="text-xs font-bold text-on-surface-variant hover:text-white transition-colors">Voltar ao App</button>
+      </div>
+    </header>
+
+    <main class="pt-24 pb-12 px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left Column: Batches & Stats -->
+      <div class="lg:col-span-4 space-y-8">
+        <!-- Batches Management -->
+        <section class="bg-surface border border-outline rounded-3xl p-6 space-y-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">groups</span>
+              Gestão de Turmas
+            </h3>
+            <button onclick="openNewBatchModal()" class="text-[10px] font-black text-primary uppercase tracking-widest">+ Nova</button>
+          </div>
+          
+          <div id="batchesList" class="space-y-3">
+            <!-- Batches will be injected here -->
+            <div class="animate-pulse flex items-center gap-4 p-4 bg-background/50 rounded-2xl">
+              <div class="w-10 h-10 bg-outline rounded-xl"></div>
+              <div class="flex-1 space-y-2">
+                <div class="h-2 bg-outline rounded w-1/2"></div>
+                <div class="h-2 bg-outline rounded w-1/4"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Card -->
+        <section class="bg-gradient-to-br from-primary/20 to-transparent border border-primary/20 rounded-3xl p-6">
+          <h4 class="text-xs font-black uppercase tracking-widest text-primary mb-4">Resumo do Ecossistema</h4>
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div class="p-4 bg-background/40 rounded-2xl">
+              <p id="stat-lessons" class="text-2xl font-black">0</p>
+              <p class="text-[10px] text-on-surface-variant uppercase font-bold">Aulas</p>
+            </div>
+            <div class="p-4 bg-background/40 rounded-2xl">
+              <p id="stat-batches" class="text-2xl font-black">0</p>
+              <p class="text-[10px] text-on-surface-variant uppercase font-bold">Turmas</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: Lessons Management -->
+      <div class="lg:col-span-8 space-y-8">
+        <section class="bg-surface border border-outline rounded-3xl p-8 space-y-8">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-bold flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">play_lesson</span>
+              Cronograma de Aulas
+            </h3>
+            <span class="text-xs text-on-surface-variant font-medium">Os links e datas refletem em tempo real no app</span>
+          </div>
+
+          <div id="lessonsList" class="space-y-6">
+            <!-- Lessons will be injected here -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Edit Lesson Modal -->
+  <div id="editLessonModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-background/90 backdrop-blur-md">
+    <div class="bg-surface w-full max-w-lg rounded-3xl border border-outline p-8 space-y-6 max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold text-primary">Editar Aula <span id="modalLessonId"></span></h3>
+        <button onclick="closeEditModal()" class="material-symbols-outlined text-on-surface-variant">close</button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Título da Aula</label>
+          <input type="text" id="editTitle" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Duração Exibida</label>
+          <input type="text" id="editDuration" placeholder="Ex: 04h 30min ou Hoje às 20h" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Data de Liberação</label>
+          <input type="datetime-local" id="editReleaseAt" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">URL do Vídeo (YouTube Embed)</label>
+          <input type="text" id="editVideoUrl" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">URL do Material de Apoio (PDF)</label>
+          <input type="text" id="editPdfUrl" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">URL da Thumbnail</label>
+          <input type="text" id="editThumbnail" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Descrição Curta</label>
+          <textarea id="editDescription" rows="3" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-4 pt-4">
+        <button onclick="saveLesson()" class="flex-1 py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all">Salvar Alterações</button>
+        <button onclick="closeEditModal()" class="px-8 py-4 bg-background text-on-surface-variant font-bold rounded-xl uppercase tracking-widest text-[10px]">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Batch Modal -->
+  <div id="newBatchModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-background/90 backdrop-blur-md">
+    <div class="bg-surface w-full max-w-sm rounded-3xl border border-outline p-8 space-y-6">
+      <h3 class="text-xl font-bold text-primary">Nova Turma</h3>
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Nome da Turma</label>
+          <input type="text" id="newBatchName" placeholder="Ex: Turma Julho 2026" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none">
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Status Inicial</label>
+          <select id="newBatchStatus" class="w-full bg-background border border-outline rounded-xl p-4 text-sm outline-none appearance-none">
+            <option value="current">Atual (Respeita Cronograma)</option>
+            <option value="legacy">Antiga (Libera Tudo)</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="saveNewBatch()" class="w-full py-4 bg-primary text-secondary font-black rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all">Criar Turma</button>
+      <button onclick="closeBatchModal()" class="w-full text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center">Voltar</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { 
+        getBatches, updateLessonAdmin, updateBatchAdmin, createBatch, supabase
+    } from './assets/js/supabase.js';
+
+    let lessons = [];
+    let batches = [];
+    let activeLessonId = null;
+
+    // A senha mestre é icf2026
+    const MASTER_KEY = 'icf2026';
+
+    window.checkAdminKey = () => {
+      const key = document.getElementById('adminKey').value;
+      if (key === MASTER_KEY) {
+        document.getElementById('authOverlay').classList.add('hidden');
+        document.getElementById('adminContent').classList.remove('hidden');
+        init();
+      } else {
+        alert('Chave mestra incorreta.');
+      }
+    };
+
+    async function init() {
+      await loadData();
+    }
+
+    async function loadData() {
+      try {
+        const { data: rawLessons, error } = await supabase
+            .from('lessons')
+            .select('*')
+            .order('order_index', { ascending: true });
+        
+        lessons = rawLessons || [];
+        batches = await getBatches();
+        
+        renderLessons();
+        renderBatches();
+        updateStats();
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+      }
+    }
+
+    function renderLessons() {
+      const list = document.getElementById('lessonsList');
+      if (!lessons.length) {
+        list.innerHTML = `<p class="text-center text-on-surface-variant py-12">Nenhuma aula encontrada no banco.</p>`;
+        return;
+      }
+
+      list.innerHTML = lessons.map(lesson => {
+        const releaseDate = lesson.release_at ? new Date(lesson.release_at).toLocaleString('pt-BR') : 'Não agendada';
+        const isFuture = lesson.release_at && new Date(lesson.release_at) > new Date();
+
+        return `
+          <div class="bg-background/40 border border-outline rounded-2xl p-6 flex flex-col md:flex-row gap-6 hover:border-primary/30 transition-all group">
+            <div class="w-full md:w-48 aspect-video rounded-xl overflow-hidden border border-outline shrink-0 relative">
+              <img src="${lesson.thumbnail}" class="w-full h-full object-cover opacity-60">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-[10px] font-black bg-black/60 px-3 py-1 rounded-full uppercase tracking-widest">AULA ${lesson.order_index}</span>
+              </div>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-start justify-between gap-4">
+                <h4 class="font-bold text-white group-hover:text-primary transition-colors">${lesson.title}</h4>
+                <button onclick="openEditModal(${lesson.id})" class="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">edit_square</span>
+                </button>
+              </div>
+              <p class="text-xs text-on-surface-variant line-clamp-2">${lesson.description || 'Sem descrição'}</p>
+              <div class="pt-4 flex flex-wrap gap-4">
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-[16px]">schedule</span>
+                  <span class="text-[10px] font-bold uppercase tracking-wider ${isFuture ? 'text-amber-400' : 'text-on-surface-variant'}">
+                    Liberação: ${releaseDate}
+                  </span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-[16px]">link</span>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Vídeo OK</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBatches() {
+      const list = document.getElementById('batchesList');
+      if (!batches.length) {
+        list.innerHTML = `<p class="text-center text-xs text-on-surface-variant py-4">Nenhuma turma cadastrada.</p>`;
+        return;
+      }
+
+      list.innerHTML = batches.map(batch => `
+        <div class="bg-background/40 border border-outline p-4 rounded-2xl flex items-center justify-between">
+          <div>
+            <p class="text-sm font-bold text-white">${batch.name}</p>
+            <p class="text-[10px] font-black uppercase tracking-widest ${batch.status === 'current' ? 'text-primary' : 'text-on-surface-variant'}">
+              ${batch.status === 'current' ? 'Turma Atual' : 'Turma Antiga'}
+            </p>
+          </div>
+          <button onclick="toggleBatchStatus('${batch.id}', '${batch.status}')" class="p-2 hover:bg-white/5 rounded-xl text-on-surface-variant transition-colors">
+            <span class="material-symbols-outlined">sync_alt</span>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function updateStats() {
+      document.getElementById('stat-lessons').textContent = lessons.length;
+      document.getElementById('stat-batches').textContent = batches.length;
+    }
+
+    window.openEditModal = (id) => {
+      const lesson = lessons.find(l => l.id === id);
+      if (!lesson) return;
+      
+      activeLessonId = id;
+      document.getElementById('modalLessonId').textContent = `#${lesson.order_index}`;
+      document.getElementById('editTitle').value = lesson.title;
+      document.getElementById('editDuration').value = lesson.duration || '';
+      document.getElementById('editVideoUrl').value = lesson.video_url;
+      document.getElementById('editPdfUrl').value = lesson.pdf_url || '';
+      document.getElementById('editThumbnail').value = lesson.thumbnail;
+      document.getElementById('editDescription').value = lesson.description || '';
+      
+      if (lesson.release_at) {
+        const d = new Date(lesson.release_at);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        document.getElementById('editReleaseAt').value = d.toISOString().slice(0, 16);
+      } else {
+        document.getElementById('editReleaseAt').value = '';
+      }
+
+      document.getElementById('editLessonModal').classList.remove('hidden');
+      document.getElementById('editLessonModal').classList.add('flex');
+    };
+
+    window.closeEditModal = () => {
+      document.getElementById('editLessonModal').classList.add('hidden');
+      document.getElementById('editLessonModal').classList.remove('flex');
+      activeLessonId = null;
+    };
+
+    window.saveLesson = async () => {
+      const data = {
+        title: document.getElementById('editTitle').value,
+        duration: document.getElementById('editDuration').value,
+        video_url: document.getElementById('editVideoUrl').value,
+        pdf_url: document.getElementById('editPdfUrl').value,
+        thumbnail: document.getElementById('editThumbnail').value,
+        description: document.getElementById('editDescription').value,
+        release_at: document.getElementById('editReleaseAt').value || null
+      };
+
+      try {
+        await updateLessonAdmin(activeLessonId, data);
+        alert('Aula atualizada com sucesso!');
+        closeEditModal();
+        loadData();
+      } catch (err) {
+        alert('Erro ao salvar aula.');
+      }
+    };
+
+    window.openNewBatchModal = () => {
+      document.getElementById('newBatchModal').classList.remove('hidden');
+      document.getElementById('newBatchModal').classList.add('flex');
+    };
+
+    window.closeBatchModal = () => {
+      document.getElementById('newBatchModal').classList.add('hidden');
+      document.getElementById('newBatchModal').classList.remove('flex');
+    };
+
+    window.saveNewBatch = async () => {
+      const name = document.getElementById('newBatchName').value;
+      const status = document.getElementById('newBatchStatus').value;
+      if (!name) return alert('Dê um nome à turma.');
+
+      try {
+        await createBatch(name, status);
+        alert('Turma criada!');
+        closeBatchModal();
+        loadData();
+      } catch (err) {
+        alert('Erro ao criar turma.');
+      }
+    };
+
+    window.toggleBatchStatus = async (id, currentStatus) => {
+      const newStatus = currentStatus === 'current' ? 'legacy' : 'current';
+      try {
+        await updateBatchAdmin(id, { status: newStatus });
+        loadData();
+      } catch (err) {
+        alert('Erro ao alterar status.');
+      }
+    };
+
+  </script>
+</body>
+</html>
