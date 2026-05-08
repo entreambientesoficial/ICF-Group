@@ -53,13 +53,18 @@ export async function updateProgress(lessonId) {
     const user = await getUser()
     if (!user) return
     const numericId = typeof lessonId === 'string' ? parseInt(lessonId.replace('lesson_', '')) : lessonId;
-    const { data: existing } = await supabase.from('user_progress').select('lesson_id').eq('user_id', user.id).eq('lesson_id', numericId).maybeSingle()
-    if (existing) {
-        await supabase.from('user_progress').update({ updated_at: new Date().toISOString() }).eq('user_id', user.id).eq('lesson_id', numericId)
-    } else {
-        await supabase.from('user_progress').insert({ user_id: user.id, lesson_id: numericId, updated_at: new Date().toISOString() })
-    }
+    await supabase.from('user_progress').upsert(
+        { user_id: user.id, lesson_id: numericId, completed: true, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id,lesson_id' }
+    )
     return true
+}
+
+export function computeLevel(completedCount, totalLessons = 5) {
+    const pct = (completedCount / totalLessons) * 100
+    if (pct >= 100) return 'Expert'
+    if (pct >= 30)  return 'Intermediário'
+    return 'Iniciante'
 }
 
 // --- COMUNIDADE & EXPERTS ---

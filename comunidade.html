@@ -931,9 +931,15 @@
 
       if (localDiscussions.length === 0) {
         list.innerHTML = `
-          <div class="text-center py-20 bg-surface/30 rounded-3xl border border-dashed border-outline">
-            <span class="material-symbols-outlined text-5xl text-on-surface-variant opacity-20 mb-2">forum</span>
-            <p class="text-on-surface-variant text-sm">O mural está vazio.<br>Seja o primeiro a iniciar uma discussão!</p>
+          <div class="flex flex-col items-center justify-center py-20 text-center space-y-3 bg-surface/30 rounded-3xl border border-dashed border-primary/20">
+            <div class="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center border border-primary/20">
+              <span class="material-symbols-outlined text-4xl text-primary opacity-40">workspace_premium</span>
+            </div>
+            <p class="text-white font-bold text-base">O mural está aguardando.</p>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Seja o primeiro Expert a<br>postar uma obra hoje!</p>
+            <button onclick="window.openNewDiscussionModal()" class="mt-2 px-6 py-3 bg-primary/10 border border-primary/30 text-primary rounded-full font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-secondary transition-all">
+              Iniciar Discussão
+            </button>
           </div>
         `;
         updateStats();

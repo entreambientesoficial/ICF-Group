@@ -162,6 +162,19 @@
   <!-- FORMULÁRIO DE ENTRADA -->
   <div id="formSection" class="space-y-4">
 
+    <!-- Toggle Tipo de Projeto -->
+    <div class="flex gap-1 p-1 bg-surface rounded-2xl border border-white/10">
+      <button id="btnResidencial" onclick="setTipoProjeto('residencial')"
+        class="flex-1 py-3 rounded-xl font-black text-xs uppercase tracking-widest bg-primary text-secondary transition-all">
+        Residencial
+      </button>
+      <button id="btnPiscina" onclick="setTipoProjeto('piscina')"
+        class="flex-1 py-3 rounded-xl font-black text-xs uppercase tracking-widest text-on-surface-variant transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-sm">pool</span>
+        Piscina +25% Aço
+      </button>
+    </div>
+
     <!-- Chips de tipo (informativo) -->
     <div class="grid grid-cols-2 gap-3">
       <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-primary/40 bg-primary/5">
@@ -500,7 +513,7 @@
         <!-- Barra de Lucratividade -->
         <div class="space-y-2">
           <div class="flex justify-between items-end">
-            <p class="text-[11px] font-bold text-white uppercase tracking-wide">Resultado Bruto Estimado (BDI)</p>
+            <p class="text-[11px] font-bold text-white uppercase tracking-wide">Margem Bruta Estimada (40%)</p>
             <p class="text-lg font-black text-primary" id="resLucroAbsoluto">R$ 0,00</p>
           </div>
           <div class="h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
@@ -719,7 +732,7 @@
   </div>
 
   <script type="module">
-    import { logout, getUser, getProgress } from './assets/js/supabase.js';
+    import { logout, getUser, getProgress, computeLevel } from './assets/js/supabase.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
       const user = await getUser();
@@ -739,11 +752,7 @@
 
       const progressData = await getProgress(user.id);
       const completedCount = progressData.length;
-      let level = 'Iniciante';
-      if (completedCount >= 5) level = 'Expert';
-      else if (completedCount >= 3) level = 'Intermediário';
-      
-      if (sideLevel) sideLevel.textContent = `Nível ${level}`;
+      if (sideLevel) sideLevel.textContent = `Nível ${computeLevel(completedCount)}`;
     });
 
     window.closeLogoutModal = () => {
@@ -782,6 +791,24 @@
 
     // ── Lógica da Calculadora ──────────────────────────────────────────
     const SIMULATION_KEY = 'iforms_last_simulation';
+
+    let tipoProjeto = 'residencial';
+    window.setTipoProjeto = (tipo) => {
+      tipoProjeto = tipo;
+      const btnR = document.getElementById('btnResidencial');
+      const btnP = document.getElementById('btnPiscina');
+      if (tipo === 'piscina') {
+        btnR.classList.remove('bg-primary', 'text-secondary');
+        btnR.classList.add('text-on-surface-variant');
+        btnP.classList.add('bg-primary', 'text-secondary');
+        btnP.classList.remove('text-on-surface-variant');
+      } else {
+        btnP.classList.remove('bg-primary', 'text-secondary');
+        btnP.classList.add('text-on-surface-variant');
+        btnR.classList.add('bg-primary', 'text-secondary');
+        btnR.classList.remove('text-on-surface-variant');
+      }
+    };
 
     window.calcularICF = (isAuto = false) => {
       const area18 = parseFloat(document.getElementById('inArea18').value) || 0;
@@ -835,15 +862,16 @@
       const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
       
       const mLinear     = somaAreas / (altura || 1);
-      const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * (altura || 1));
-      const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear);
+      const acoFactor   = tipoProjeto === 'piscina' ? 1.25 : 1.0;
+      const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * (altura || 1) * acoFactor);
+      const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear * acoFactor);
       const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
       // Módulo Financeiro (Aula 03)
       const totalAreaConstrucao = somaAreas / 2; // Estimativa de área construída baseada em paredes
       const custoObraCinza = (cubValue * 1.3) * totalAreaConstrucao; 
-      const precoSugeridoVenda = custoObraCinza * (1 + (bdiPercent / 100));
-      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza;
+      const precoSugeridoVenda = cubValue > 0 ? custoObraCinza / 0.6 : 0;
+      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza; // 40% sobre receita
 
       document.getElementById('memArea18').textContent = area18.toFixed(1);
       document.getElementById('memArea12').textContent = area12.toFixed(1);
@@ -875,7 +903,7 @@
       document.getElementById('resCustoObra').textContent = custoObraCinza.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('resPrecoVenda').textContent = precoSugeridoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('resLucroAbsoluto').textContent = lucroAbsoluto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('bdiLabel').textContent = `BDI Aplicado: ${bdiPercent}%`;
+      document.getElementById('bdiLabel').textContent = 'Margem sobre Receita: 40%';
 
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('memorial').classList.remove('hidden');

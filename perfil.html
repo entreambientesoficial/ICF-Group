@@ -35,6 +35,12 @@
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
     body { background-color: #020817; min-height: 100dvh; }
     .badge-glow { filter: drop-shadow(0 0 10px rgba(0, 194, 160, 0.4)); }
+    .badge-expert-active {
+      filter: drop-shadow(0 0 18px rgba(16, 185, 129, 0.85));
+      border-color: rgba(16, 185, 129, 0.55) !important;
+      background: rgba(16, 185, 129, 0.14) !important;
+    }
+    .badge-expert-active .material-symbols-outlined { color: #10b981 !important; }
   </style>
 </head>
 
@@ -280,8 +286,8 @@
   </div>
 
   <script type="module">
-    import { 
-        logout, getUser, getProgress, getUserStats, getUserExpertData 
+    import {
+        logout, getUser, getProgress, getUserStats, getUserExpertData, computeLevel
     } from './assets/js/supabase.js';
 
     window.closeLogoutModal = () => {
@@ -353,17 +359,18 @@
       if (contribElement) contribElement.textContent = stats.total;
 
       const levelElement = document.getElementById('profile-level');
-      let currentLevel = 'Iniciando Jornada';
-      if (completedCount >= 5) currentLevel = 'Mestre ICF';
-      else if (completedCount >= 3) currentLevel = 'Expert em Formação';
-      else if (completedCount >= 1) currentLevel = 'Aluno Iniciante';
-      levelElement.textContent = currentLevel;
+      const levelStr = computeLevel(completedCount);
+      levelElement.textContent = levelStr;
 
-      if (completedCount >= 5) {
+      // Sincroniza o nível no menu lateral
+      const sideLevel = document.querySelector('#sideMenu .text-primary.font-black.uppercase');
+      if (sideLevel) sideLevel.textContent = `Nível ${levelStr}`;
+
+      if (levelStr === 'Expert') {
         const badge = document.getElementById('badge-expert');
         if (badge) {
           badge.classList.remove('grayscale', 'opacity-30');
-          badge.classList.add('badge-glow', 'border-primary/40', 'bg-primary/5');
+          badge.classList.add('badge-expert-active');
         }
       }
 
