@@ -2,7 +2,7 @@
   "name": "Iforms Grupo ICF",
   "short_name": "Iforms",
   "description": "Plataforma de treinamento técnico em construção ICF - Iforms Grupo ICF",
-  "start_url": "./dashboard.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
