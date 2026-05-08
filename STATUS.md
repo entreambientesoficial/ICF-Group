@@ -256,6 +256,16 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 
 ---
 
+## Changelog — 2026-05-08 (Noite 3 — Referência CUB)
+
+### Calculadora (`calculadora.html`) — Campo de Área para CUB
+
+- **[FEAT]** Seção "Referência de Mercado CUB" agora tem dois campos lado a lado: **CUB do Estado (R$/m²)** e **Área Construída (m²)** — o usuário informa a área real da obra em vez de usar proxy de paredes.
+- **[FIX]** Cálculo do comparativo CUB corrigido: `CUB × 1,3 × área construída` (antes usava `somaAreas ÷ 2`, que era impreciso).
+- **[FIX]** Card "Referência Convencional (CUB)" no memorial só aparece se **ambos** os campos (CUB e área) estiverem preenchidos.
+
+---
+
 ## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
 - [x] Módulo Financeiro (Viabilidade) na Calculadora.
