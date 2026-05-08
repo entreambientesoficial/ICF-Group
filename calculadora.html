@@ -354,7 +354,7 @@
         </div>
 
         <button onclick="calcularICF()"
-          class="w-full h-14 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+          class="w-full h-14 mt-4 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
           <span class="material-symbols-outlined">calculate</span>
           Gerar Memorial Descritivo
         </button>
@@ -1484,7 +1484,6 @@
       }));
       localStorage.setItem('iforms_cub_padrao', cubValue);
       localStorage.setItem('iforms_modo_financeiro', modoFinanceiro);
-      localStorage.setItem('iforms_icf_prices', JSON.stringify(icfPrices));
 
       const somaAreas   = area18 + area12;
       const formas18    = Math.ceil(area18 * 2);
@@ -1541,6 +1540,7 @@
       const icfDiv     = 1 - (icfPrices.bdi / 100);
       const icfVenda   = icfDiv > 0 ? icfTotal / icfDiv : 0;
       const icfLucro   = icfVenda - icfTotal;
+      localStorage.setItem('iforms_icf_prices', JSON.stringify(icfPrices));
 
       document.getElementById('memArea18').textContent = area18.toFixed(1);
       document.getElementById('memArea12').textContent = area12.toFixed(1);
