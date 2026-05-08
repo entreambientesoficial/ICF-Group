@@ -263,7 +263,7 @@
           </div>
           <!-- CUB como Referência de Mercado (opcional) -->
           <div class="p-3 rounded-xl bg-white/5 border border-white/10">
-            <p class="text-[9px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Referência de Mercado (opcional)</p>
+            <p class="text-[9px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Referência de Mercado CUB</p>
             <div class="relative">
               <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="CUB do seu Estado (R$/m²)"
                 class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
@@ -1450,7 +1450,6 @@
       const icfDiv     = 1 - (icfPrices.bdi / 100);
       const icfVenda   = icfDiv > 0 ? icfTotal / icfDiv : 0;
       const icfLucro   = icfVenda - icfTotal;
-      localStorage.setItem('iforms_icf_prices', JSON.stringify(icfPrices));
 
       document.getElementById('memArea18').textContent = area18.toFixed(1);
       document.getElementById('memArea12').textContent = area12.toFixed(1);
@@ -1532,7 +1531,6 @@
 
     window.resetForm = () => {
       localStorage.removeItem(SIMULATION_KEY);
-      localStorage.removeItem('iforms_icf_prices');
       // Limpar campos obra
       ['inArea18','inArea12','inAltura','inCantos','inVaos','inLaje'].forEach(id => {
         const el = document.getElementById(id);
@@ -1590,16 +1588,6 @@
       // Carregar última simulação se existir
       const lastSimulation = JSON.parse(localStorage.getItem(SIMULATION_KEY));
 
-      // Restaurar preços ICF
-      const savedIcfPrices = JSON.parse(localStorage.getItem('iforms_icf_prices') || 'null');
-      if (savedIcfPrices) {
-        ['p18','p12','pCanto','pConc','pAco','pICFlex','bdi'].forEach(key => {
-          const elMap = { p18:'icfP18', p12:'icfP12', pCanto:'icfPCanto', pConc:'icfPConc',
-                          pAco:'icfPAco', pICFlex:'icfPICFlex', bdi:'icfBDI' };
-          if (savedIcfPrices[key]) document.getElementById(elMap[key]).value = savedIcfPrices[key];
-        });
-      }
-
       if (lastSimulation) {
         document.getElementById('inArea18').value = lastSimulation.area18 || '';
         document.getElementById('inArea12').value = lastSimulation.area12 || '';
@@ -1607,7 +1595,6 @@
         document.getElementById('inAltura').value = lastSimulation.altura || '';
         document.getElementById('inCantos').value = lastSimulation.cantos || '';
         document.getElementById('inVaos').value   = lastSimulation.vaos || '';
-        if (lastSimulation.cubValue) document.getElementById('inCUB').value = lastSimulation.cubValue;
         window.calcularICF(true); // Chamada silenciosa
       }
 
