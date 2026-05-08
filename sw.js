@@ -1,4 +1,4 @@
-const CACHE_NAME = 'iforms-pwa-v2';
+const CACHE_NAME = 'iforms-pwa-v3';
 const OFFLINE_URL = './offline.html';
 
 const STATIC_ASSETS = [
@@ -16,10 +16,12 @@ const STATIC_ASSETS = [
   './assets/icons/icon-maskable.svg',
 ];
 
-// Install: pré-caches os assets estáticos
+// Install: pré-caches os assets estáticos (falha silenciosa por arquivo)
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(STATIC_ASSETS.map((url) => cache.add(url)))
+    )
   );
   self.skipWaiting();
 });
@@ -41,10 +43,9 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Ignora requisições não-GET
   if (request.method !== 'GET') return;
 
-  // CDN externos (Tailwind, Google Fonts): stale-while-revalidate
+  // CDN externos: stale-while-revalidate
   if (url.origin !== self.location.origin) {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {
@@ -55,35 +56,38 @@ self.addEventListener('fetch', (event) => {
             return response;
           })
           .catch(() => cached);
-        return cached || networkFetch;
+        return cached || networkFetch || new Response('', { status: 503 });
       })
     );
     return;
   }
 
-  // Assets locais: Cache-first com fallback para offline
+  // Assets locais: Cache-first com fallback garantido (nunca retorna undefined)
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.match(request).then(async (cached) => {
       if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
-          if (response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
-          // Retorna página offline para navegação HTML
-          if (request.headers.get('accept')?.includes('text/html')) {
-            return caches.match(OFFLINE_URL);
-          }
-        });
+      try {
+        const response = await fetch(request);
+        if (response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(request, response.clone());
+        }
+        return response;
+      } catch {
+        // Conexão falhou — tenta servir offline.html para navegação HTML
+        if (request.headers.get('accept')?.includes('text/html')) {
+          const offline = await caches.match(OFFLINE_URL);
+          return offline || new Response(
+            '<html><body style="font-family:sans-serif;text-align:center;padding:2rem"><h2>Sem conexão</h2><p>Verifique sua internet e tente novamente.</p></body></html>',
+            { status: 503, headers: { 'Content-Type': 'text/html' } }
+          );
+        }
+        return new Response('', { status: 503 });
+      }
     })
   );
 });
 
-// Escuta mensagens do app (ex: skip waiting)
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
