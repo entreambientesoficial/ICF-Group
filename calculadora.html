@@ -198,31 +198,7 @@
 
       <!-- Inputs de Geometria -->
       <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
-        <div>
-          <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Geometria da Obra</p>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Estruturais</label>
-              <div class="relative">
-                <input id="inArea18" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 120"
-                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
-              </div>
-              <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Forma 18cm</p>
-            </div>
-            <div>
-              <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes de Vedação</label>
-              <div class="relative">
-                <input id="inArea12" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 60"
-                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
-              </div>
-              <p class="text-[9px] text-on-surface-variant/70 mt-1 font-bold">→ Forma 12cm</p>
-            </div>
-          </div>
-        </div>
 
-        <div class="border-t border-white/5 pt-4">
           <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Estimativa Financeira</p>
           <!-- Sub-toggle CUB / ICF -->
           <div class="flex gap-1 p-1 bg-background/40 rounded-xl border border-white/10 mb-4">
@@ -321,6 +297,30 @@
                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
               </div>
               <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Preço = Custo ÷ (1 - margem)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-white/5 pt-4">
+          <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Geometria da Obra</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Estruturais</label>
+              <div class="relative">
+                <input id="inArea18" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 120"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+              </div>
+              <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Forma 18cm</p>
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes de Vedação</label>
+              <div class="relative">
+                <input id="inArea12" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 60"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+              </div>
+              <p class="text-[9px] text-on-surface-variant/70 mt-1 font-bold">→ Forma 12cm</p>
             </div>
           </div>
         </div>
