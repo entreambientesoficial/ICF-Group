@@ -81,6 +81,12 @@ iforms-pwa/
 
 ## Changelog — Sessão 06/05 (Final)
 
+### Lançamento & Conteúdo (08/05)
+- **[FEAT]** **Aula 4 Liberada**: Vídeo oficial, material de apoio (Ebook 4) e Quiz técnico integrados.
+- **[UX]** **Quiz Inteligente**: Implementada lista de revisão automática ao final do quiz, mostrando exatamente quais questões o aluno errou.
+- **[UX]** **Redistribuição de Respostas**: Respostas corretas agora distribuídas entre A, B, C e D para evitar previsibilidade (fuga do padrão "sempre B").
+- **[FIX]** **Sinalização do Dashboard**: Corrigida a lógica de labels nos cards das aulas. Agora diferencia claramente o status (CONCLUÍDA) da ação (REVER/ASSISTIR), resolvendo o conflito visual de aulas concluídas que apareciam como "bloqueadas".
+
 ### Lançamento & Conteúdo (07/05)
 - **[FEAT]** **Aula 3 Liberada**: Vídeo e material de apoio (Ebook 3) integrados e disponíveis no app.
 - **[UX]** **Desbloqueio Progressivo**: Atualizada a lógica do Dashboard para permitir acesso à Aula 3.
@@ -88,6 +94,14 @@ iforms-pwa/
 ### Profissionalização & UX (06/05)
 
 ---
+
+### 2026-05-08 - Lançamento da Aula 04 & Refinamento Pedagógico
+- [x] Liberação oficial da Aula 04 (Vídeo e Ebook).
+- [x] Implementação de 12 novas questões de Quiz técnico da Aula 04.
+- [x] Limpeza técnica do Quiz: Remoção de prefixos de categoria (ex: "(FUNDAÇÃO)") para interface mais limpa.
+- [x] Implementação de feedback de erros no Quiz: Lista dinâmica de questões para revisão.
+- [x] Correção de labels de status no `dashboard.html` (Status vs. Ação).
+- [x] Adição de classes semânticas (`lesson-status-label`, `lesson-action-label`) para controle preciso via JS.
 
 ### 2026-05-07 - Lançamento da Aula 03 & Calculadora de Negócios
 - [x] Liberação oficial da Aula 03 (Vídeo e Ebook).
@@ -149,12 +163,64 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 
 ---
 
+---
+
+## Changelog — 2026-05-08 (Tarde — Migração de Ebooks)
+
+- **[FEAT]** Criada pasta `public/ebooks/` no PWA com os 4 ebooks comprimidos (~3 MB total vs ~288 MB originais).
+- **[FIX]** URLs dos ebooks 1, 2 e 3 migradas do Google Drive para arquivos locais (`/ebooks/ebook-N-aula-N.pdf`) — elimina risco de link quebrado por cancelamento ou cota do Drive.
+- **[FIX]** Ebook 4 migrado de path relativo fora do PWA (`../material-apoio-ICF/...`) para path local padronizado.
+- **[INFRA]** `public/ebooks/*.pdf` adicionado ao `.gitignore` — Ebook 4 original tinha 111 MB (acima do limite de 100 MB do GitHub).
+- **[CLEANUP]** Arquivo órfão `calculadora.html_fixed_script.html` removido da raiz do PWA.
+- **[PENDENTE]** Upload dos ebooks comprimidos no Supabase Storage (bucket `ebooks`, público) aguardando resolução de incidente técnico no Supabase. Após upload, atualizar URLs em `aula.html` para `https://hbcqldrrgrpyufylojtv.supabase.co/storage/v1/object/public/ebooks/ebook-N-aula-N.pdf`.
+
+---
+
+---
+
+## Changelog — 2026-05-08 (Noite — UX, Certificado & Calculadora Piscina)
+
+### Dashboard (`dashboard.html`)
+- **[FIX]** Removida trava progressiva da Aula 4 — todas as aulas lançadas (1-4) agora acessíveis a qualquer usuário sem dependência de progresso anterior.
+- **[FIX]** Removido badge NOVO que aparecia como retângulo verde entre "DIA 4" e "ASSISTIR AULA" após unlock.
+
+### Perfil (`perfil.html`)
+- **[FEAT]** Adicionado editor de nome inline ao lado do nome no perfil (lápis de edição). Permite corrigir o nome que sairá no certificado sem depender do Google Auth.
+- **[FEAT]** Adicionado botão CTA de Certificado na tela de Perfil — exibe estado bloqueado até 5/5 aulas concluídas; ao completar, ativa link para `certificado.html`.
+- **[FIX]** Removido lápis de edição não-funcional do avatar.
+
+### Certificado (`certificado.html`) — NOVA TELA
+- **[FEAT]** Nova tela de certificado A4 paisagem com design ICF (triângulos navy + faixa teal, logo SVG, tipografia Dancing Script).
+- **[FEAT]** Nome do aluno e data de conclusão preenchidos dinamicamente via Supabase.
+- **[FEAT]** Guarda authwall: redireciona para login se não autenticado; exibe estado bloqueado se progresso < 5/5.
+- **[FEAT]** Botão "Imprimir / Salvar PDF" via `window.print()` com `@page { size: A4 landscape; margin: 0; }`.
+- **[INFRA]** `certificado.html` adicionado ao rollup inputs do `vite.config.js`.
+
+### Calculadora (`calculadora.html`) — Refatoração Piscina
+- **[REFACTOR]** Separação completa dos modos Obra e Piscina: formulários independentes, motor de cálculo independente, memorial independente.
+- **[FEAT]** Formulário Piscina com 3 dimensões (Comprimento × Largura × Profundidade) e BDI editável (padrão 40%).
+- **[FEAT]** Seção "Custos Unitários" colapsável (`<details>`) com 13 campos editáveis extraídos da planilha do especialista — sem valores fixos no código.
+- **[FEAT]** Memorial Piscina em 4 blocos: Estrutura ICF / Estanqueidade / Mão de Obra / Equipamentos + resumo financeiro com divisor BDI.
+- **[FIX]** Fator financeiro da Piscina ajustado de 0.65 para 0.60 (margem sugestiva de 40%, conforme vídeo da aula).
+- **[FEAT]** Botões "Alterar" e "Nova Simulação" em ambos os memorials (Obra e Piscina). "Alterar" retorna ao formulário mantendo os dados; "Nova Simulação" limpa tudo.
+- **[FIX]** `calcularICF()` (modo Obra) limpo de referências a piscina (`isPiscina`, `KIT_PISCINA`, `custoEstrutura` piscina).
+
+---
+
 ## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
 - [x] Módulo Financeiro (Viabilidade) na Calculadora.
 - [x] Auditoria de Código e Estabilização.
-- [ ] Refinamento Financeiro: Utilizar Área da Laje como base principal para CUB (Aguardando Aulas 04/05).
-- [ ] Geração de Certificado em PDF (Próximo Módulo).
-- [ ] Conteúdo e Quiz das Aulas 04 e 05.
-- [ ] Painel Administrativo do Mentor (reescrever do zero, com módulo JS separado e auth via Supabase).
+- [x] Liberação da Aula 04 e Quiz técnico (Limpo e Redistribuído).
+- [x] Feedback de erros detalhado no Quiz.
+- [x] Migração de Ebooks para arquivos locais comprimidos.
+- [x] Desbloqueio de Aulas 1-4 sem trava progressiva.
+- [x] Editor de nome no Perfil (para uso no certificado).
+- [x] Certificado de conclusão (`certificado.html`) — A4 landscape, print/PDF.
+- [x] Calculadora Piscina: motor separado, custos editáveis, memorial próprio.
+- [ ] Upload dos Ebooks no Supabase Storage (aguardando incidente Supabase).
+- [ ] Configuração da Aula 5 (vídeo, quiz, ebook) — professor liberando conteúdo.
+- [ ] Teste do Certificado com 5/5 aulas concluídas (após Aula 5 liberada).
+- [ ] Refinamento Financeiro: Base de cálculo da área da laje para CUB.
+- [ ] Painel Administrativo do Mentor (V2 estável, com módulo JS separado e auth via Supabase).
 - [ ] Módulo Offline: Melhorar cache de vídeos para acesso sem internet.

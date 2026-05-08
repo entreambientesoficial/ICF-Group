@@ -32,3 +32,7 @@ Thumbs.db
 
 # Cache Vite
 .vite/
+
+# Ebooks (arquivos grandes — o Ebook 4 tem 111 MB, acima do limite do GitHub)
+# Para produção, hospedar no Supabase Storage ou similar
+public/ebooks/*.pdf

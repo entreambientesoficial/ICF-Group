@@ -366,7 +366,6 @@
           <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">O passo a passo para ganhar R$15.000/mês com ICF</h5>
           <div class="mt-4 flex items-center gap-2">
             <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">DIA 4</span>
-            <span id="lesson-4-novo-badge" class="hidden text-[8px] font-black bg-primary text-secondary px-2 py-0.5 rounded-full uppercase tracking-widest">NOVO</span>
             <span class="text-[9px] font-bold text-on-surface-variant uppercase lesson-action-label">Bloqueado</span>
           </div>
         </a>
@@ -760,16 +759,6 @@
         }
 
         // 4. Atualiza os cards das aulas (Bloqueio e Status)
-        const lesson3Completed = progressData.some(p => Number(p.lesson_id) === 3);
-        const lesson4Completed = progressData.some(p => Number(p.lesson_id) === 4);
-
-        // Badge NOVO na Aula 04 — aparece quando aula 3 concluída e 4 ainda não
-        const novoBadge = document.getElementById('lesson-4-novo-badge');
-        if (novoBadge) {
-            if (lesson3Completed && !lesson4Completed) novoBadge.classList.remove('hidden');
-            else novoBadge.classList.add('hidden');
-        }
-
         for (let i = 1; i <= totalLessons; i++) {
             const card = document.getElementById(`lesson-card-${i}`);
             if (!card) continue;
@@ -779,8 +768,8 @@
             const statusLabel = card.querySelector('.lesson-status-label');
             const actionLabel = card.querySelector('.lesson-action-label');
 
-            // Aula 4 só desbloqueia após aula 3 concluída; aula 5 sempre bloqueada
-            if (i > 4 || (i === 4 && !lesson3Completed)) {
+            // Apenas aula 5 bloqueada (ainda não publicada)
+            if (i > 4) {
                 card.classList.add('opacity-40', 'grayscale', 'pointer-events-none');
                 card.style.cursor = 'default';
                 if (icon) icon.textContent = 'lock';

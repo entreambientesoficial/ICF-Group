@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificado — Intensivão ICF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0e14;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      gap: 24px;
+      padding: 32px 16px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #00c2a0;
+      color: #0a0e14;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: transform 0.15s, opacity 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { transform: scale(1.02); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: #888;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .btn-secondary:hover { color: #fff; }
+
+    /* State screens */
+    .state-screen {
+      text-align: center;
+      color: #aaa;
+      max-width: 360px;
+    }
+    .state-screen h2 { font-size: 22px; color: #fff; margin-bottom: 10px; }
+    .state-screen p { font-size: 14px; line-height: 1.6; }
+    .state-screen a { color: #00c2a0; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 20px; }
+
+    .hidden { display: none !important; }
+
+    /* Certificate wrapper — scales on small screens */
+    .cert-wrapper {
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      transform-origin: top center;
+    }
+
+    /* ── THE CERTIFICATE ── */
+    .certificate {
+      width: 297mm;
+      height: 210mm;
+      background: linear-gradient(135deg, #c8dce8 0%, #ddeaf4 40%, #cfe0ec 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Corner decorations ── */
+    .cert-corner {
+      position: absolute;
+      width: 190px;
+      height: 145px;
+      pointer-events: none;
+    }
+    .cert-corner::before,
+    .cert-corner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    /* Top-left */
+    .cert-corner-tl { top: 0; left: 0; }
+    .cert-corner-tl::before {
+      background: #1a3358;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+    .cert-corner-tl::after {
+      background: #00c2a0;
+      clip-path: polygon(0 26%, 29% 0, 38% 0, 0 36%);
+    }
+
+    /* Top-right */
+    .cert-corner-tr { top: 0; right: 0; }
+    .cert-corner-tr::before {
+      background: #1a3358;
+      clip-path: polygon(100% 0, 0 0, 100% 100%);
+    }
+    .cert-corner-tr::after {
+      background: #00c2a0;
+      clip-path: polygon(100% 26%, 71% 0, 62% 0, 100% 36%);
+    }
+
+    /* Bottom-left */
+    .cert-corner-bl { bottom: 0; left: 0; }
+    .cert-corner-bl::before {
+      background: #1a3358;
+      clip-path: polygon(0 0, 0 100%, 100% 100%);
+    }
+    .cert-corner-bl::after {
+      background: #00c2a0;
+      clip-path: polygon(0 74%, 29% 100%, 38% 100%, 0 64%);
+    }
+
+    /* Bottom-right */
+    .cert-corner-br { bottom: 0; right: 0; }
+    .cert-corner-br::before {
+      background: #1a3358;
+      clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    }
+    .cert-corner-br::after {
+      background: #00c2a0;
+      clip-path: polygon(100% 74%, 71% 100%, 62% 100%, 100% 64%);
+    }
+
+    /* ── Certificate content ── */
+    .cert-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      padding: 14mm 38mm 12mm;
+    }
+
+    /* Header */
+    .cert-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 5mm;
+    }
+
+    .cert-logo-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .cert-helmet-icon {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 2px;
+    }
+
+    .cert-brand-title {
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #1a3358;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .cert-brand-sub {
+      font-size: 7px;
+      font-weight: 600;
+      color: #2a4a6a;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    /* Title */
+    .cert-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 64px;
+      color: #1a3358;
+      line-height: 1;
+      margin-bottom: 5mm;
+    }
+
+    /* Body text */
+    .cert-body {
+      text-align: center;
+      color: #243a50;
+      font-size: 11.5px;
+      line-height: 1.9;
+      max-width: 175mm;
+    }
+
+    .cert-student-name {
+      font-weight: 800;
+      font-size: 13px;
+      color: #1a3358;
+      border-bottom: 1.5px solid #1a3358;
+      padding: 0 6px 1px;
+      display: inline-block;
+      min-width: 52mm;
+    }
+
+    /* Footer */
+    .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .cert-footer-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 52mm;
+    }
+
+    .cert-footer-sig {
+      font-family: 'Dancing Script', cursive;
+      font-size: 22px;
+      color: #1a3358;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .cert-footer-line {
+      width: 100%;
+      border-top: 1px solid #2a3a50;
+      padding-top: 4px;
+    }
+
+    .cert-footer-value {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #1a3358;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cert-footer-label {
+      font-size: 7.5px;
+      font-weight: 500;
+      color: #6a7a8a;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        margin: 0;
+        display: block;
+      }
+      .actions { display: none !important; }
+      .cert-wrapper { box-shadow: none; }
+      .certificate { width: 297mm; height: 210mm; }
+      @page { size: A4 landscape; margin: 0; }
+    }
+
+    /* Responsive scaling for small screens */
+    @media screen and (max-width: 1200px) {
+      .cert-wrapper {
+        transform: scale(0.75);
+        margin: -60px 0;
+      }
+    }
+    @media screen and (max-width: 900px) {
+      .cert-wrapper {
+        transform: scale(0.55);
+        margin: -120px 0;
+      }
+    }
+    @media screen and (max-width: 600px) {
+      .cert-wrapper {
+        transform: scale(0.35);
+        margin: -200px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading -->
+  <div id="state-loading" class="state-screen">
+    <p>Verificando seu certificado...</p>
+  </div>
+
+  <!-- Locked -->
+  <div id="state-locked" class="state-screen hidden">
+    <h2>Certificado bloqueado</h2>
+    <p id="locked-msg">Conclua todas as 5 aulas do Intensivão para desbloquear seu certificado.</p>
+    <a href="dashboard.html">← Voltar ao Dashboard</a>
+  </div>
+
+  <!-- Ready -->
+  <div id="state-ready" class="hidden" style="display:none; flex-direction:column; align-items:center; gap:24px;">
+
+    <div class="actions">
+      <a href="perfil.html" class="btn-secondary">← Voltar</a>
+      <button class="btn-primary" onclick="window.print()">⬇ Salvar como PDF</button>
+    </div>
+
+    <div class="cert-wrapper">
+      <div class="certificate">
+
+        <!-- Corner decorations -->
+        <div class="cert-corner cert-corner-tl"></div>
+        <div class="cert-corner cert-corner-tr"></div>
+        <div class="cert-corner cert-corner-bl"></div>
+        <div class="cert-corner cert-corner-br"></div>
+
+        <div class="cert-content">
+
+          <!-- Header -->
+          <div class="cert-header">
+            <div style="width:80px;"></div>
+
+            <!-- Center logo -->
+            <div class="cert-logo-center">
+              <!-- Construction helmet SVG -->
+              <svg class="cert-helmet-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 4C11.37 4 6 9.37 6 16v2h24v-2C30 9.37 24.63 4 18 4Z" fill="#00c2a0"/>
+                <path d="M18 4v14M12 8l2 6M24 8l-2 6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                <rect x="4" y="18" width="28" height="4" rx="2" fill="#1a3358"/>
+                <rect x="7" y="22" width="22" height="3" rx="1.5" fill="#1a3358"/>
+              </svg>
+              <div class="cert-brand-title">INTENSIVÃO</div>
+              <div class="cert-brand-sub">DA CONSTRUÇÃO COM ISOPOR</div>
+            </div>
+
+            <!-- ICF logo (adapted for light background) -->
+            <div style="width:80px; display:flex; justify-content:flex-end; padding-top:2px;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 52" width="72">
+                <polygon fill="#01c38e" points="45.72 20.78 31.12 20.78 20.78 0 45.72 0 45.72 20.78"/>
+                <polygon fill="#01c38e" points="0 30.32 0 51.1 20.78 30.32 20.78 51.1 35.94 51.1 60.88 51.1 35.94 30.32 20.78 30.32 20.78 0 0 0 0 30.32"/>
+                <path fill="#1a3358" d="M80.99,51.69h-10.22V.74h10.22v50.96Z"/>
+                <path fill="#1a3358" d="M129.64,34.33l.07.21c.09,5.48-1.58,9.83-5.02,13.05-3.44,3.22-8.22,4.83-14.33,4.83s-11.12-1.97-14.94-5.91c-3.83-3.94-5.74-9.02-5.74-15.22v-10.11c0-6.18,1.87-11.26,5.6-15.22,3.73-3.97,8.59-5.95,14.56-5.95,6.3,0,11.22,1.62,14.77,4.85,3.55,3.23,5.27,7.64,5.18,13.21l-.07.21h-9.94c0-3.36-.81-5.93-2.42-7.72-1.61-1.78-4.12-2.68-7.52-2.68-3.06,0-5.48,1.24-7.28,3.72-1.8,2.48-2.69,5.65-2.69,9.49v10.17c0,3.89.95,7.08,2.83,9.56s4.44,3.72,7.66,3.72,5.56-.86,7.09-2.57c1.53-1.71,2.29-4.26,2.29-7.65h9.9Z"/>
+                <path fill="#1a3358" d="M168.55,30.52h-21.35v21.17h-10.22V.74h35.14v7.87h-24.92v14.03h21.35v7.87Z"/>
+                <text x="70" y="51" font-family="Inter,Arial,sans-serif" font-size="7" font-weight="700" fill="#1a3358" letter-spacing="2">GRUPO</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div class="cert-title">Certificado</div>
+
+          <!-- Body -->
+          <div class="cert-body">
+            Certifico que <span id="cert-name" class="cert-student-name">&nbsp;</span>
+            participou do Intensivão da Construção com Isopor,<br>
+            um evento online, realizado entre 04/05/2026 a 08/05/2026, com carga horária de <strong>12 horas</strong>.<br>
+            Tendo acertado mais do que 80% das questões do Quiz de Conhecimento<br>
+            sobre o aprendizado no evento.
+          </div>
+
+          <!-- Footer -->
+          <div class="cert-footer">
+            <!-- Date -->
+            <div class="cert-footer-block">
+              <div class="cert-footer-sig">&nbsp;</div>
+              <div class="cert-footer-line">
+                <div class="cert-footer-value" id="cert-date">SÃO PAULO, 08/05/2026</div>
+                <div class="cert-footer-label">DATA</div>
+              </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="cert-footer-block">
+              <div class="cert-footer-sig">João F. da Rocha</div>
+              <div class="cert-footer-line">
+                <div class="cert-footer-value">JOÃO F. DA ROCHA</div>
+                <div class="cert-footer-label">ASSINATURA</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- .cert-content -->
+      </div><!-- .certificate -->
+    </div><!-- .cert-wrapper -->
+
+  </div><!-- #state-ready -->
+
+  <script type="module">
+    import { getUser, getProgress } from './assets/js/supabase.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await getUser();
+      if (!user) { window.location.href = 'index.html'; return; }
+
+      const progress = await getProgress();
+      const completedCount = progress.filter(p => p.lesson_id).length;
+
+      document.getElementById('state-loading').classList.add('hidden');
+
+      if (completedCount < 5) {
+        const remaining = 5 - completedCount;
+        document.getElementById('locked-msg').textContent =
+          `Falta${remaining > 1 ? 'm' : ''} ${remaining} aula${remaining > 1 ? 's' : ''} para concluir o Intensivão e liberar seu certificado.`;
+        document.getElementById('state-locked').classList.remove('hidden');
+        return;
+      }
+
+      // Student name
+      const name = user.user_metadata?.full_name || user.email;
+      document.getElementById('cert-name').textContent = name;
+
+      // Completion date = most recent lesson updated_at
+      const dates = progress
+        .filter(p => p.updated_at)
+        .map(p => new Date(p.updated_at))
+        .sort((a, b) => b - a);
+      const completionDate = dates.length > 0 ? dates[0] : new Date();
+      const formatted = completionDate.toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      });
+      document.getElementById('cert-date').textContent = `SÃO PAULO, ${formatted}`;
+
+      // Show certificate
+      const ready = document.getElementById('state-ready');
+      ready.style.display = 'flex';
+    });
+  </script>
+</body>
+</html>

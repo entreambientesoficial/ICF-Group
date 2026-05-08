@@ -166,122 +166,332 @@
     <div class="flex gap-1 p-1 bg-surface rounded-2xl border border-white/10">
       <button id="btnResidencial" onclick="setTipoProjeto('residencial')"
         class="flex-1 py-3 rounded-xl font-black text-xs uppercase tracking-widest bg-primary text-secondary transition-all">
-        Residencial
+        Obra
       </button>
       <button id="btnPiscina" onclick="setTipoProjeto('piscina')"
         class="flex-1 py-3 rounded-xl font-black text-xs uppercase tracking-widest text-on-surface-variant transition-all flex items-center justify-center gap-2">
         <span class="material-symbols-outlined text-sm">pool</span>
-        Piscina +25% Aço
+        Piscina
       </button>
     </div>
 
-    <!-- Chips de tipo (informativo) -->
-    <div class="grid grid-cols-2 gap-3">
-      <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-primary/40 bg-primary/5">
-        <span class="material-symbols-outlined text-primary text-xl shrink-0">domain</span>
+    <!-- ── OBRA FIELDS ── -->
+    <div id="obraFields">
+
+      <!-- Chips de tipo (informativo) -->
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-primary/40 bg-primary/5">
+          <span class="material-symbols-outlined text-primary text-xl shrink-0">domain</span>
+          <div>
+            <p class="text-xs font-black text-primary uppercase tracking-wider">Estrutural (18cm)</p>
+            <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes de Carga</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-white/10 bg-surface-variant/50">
+          <span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0">splitscreen</span>
+          <div>
+            <p class="text-xs font-black text-on-surface-variant uppercase tracking-wider">Vedação (12cm)</p>
+            <p class="text-[10px] text-on-surface-variant/60 mt-0.5">Paredes Divisórias</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inputs de Geometria -->
+      <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
         <div>
-          <p class="text-xs font-black text-primary uppercase tracking-wider">Estrutural (18cm)</p>
-          <p class="text-[10px] text-on-surface-variant mt-0.5">Paredes de Carga</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-white/10 bg-surface-variant/50">
-        <span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0">splitscreen</span>
-        <div>
-          <p class="text-xs font-black text-on-surface-variant uppercase tracking-wider">Vedação (12cm)</p>
-          <p class="text-[10px] text-on-surface-variant/60 mt-0.5">Paredes Divisórias</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Inputs de Geometria -->
-    <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
-
-      <!-- Áreas -->
-      <div>
-        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Geometria da Obra</p>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Estruturais</label>
-            <div class="relative">
-              <input id="inArea18" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 120"
-                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+          <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Geometria da Obra</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Paredes Estruturais</label>
+              <div class="relative">
+                <input id="inArea18" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 120"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+              </div>
+              <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Forma 18cm</p>
             </div>
-            <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Forma 18cm</p>
-          </div>
-          <div>
-            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes de Vedação</label>
-            <div class="relative">
-              <input id="inArea12" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 60"
-                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
-            </div>
-            <p class="text-[9px] text-on-surface-variant/70 mt-1 font-bold">→ Forma 12cm</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="border-t border-white/5 pt-4">
-        <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Parâmetros Financeiros (Aula 03)</p>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">CUB do Estado (m²)</label>
-            <div class="relative">
-              <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 2500"
-                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+            <div>
+              <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Paredes de Vedação</label>
+              <div class="relative">
+                <input id="inArea12" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 60"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+              </div>
+              <p class="text-[9px] text-on-surface-variant/70 mt-1 font-bold">→ Forma 12cm</p>
             </div>
           </div>
+        </div>
+
+        <div class="border-t border-white/5 pt-4">
+          <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Parâmetros Financeiros</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">CUB do Estado (m²)</label>
+              <div class="relative">
+                <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 2500"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem BDI (%)</label>
+              <div class="relative">
+                <input id="inBDI" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Sugestão: 35"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-white/5 pt-4">
+          <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Peças Especiais & Pé-Direito</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Altura (Pé-Direito)</label>
+              <div class="relative">
+                <input id="inAltura" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 3.0"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Cantos (90°)</label>
+              <input id="inCantos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 4"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
+            </div>
+            <div class="col-span-2">
+              <label id="labelLaje" class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Área Total da Laje (Opcional)</label>
+              <div class="relative">
+                <input id="inLaje" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 100"
+                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+              </div>
+              <p id="hintLaje" class="text-[9px] text-primary/70 mt-1 font-bold">→ Vigotas + Lajotas EPS + Capa Concreto</p>
+            </div>
+            <div id="fieldVaos" class="col-span-2">
+              <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Total de Vãos (Portas + Janelas)</label>
+              <input id="inVaos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 8"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
+            </div>
+          </div>
+        </div>
+
+        <button onclick="calcularICF()"
+          class="w-full h-14 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined">calculate</span>
+          Gerar Memorial Descritivo
+        </button>
+      </div>
+    </div><!-- #obraFields -->
+
+    <!-- ── PISCINA FIELDS ── -->
+    <div id="piscinaFields" class="hidden space-y-4">
+      <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
+
+        <!-- Dimensões -->
+        <p class="text-[10px] font-black text-primary uppercase tracking-widest">Dimensões da Piscina</p>
+        <div class="grid grid-cols-3 gap-3">
           <div>
-            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem BDI (%)</label>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Comprimento</label>
             <div class="relative">
-              <input id="inBDI" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Sugestão: 35"
+              <input id="pComp" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex: 8"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-3 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-8" />
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Largura</label>
+            <div class="relative">
+              <input id="pLarg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex: 4"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-3 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-8" />
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Profundidade</label>
+            <div class="relative">
+              <input id="pProf" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex: 1.5"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-3 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-8" />
+              <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Margem -->
+        <div class="border-t border-white/5 pt-4">
+          <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Parâmetros Financeiros</p>
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem de Lucro (%)</label>
+            <div class="relative w-1/2">
+              <input id="pBDI" type="number" inputmode="decimal" min="1" max="99" step="0.1" placeholder="40"
                 class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
               <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
             </div>
+            <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Preço = Custo ÷ (1 - margem). Ex: 40% → divisor 0,60</p>
           </div>
         </div>
-      </div>
 
-      <div class="border-t border-white/5 pt-4">
-        <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">Peças Especiais & Pé-Direito</p>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Altura (Pé-Direito)</label>
-            <div class="relative">
-              <input id="inAltura" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 3.0"
-                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m</span>
+        <!-- Custos Unitários (accordion) -->
+        <details class="border-t border-white/5 pt-4">
+          <summary class="flex items-center justify-between cursor-pointer select-none list-none">
+            <div>
+              <p class="text-[10px] font-black text-primary uppercase tracking-widest">Custos Unitários</p>
+              <p class="text-[9px] text-on-surface-variant mt-0.5">Edite conforme os preços da sua região</p>
             </div>
-          </div>
-          <div>
-            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Cantos (90°)</label>
-            <input id="inCantos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 4"
-              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
-          </div>
-          <div class="col-span-2">
-            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Área Total da Laje (Opcional)</label>
-            <div class="relative">
-              <input id="inLaje" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 100"
-                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-12" />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
-            </div>
-            <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Vigotas + Lajotas EPS + Capa Concreto</p>
-          </div>
-          <div class="col-span-2">
-            <label class="block text-[10px] font-black text-primary uppercase tracking-widest mb-2">Total de Vãos (Portas + Janelas)</label>
-            <input id="inVaos" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex: 8"
-              class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all" />
-          </div>
-        </div>
-      </div>
+            <span class="material-symbols-outlined text-on-surface-variant text-xl transition-transform details-arrow">expand_more</span>
+          </summary>
 
-      <button onclick="calcularICF()"
-        class="w-full h-14 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
-        <span class="material-symbols-outlined">calculate</span>
-        Gerar Memorial Descritivo
-      </button>
-    </div>
+          <div class="mt-4 space-y-5">
+
+            <!-- Estrutura -->
+            <div>
+              <p class="text-[9px] font-black text-primary uppercase tracking-widest mb-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">domain</span> Estrutura ICF
+              </p>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Forma ICF 18 (unid)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCForma" type="number" min="0" value="145"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Forma Canto (unid)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCCanto" type="number" min="0" value="65"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Concreto FCK25 (m³)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCConcreto" type="number" min="0" value="610"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Aço 8mm (kg)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCAco" type="number" min="0" value="32"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Estanqueidade -->
+            <div>
+              <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">water</span> Estanqueidade
+              </p>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">ICFlex Argamassa (m²)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCICFlex" type="number" min="0" value="175"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Tela Fibra Vidro (m²)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCTela" type="number" min="0" value="8"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mão de Obra -->
+            <div>
+              <p class="text-[9px] font-black text-yellow-400 uppercase tracking-widest mb-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">engineering</span> Mão de Obra
+              </p>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">MO Fundo (m²)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCMOFundo" type="number" min="0" value="70"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">MO Paredes (m²)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCMOParedes" type="number" min="0" value="120"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">MO Impermeabilização (m²)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCMOImperm" type="number" min="0" value="30"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Mat. Impermeabilização (m²)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCMatImperm" type="number" min="0" value="65"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Equipamentos -->
+            <div>
+              <p class="text-[9px] font-black text-primary uppercase tracking-widest mb-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">settings</span> Equipamentos
+              </p>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Kit Filtro + Bomba</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCKitFiltro" type="number" min="0" value="3500"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">LED Subaquático (unid)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="pCLed" type="number" min="0" value="500"
+                      class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                  </div>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Quantidade de LEDs</label>
+                  <input id="pQtdLed" type="number" inputmode="numeric" min="0" value="4"
+                    class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </details>
+
+        <button onclick="calcularPiscina()"
+          class="w-full h-14 bg-primary rounded-xl font-black text-on-primary uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined">pool</span>
+          Calcular Piscina ICF
+        </button>
+      </div>
+    </div><!-- #piscinaFields -->
+
   </div>
 
   <!-- MEMORIAL DESCRITIVO -->
@@ -294,8 +504,24 @@
           <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">description</span>
         </div>
         <div>
-          <p class="text-[10px] font-black text-primary uppercase tracking-widest">Grupo ICF · Iforms</p>
-          <h2 class="text-lg font-black text-white">Memorial Descritivo de Materiais</h2>
+          <p id="memSubtitulo" class="text-[10px] font-black text-primary uppercase tracking-widest">Grupo ICF · Iforms</p>
+          <h2 id="memTitulo" class="text-lg font-black text-white">Memorial Descritivo de Materiais</h2>
+        </div>
+      </div>
+
+      <!-- Nota técnica piscina — aparece só no modo Piscina -->
+      <div id="notaPiscina" class="hidden mb-3 p-3 rounded-xl bg-blue-500/10 border border-blue-400/30">
+        <div class="flex items-start gap-2">
+          <span class="material-symbols-outlined text-blue-400 text-base shrink-0 mt-0.5">water</span>
+          <div>
+            <p class="text-[10px] font-black text-blue-300 uppercase tracking-wider mb-1">Especificações Técnicas — Piscina ICF</p>
+            <ul class="text-[10px] text-blue-200/80 space-y-0.5 list-disc list-inside leading-relaxed">
+              <li>Aço calculado com fator +25% (armação dupla para pressão hidrostática)</li>
+              <li>Concreto estrutural: fck ≥ 30 MPa obrigatório no fundo e paredes</li>
+              <li>Impermeabilização: ICFlex + aditivo cristalizante em todas as superfícies internas</li>
+              <li>Laje de fundo estrutural — incluir no campo "Área de Laje"</li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -496,10 +722,33 @@
       </div>
       
       <div class="p-6 space-y-6">
+        <!-- Kit Piscina (visível só no modo Piscina) -->
+        <div id="cardKitPiscina" class="hidden p-4 rounded-2xl bg-blue-500/10 border border-blue-400/30 space-y-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="material-symbols-outlined text-blue-400 text-base">pool</span>
+            <p class="text-[10px] font-black text-blue-300 uppercase tracking-wider">Kit Equipamentos Piscina (estimado)</p>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-white/5 rounded-xl p-2">
+              <p class="text-[9px] text-on-surface-variant font-bold uppercase">Filtro + Bomba</p>
+              <p class="text-sm font-black text-white">R$ 3.500</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-2">
+              <p class="text-[9px] text-on-surface-variant font-bold uppercase">LED Subaquático</p>
+              <p class="text-sm font-black text-white">R$ 1.500</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-2">
+              <p class="text-[9px] text-on-surface-variant font-bold uppercase">Total Kit</p>
+              <p class="text-sm font-black text-blue-300" id="resKitPiscina">R$ 5.000</p>
+            </div>
+          </div>
+          <p class="text-[9px] text-blue-200/60 italic">*Estimativa incluída no custo base antes da aplicação da margem</p>
+        </div>
+
         <!-- Grid de Valores -->
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Custo Est. Obra Cinza</p>
+            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1" id="labelCustoObra">Custo Est. Obra Cinza</p>
             <p class="text-2xl font-black text-white" id="resCustoObra">R$ 0,00</p>
             <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase">Fórmula: CUB + 30%</p>
           </div>
@@ -575,13 +824,142 @@
       </div>
     </div>
 
-    <!-- Nova Simulação -->
-    <button onclick="resetForm()"
-      class="w-full h-14 bg-surface border-2 border-primary/40 rounded-xl font-black text-primary uppercase tracking-widest text-sm hover:bg-primary/10 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg">
-      <span class="material-symbols-outlined">refresh</span>
-      Nova Simulação
-    </button>
+    <!-- Ações -->
+    <div class="grid grid-cols-2 gap-3">
+      <button onclick="alterarSimulacao('obra')"
+        class="h-14 bg-surface border-2 border-white/20 rounded-xl font-black text-on-surface-variant uppercase tracking-widest text-xs hover:bg-white/5 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-base">edit</span>
+        Alterar
+      </button>
+      <button onclick="resetForm()"
+        class="h-14 bg-surface border-2 border-primary/40 rounded-xl font-black text-primary uppercase tracking-widest text-xs hover:bg-primary/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-base">refresh</span>
+        Nova Simulação
+      </button>
+    </div>
   </div>
+
+  <!-- ── MEMORIAL PISCINA ── -->
+  <div id="memorialPiscina" class="hidden space-y-4">
+
+    <!-- Cabeçalho -->
+    <div class="bg-gradient-to-br from-blue-500/10 to-surface rounded-2xl p-5 border border-blue-400/30">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-blue-400" style="font-variation-settings:'FILL' 1;">pool</span>
+        </div>
+        <div>
+          <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Grupo ICF · Piscinas Térmicas</p>
+          <h2 class="text-lg font-black text-white">Orçamento — Piscina Térmica ICF</h2>
+        </div>
+      </div>
+      <!-- Resumo Dimensões -->
+      <div id="pMemDimensoes" class="grid grid-cols-3 gap-2 text-center mt-2">
+        <div class="bg-background/40 rounded-xl p-3">
+          <p class="text-lg font-black text-blue-300" id="pResComp">—</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">Comprimento (m)</p>
+        </div>
+        <div class="bg-background/40 rounded-xl p-3">
+          <p class="text-lg font-black text-blue-300" id="pResLarg">—</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">Largura (m)</p>
+        </div>
+        <div class="bg-background/40 rounded-xl p-3">
+          <p class="text-lg font-black text-blue-300" id="pResProf">—</p>
+          <p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-wide mt-0.5">Profundidade (m)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bloco: Estrutura ICF -->
+    <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden">
+      <div class="flex items-center gap-3 p-4 border-b border-white/5 bg-primary/5">
+        <span class="material-symbols-outlined text-primary text-lg">domain</span>
+        <p class="text-[10px] font-black text-primary uppercase tracking-widest">1. Estrutura ICF</p>
+      </div>
+      <div class="p-4 space-y-3" id="pBlocoEstrutura"></div>
+    </div>
+
+    <!-- Bloco: Estanqueidade -->
+    <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden">
+      <div class="flex items-center gap-3 p-4 border-b border-white/5 bg-blue-500/5">
+        <span class="material-symbols-outlined text-blue-400 text-lg">water</span>
+        <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">2. Sistema de Estanqueidade</p>
+      </div>
+      <div class="p-4 space-y-3" id="pBlocoEstanque"></div>
+    </div>
+
+    <!-- Bloco: Mão de Obra -->
+    <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden">
+      <div class="flex items-center gap-3 p-4 border-b border-white/5 bg-yellow-500/5">
+        <span class="material-symbols-outlined text-yellow-400 text-lg">engineering</span>
+        <p class="text-[10px] font-black text-yellow-400 uppercase tracking-widest">3. Mão de Obra</p>
+      </div>
+      <div class="p-4 space-y-3" id="pBlocoMO"></div>
+    </div>
+
+    <!-- Bloco: Equipamentos -->
+    <div class="bg-surface rounded-2xl border border-white/10 overflow-hidden">
+      <div class="flex items-center gap-3 p-4 border-b border-white/5 bg-primary/5">
+        <span class="material-symbols-outlined text-primary text-lg">settings</span>
+        <p class="text-[10px] font-black text-primary uppercase tracking-widest">4. Kit de Máquinas e Equipamentos</p>
+      </div>
+      <div class="p-4 space-y-3" id="pBlocoEquip"></div>
+    </div>
+
+    <!-- Bloco: Financeiro -->
+    <div class="bg-gradient-to-br from-background via-surface to-background rounded-3xl border-2 border-primary/40 overflow-hidden shadow-[0_20px_50px_rgba(0,194,160,0.15)]">
+      <div class="p-6 border-b border-primary/20 bg-primary/5 flex justify-between items-center">
+        <div>
+          <p class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Precificação Inteligente</p>
+          <h3 class="text-xl font-black text-white">Estudo de Viabilidade</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-3xl">analytics</span>
+        </div>
+      </div>
+      <div class="p-6 space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Custo Direto Total</p>
+            <p class="text-2xl font-black text-white" id="pResCusto">R$ 0,00</p>
+            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase">Materiais + MO + Equipamentos</p>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Preço Sugerido Venda</p>
+            <p class="text-2xl font-black text-primary" id="pResVenda">R$ 0,00</p>
+            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase" id="pResBdiLabel">Margem: 35%</p>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between items-end">
+            <p class="text-[11px] font-bold text-white uppercase tracking-wide" id="pResLucroLabel">Lucro Bruto Estimado</p>
+            <p class="text-lg font-black text-primary" id="pResLucro">R$ 0,00</p>
+          </div>
+          <div class="h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
+            <div class="h-full bg-gradient-to-r from-primary/40 to-primary rounded-full" id="pResBarra" style="width:35%"></div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-primary/5 border border-primary/20">
+          <p class="text-[10px] text-on-surface-variant leading-relaxed">
+            <span class="text-primary font-black uppercase">Método:</span> Margem aplicada sobre o Preço de Venda (não sobre o custo). Protege contra impostos e custos fixos. <span class="text-white font-bold">Custo ÷ (1 − margem%) = Preço de Venda.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <button onclick="alterarSimulacao('piscina')"
+        class="h-14 bg-surface border-2 border-white/20 rounded-xl font-black text-on-surface-variant uppercase tracking-widest text-xs hover:bg-white/5 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-base">edit</span>
+        Alterar
+      </button>
+      <button onclick="resetForm()"
+        class="h-14 bg-surface border-2 border-primary/40 rounded-xl font-black text-primary uppercase tracking-widest text-xs hover:bg-primary/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-base">refresh</span>
+        Nova Simulação
+      </button>
+    </div>
+  </div><!-- #memorialPiscina -->
 
   <!-- Protocolo de Montagem Anti-Erro -->
   <div class="rounded-2xl border border-primary/30 overflow-hidden mt-4" style="background:#020f22;">
@@ -795,19 +1173,141 @@
     let tipoProjeto = 'residencial';
     window.setTipoProjeto = (tipo) => {
       tipoProjeto = tipo;
+      const isPiscina = tipo === 'piscina';
+
+      // Botões
       const btnR = document.getElementById('btnResidencial');
       const btnP = document.getElementById('btnPiscina');
-      if (tipo === 'piscina') {
-        btnR.classList.remove('bg-primary', 'text-secondary');
-        btnR.classList.add('text-on-surface-variant');
-        btnP.classList.add('bg-primary', 'text-secondary');
-        btnP.classList.remove('text-on-surface-variant');
-      } else {
-        btnP.classList.remove('bg-primary', 'text-secondary');
-        btnP.classList.add('text-on-surface-variant');
-        btnR.classList.add('bg-primary', 'text-secondary');
-        btnR.classList.remove('text-on-surface-variant');
-      }
+      btnR.classList.toggle('bg-primary',    !isPiscina);
+      btnR.classList.toggle('text-secondary', !isPiscina);
+      btnR.classList.toggle('text-on-surface-variant', isPiscina);
+      btnP.classList.toggle('bg-primary',    isPiscina);
+      btnP.classList.toggle('text-secondary', isPiscina);
+      btnP.classList.toggle('text-on-surface-variant', !isPiscina);
+
+      // Alterna formulários
+      document.getElementById('obraFields').classList.toggle('hidden', isPiscina);
+      document.getElementById('piscinaFields').classList.toggle('hidden', !isPiscina);
+
+      // Oculta qualquer memorial aberto ao trocar de modo
+      document.getElementById('memorial').classList.add('hidden');
+      document.getElementById('memorialPiscina').classList.add('hidden');
+      document.getElementById('formSection').classList.remove('hidden');
+    };
+
+    // ── Helper para linhas do memorial piscina ──────────────────────────
+    function pLinhaItem(descricao, qtd, unidade, valorUn, total) {
+      return `<div class="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+        <div class="flex-1">
+          <p class="text-sm font-bold text-white">${descricao}</p>
+          <p class="text-[10px] text-on-surface-variant">${qtd} ${unidade} × R$ ${valorUn.toLocaleString('pt-BR', {minimumFractionDigits:2})}</p>
+        </div>
+        <p class="text-sm font-black text-primary ml-4">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}</p>
+      </div>`;
+    }
+
+    // ── CALCULAR PISCINA ────────────────────────────────────────────────
+    window.calcularPiscina = () => {
+      const C = parseFloat(document.getElementById('pComp').value) || 0;
+      const L = parseFloat(document.getElementById('pLarg').value) || 0;
+      const P = parseFloat(document.getElementById('pProf').value) || 0;
+      const bdi = parseFloat(document.getElementById('pBDI').value) || 40;
+
+      if (!C || !L || !P) { alert('Preencha Comprimento, Largura e Profundidade.'); return; }
+
+      // Custos unitários (editáveis)
+      const cu = {
+        forma:      parseFloat(document.getElementById('pCForma').value)    || 145,
+        canto:      parseFloat(document.getElementById('pCCanto').value)    || 65,
+        concreto:   parseFloat(document.getElementById('pCConcreto').value) || 610,
+        aco:        parseFloat(document.getElementById('pCAco').value)      || 32,
+        icflex:     parseFloat(document.getElementById('pCICFlex').value)   || 175,
+        tela:       parseFloat(document.getElementById('pCTela').value)     || 8,
+        moFundo:    parseFloat(document.getElementById('pCMOFundo').value)  || 70,
+        moParedes:  parseFloat(document.getElementById('pCMOParedes').value)|| 120,
+        moImperm:   parseFloat(document.getElementById('pCMOImperm').value) || 30,
+        matImperm:  parseFloat(document.getElementById('pCMatImperm').value)|| 65,
+        kitFiltro:  parseFloat(document.getElementById('pCKitFiltro').value)|| 3500,
+        led:        parseFloat(document.getElementById('pCLed').value)      || 500,
+        qtdLed:     parseInt(document.getElementById('pQtdLed').value)      || 4,
+      };
+
+      // Geometria
+      const areaFundo    = C * L;
+      const perimetro    = 2 * (C + L);
+      const areaParedes  = perimetro * P;
+      const areaInterna  = areaFundo + areaParedes;
+
+      // Estrutura
+      const formasQtd    = Math.ceil(areaParedes / 0.3);
+      const cantosQtd    = Math.ceil(perimetro / 1.25);
+      const concRadier   = parseFloat((areaFundo * 0.15).toFixed(2));
+      const concParedes  = parseFloat((areaParedes * 0.10).toFixed(2));
+      const concTotal    = parseFloat((concRadier + concParedes).toFixed(2));
+      const acoKg        = Math.ceil(areaParedes * 4 * 1.25); // +25% piscina
+
+      // Estanqueidade
+      const icflexM2     = Math.ceil(areaInterna);
+      const telaM2       = Math.ceil(areaInterna);
+
+      // Mão de obra
+      const moFundoM2    = Math.ceil(areaFundo);
+      const moParedesM2  = Math.ceil(areaParedes);
+      const moImpermM2   = Math.ceil(areaInterna);
+
+      // Custos por bloco
+      const custoEstrutura = formasQtd*cu.forma + cantosQtd*cu.canto + concTotal*cu.concreto + acoKg*cu.aco;
+      const custoEstanque  = icflexM2*cu.icflex + telaM2*cu.tela;
+      const custoMO        = moFundoM2*cu.moFundo + moParedesM2*cu.moParedes + moImpermM2*(cu.moImperm + cu.matImperm);
+      const custoEquip     = cu.kitFiltro + cu.qtdLed * cu.led;
+      const custoTotal     = custoEstrutura + custoEstanque + custoMO + custoEquip;
+
+      // Financeiro
+      const divisor    = 1 - (bdi / 100);
+      const precoVenda = divisor > 0 ? custoTotal / divisor : 0;
+      const lucro      = precoVenda - custoTotal;
+      const brl = v => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+
+      // Preenche memorial
+      document.getElementById('pResComp').textContent = C.toFixed(1);
+      document.getElementById('pResLarg').textContent = L.toFixed(1);
+      document.getElementById('pResProf').textContent = P.toFixed(1);
+
+      document.getElementById('pBlocoEstrutura').innerHTML =
+        pLinhaItem('Formas ICF 18', formasQtd, 'unid', cu.forma, formasQtd*cu.forma) +
+        pLinhaItem('Formas Canto ICF', cantosQtd, 'unid', cu.canto, cantosQtd*cu.canto) +
+        pLinhaItem('Concreto FCK25 — Radier', concRadier, 'm³', cu.concreto, concRadier*cu.concreto) +
+        pLinhaItem('Concreto FCK25 — Paredes', concParedes, 'm³', cu.concreto, concParedes*cu.concreto) +
+        pLinhaItem('Aço 8mm (+25% armadura dupla)', acoKg, 'kg', cu.aco, acoKg*cu.aco) +
+        `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Estrutura</p><p class="text-sm font-black text-white">${brl(custoEstrutura)}</p></div>`;
+
+      document.getElementById('pBlocoEstanque').innerHTML =
+        pLinhaItem('ICFlex Argamassa + Tela', icflexM2, 'm²', cu.icflex, icflexM2*cu.icflex) +
+        pLinhaItem('Tela Fibra de Vidro', telaM2, 'm²', cu.tela, telaM2*cu.tela) +
+        `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Estanqueidade</p><p class="text-sm font-black text-white">${brl(custoEstanque)}</p></div>`;
+
+      document.getElementById('pBlocoMO').innerHTML =
+        pLinhaItem('MO — Execução Fundo (Radier)', moFundoM2, 'm²', cu.moFundo, moFundoM2*cu.moFundo) +
+        pLinhaItem('MO — Execução Paredes ICF', moParedesM2, 'm²', cu.moParedes, moParedesM2*cu.moParedes) +
+        pLinhaItem('MO — Impermeabilização', moImpermM2, 'm²', cu.moImperm, moImpermM2*cu.moImperm) +
+        pLinhaItem('Materiais Impermeabilização', moImpermM2, 'm²', cu.matImperm, moImpermM2*cu.matImperm) +
+        `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Mão de Obra</p><p class="text-sm font-black text-white">${brl(custoMO)}</p></div>`;
+
+      document.getElementById('pBlocoEquip').innerHTML =
+        pLinhaItem('Kit Filtro + Bomba', 1, 'kit', cu.kitFiltro, cu.kitFiltro) +
+        pLinhaItem('LED Subaquático', cu.qtdLed, 'unid', cu.led, cu.qtdLed*cu.led) +
+        `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Equipamentos</p><p class="text-sm font-black text-white">${brl(custoEquip)}</p></div>`;
+
+      document.getElementById('pResCusto').textContent  = brl(custoTotal);
+      document.getElementById('pResVenda').textContent  = brl(precoVenda);
+      document.getElementById('pResLucro').textContent  = brl(lucro);
+      document.getElementById('pResBdiLabel').textContent = `Margem sobre Receita: ${bdi}%`;
+      document.getElementById('pResLucroLabel').textContent = `Lucro Bruto Estimado (${bdi}%)`;
+      document.getElementById('pResBarra').style.width = `${Math.min(bdi, 100)}%`;
+
+      document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('memorialPiscina').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.calcularICF = (isAuto = false) => {
@@ -862,16 +1362,17 @@
       const pesoTotal   = (formas18 * 1.1) + (formas12 * 0.9) + (formasCanto * 1.1);
       
       const mLinear     = somaAreas / (altura || 1);
-      const acoFactor   = tipoProjeto === 'piscina' ? 1.25 : 1.0;
+      const acoFactor   = 1.0;
       const aco8        = Math.ceil(Math.ceil(mLinear / 0.25) * (altura || 1) * acoFactor);
       const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear * acoFactor);
       const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
       // Módulo Financeiro (Aula 03)
-      const totalAreaConstrucao = somaAreas / 2; // Estimativa de área construída baseada em paredes
-      const custoObraCinza = (cubValue * 1.3) * totalAreaConstrucao; 
-      const precoSugeridoVenda = cubValue > 0 ? custoObraCinza / 0.6 : 0;
-      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza; // 40% sobre receita
+      const totalAreaConstrucao = somaAreas / 2;
+      const custoObraCinza = (cubValue * 1.3) * totalAreaConstrucao;
+      const margemDivisor = 1 - (bdiPercent / 100);
+      const precoSugeridoVenda = cubValue > 0 && margemDivisor > 0 ? custoObraCinza / margemDivisor : 0;
+      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza;
 
       document.getElementById('memArea18').textContent = area18.toFixed(1);
       document.getElementById('memArea12').textContent = area12.toFixed(1);
@@ -903,23 +1404,41 @@
       document.getElementById('resCustoObra').textContent = custoObraCinza.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('resPrecoVenda').textContent = precoSugeridoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('resLucroAbsoluto').textContent = lucroAbsoluto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('bdiLabel').textContent = 'Margem sobre Receita: 40%';
+      document.getElementById('bdiLabel').textContent = `Margem sobre Receita: ${bdiPercent}%`;
 
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('memorial').classList.remove('hidden');
       if (!isAuto) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    window.alterarSimulacao = (modo) => {
+      document.getElementById('memorial').classList.add('hidden');
+      document.getElementById('memorialPiscina').classList.add('hidden');
+      document.getElementById('formSection').classList.remove('hidden');
+      if (modo === 'piscina') {
+        document.getElementById('obraFields').classList.add('hidden');
+        document.getElementById('piscinaFields').classList.remove('hidden');
+      } else {
+        document.getElementById('obraFields').classList.remove('hidden');
+        document.getElementById('piscinaFields').classList.add('hidden');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     window.resetForm = () => {
       localStorage.removeItem(SIMULATION_KEY);
-      // Limpar campos
-      document.getElementById('inArea18').value = '';
-      document.getElementById('inArea12').value = '';
-      document.getElementById('inAltura').value = '';
-      document.getElementById('inCantos').value = '';
-      document.getElementById('inVaos').value = '';
-      
+      // Limpar campos obra
+      ['inArea18','inArea12','inAltura','inCantos','inVaos','inLaje'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      // Limpar campos piscina
+      ['pComp','pLarg','pProf'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
       document.getElementById('memorial').classList.add('hidden');
+      document.getElementById('memorialPiscina').classList.add('hidden');
       document.getElementById('formSection').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -964,9 +1483,6 @@
       
       // Carregar última simulação se existir
       const lastSimulation = JSON.parse(localStorage.getItem(SIMULATION_KEY));
-      const cubPadrao = localStorage.getItem('iforms_cub_padrao') || '';
-      
-      if (cubPadrao) document.getElementById('inCUB').value = cubPadrao;
       if (!document.getElementById('inBDI').value) document.getElementById('inBDI').value = 35;
 
       if (lastSimulation) {

@@ -143,13 +143,25 @@
             <span class="material-symbols-outlined text-primary text-5xl">person</span>
           </div>
         </div>
-        <button onclick="editProfile()" class="absolute bottom-0 right-0 w-8 h-8 bg-primary text-background rounded-full flex items-center justify-center border-4 border-background active:scale-90 transition-transform">
-          <span class="material-symbols-outlined text-sm">edit</span>
-        </button>
       </div>
-      
+
       <div>
-        <h2 id="profile-name" class="text-2xl font-bold text-white">Carregando...</h2>
+        <div class="flex items-center gap-2">
+          <h2 id="profile-name" class="text-2xl font-bold text-white">Carregando...</h2>
+          <button id="btn-edit-name" onclick="startEditName()" class="text-on-surface-variant hover:text-primary transition-colors active:scale-90">
+            <span class="material-symbols-outlined text-base">edit</span>
+          </button>
+        </div>
+        <div id="edit-name-form" class="hidden items-center gap-2 mt-1">
+          <input id="input-name" type="text" maxlength="60" placeholder="Seu nome completo"
+            class="bg-surface border border-outline/40 rounded-xl px-3 py-2 text-white text-sm font-bold focus:outline-none focus:border-primary w-44">
+          <button onclick="saveEditName()" class="w-9 h-9 bg-primary text-secondary rounded-full flex items-center justify-center flex-shrink-0 active:scale-90">
+            <span class="material-symbols-outlined text-sm">check</span>
+          </button>
+          <button onclick="cancelEditName()" class="w-9 h-9 bg-surface border border-outline/30 text-on-surface-variant rounded-full flex items-center justify-center flex-shrink-0 active:scale-90">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
         <p id="profile-level" class="text-xs font-black text-primary uppercase tracking-[0.2em] mt-1">Status</p>
       </div>
 
@@ -185,6 +197,20 @@
           <p class="text-[8px] font-bold text-center uppercase tracking-tighter">Embaixador</p>
         </div>
       </div>
+    </section>
+
+    <!-- Certificate CTA -->
+    <section>
+      <a id="cert-btn" href="certificado.html" class="w-full flex items-center justify-between p-5 bg-primary/10 border border-primary/30 rounded-3xl hover:bg-primary/20 transition-colors group">
+        <div class="flex items-center gap-4">
+          <span class="material-symbols-outlined text-primary text-2xl">workspace_premium</span>
+          <div class="text-left">
+            <p class="text-sm font-bold text-white">Meu Certificado</p>
+            <p id="cert-btn-sub" class="text-[10px] text-on-surface-variant">Conclua as 5 aulas para liberar</p>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">chevron_right</span>
+      </a>
     </section>
 
     <!-- Professional Actions -->
@@ -287,8 +313,41 @@
 
   <script type="module">
     import {
-        logout, getUser, getProgress, getUserStats, getUserExpertData, computeLevel
+        supabase, logout, getUser, getProgress, getUserStats, getUserExpertData, computeLevel
     } from './assets/js/supabase.js';
+
+    window.startEditName = () => {
+      document.getElementById('profile-name').classList.add('hidden');
+      document.getElementById('btn-edit-name').classList.add('hidden');
+      const form = document.getElementById('edit-name-form');
+      form.classList.remove('hidden');
+      form.classList.add('flex');
+      const input = document.getElementById('input-name');
+      input.value = document.getElementById('profile-name').textContent;
+      input.focus();
+    };
+
+    window.cancelEditName = () => {
+      document.getElementById('profile-name').classList.remove('hidden');
+      document.getElementById('btn-edit-name').classList.remove('hidden');
+      const form = document.getElementById('edit-name-form');
+      form.classList.add('hidden');
+      form.classList.remove('flex');
+    };
+
+    window.saveEditName = async () => {
+      const newName = document.getElementById('input-name').value.trim();
+      if (!newName) return;
+      const btn = document.querySelector('#edit-name-form button');
+      btn.disabled = true;
+      const { error } = await supabase.auth.updateUser({ data: { full_name: newName } });
+      btn.disabled = false;
+      if (error) { alert('Erro ao salvar. Tente novamente.'); return; }
+      document.getElementById('profile-name').textContent = newName;
+      const sideName = document.querySelector('#sideMenu .text-white');
+      if (sideName) sideName.textContent = newName;
+      cancelEditName();
+    };
 
     window.closeLogoutModal = () => {
       const modal = document.getElementById('logoutModal');
@@ -353,6 +412,19 @@
       const totalLessons = 5;
       const completedCount = progressData.filter(p => p.lesson_id).length;
       document.getElementById('stats-lessons').textContent = `${completedCount}/${totalLessons}`;
+
+      // Botão certificado
+      const certBtn = document.getElementById('cert-btn');
+      const certSub = document.getElementById('cert-btn-sub');
+      if (completedCount >= 5) {
+        certSub.textContent = 'Baixar meu certificado de conclusão';
+        certBtn.classList.replace('bg-primary/10', 'bg-primary/20');
+        certBtn.classList.replace('border-primary/30', 'border-primary/60');
+      } else {
+        const remaining = 5 - completedCount;
+        certSub.textContent = `Falta${remaining > 1 ? 'm' : ''} ${remaining} aula${remaining > 1 ? 's' : ''} para liberar`;
+        certBtn.classList.add('pointer-events-none', 'opacity-60');
+      }
 
       const stats = await getUserStats();
       const contribElement = document.querySelector('p.text-lg.font-bold.text-white:not(#stats-lessons)');
