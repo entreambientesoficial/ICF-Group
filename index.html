@@ -120,10 +120,11 @@
 
         const btnStart = document.getElementById('btnStart');
 
-        // Detecta sessão tanto no carregamento normal quanto no callback OAuth
-        // onAuthStateChange dispara após o Supabase processar o #access_token do hash
+        // SIGNED_IN: dispara após processar o #access_token do OAuth (sessão já gravada no localStorage)
+        // INITIAL_SESSION: dispara no carregamento quando o usuário já estava logado
+        // TOKEN_REFRESHED: sessão renovada automaticamente
         supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
+            if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED')) {
                 window.location.href = 'dashboard.html';
             }
         });

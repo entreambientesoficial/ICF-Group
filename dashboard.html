@@ -627,7 +627,7 @@
   </div>
 
   <script type="module">
-    import { logout, getUser, syncProfile, getProgress, updateProgress, computeLevel } from './assets/js/supabase.js';
+    import { logout, getUser, syncProfile, getProgress, updateProgress, computeLevel, supabase } from './assets/js/supabase.js';
 
     window.closeLogoutModal = () => {
       const modal = document.getElementById('logoutModal');
@@ -814,6 +814,22 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
+      // Se o hash contém #access_token, o Supabase ainda está processando o OAuth.
+      // Aguarda o evento SIGNED_IN (sessão gravada no localStorage) antes de checar auth.
+      if (window.location.hash.includes('access_token')) {
+        await new Promise((resolve) => {
+          const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+            if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+              subscription.unsubscribe();
+              resolve();
+            }
+          });
+          setTimeout(resolve, 3000); // fallback: máximo 3s de espera
+        });
+        // Remove o hash da URL sem recarregar a página
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+
       const user = await getUser();
       if (!user) {
         window.location.href = 'index.html';
