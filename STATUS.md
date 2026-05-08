@@ -207,6 +207,35 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 
 ---
 
+---
+
+## Changelog — 2026-05-08 (Tarde/Noite — Ebooks, PWA, Calculadora ICF)
+
+### Ebooks & Supabase Storage
+- **[FEAT]** Upload dos 4 ebooks no bucket `ebooks` (público) do Supabase Storage com nomes padronizados (`EBOOK-AULA-1.pdf` a `EBOOK-AULA-4.pdf`).
+- **[FIX]** URLs dos ebooks em `aula.html` atualizadas para os links públicos do Supabase Storage (`hbcqldrrgrpyufylojtv.supabase.co/storage/v1/object/public/ebooks/`).
+- **[FIX]** Click handler do "Material de Apoio" em `aula.html` agora faz `fetch HEAD` antes de abrir — exibe alerta amigável se o arquivo não estiver disponível, evitando abertura de link externo indesejado.
+
+### PWA — Correção de Trava na Tela de Logo
+- **[FIX]** `manifest.json`: `start_url` alterado de `./dashboard.html` para `./` — PWA instalado no celular agora inicia pelo `index.html`, que usa `getSession()` (localStorage, sem rede) para redirecionar instantaneamente ao dashboard se já autenticado. Elimina trava na tela de logo ao abrir pelo ícone.
+
+### Títulos das Aulas
+- **[FIX]** Aula 3: "Tudo sobre preço e custos de obra com as Formas de Isopor"
+- **[FIX]** Aula 4: "O passo a passo para ganhar a partir de 15k por mês com as Formas de Isopor"
+- **[FIX]** Aula 5: "Avançando 4 anos em 3 meses com a Construção das Formas de isopor"
+
+### Calculadora (`calculadora.html`) — Estimativa Financeira ICF
+- **[FEAT]** Sub-toggle `CUB / ICF` dentro da aba Obras — permite escolher o modo de estimativa financeira sem sair da tela.
+- **[FEAT]** Modo ICF: campos de preço unitário editáveis por material (Forma 18cm, 12cm, Canto, Concreto, Aço, ICFlex) com margem configurável. Preços salvos em `localStorage`.
+- **[FEAT]** Memorial modo ICF: tabela linha a linha (quantidade × preço = subtotal) + linha "Reboco/Emboço: R$ 0,00 — substituído pelo ICFlex".
+- **[FIX]** Coeficientes de concreto corrigidos para o sistema Iforms: 0,125 m³/m² (18cm) e 0,075 m³/m² (12cm).
+- **[FIX]** Aço no modo ICF: calculado por 3,5 kg/m² × área total × R$/kg (campo único, em vez de metros por bitola).
+- **[FIX]** Estimativa Financeira movida para o topo do formulário (antes da Geometria da Obra).
+- **[FIX]** Cards informativos "Estrutural (18cm)" e "Vedação (12cm)" normalizados — mesmo estilo neutro nos dois, sem aparência de seleção.
+- **[FIX]** Todos os campos de preço (ICF e Piscina) removidos os valores padrão — campos abrem vazios com placeholder orientativo. Validação bloqueia cálculo e abre o accordion se algum preço estiver em branco.
+
+---
+
 ## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
 - [x] Módulo Financeiro (Viabilidade) na Calculadora.
