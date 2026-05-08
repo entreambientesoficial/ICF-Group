@@ -116,19 +116,15 @@
     </main>
 
     <script type="module">
-        import { loginWithGoogle, getUser } from './assets/js/supabase.js';
+        import { loginWithGoogle, supabase } from './assets/js/supabase.js';
 
         const btnStart = document.getElementById('btnStart');
 
-        // Se o usuário já estiver logado, manda direto pra dashboard
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const user = await getUser();
-                if (user) {
-                    window.location.href = 'dashboard.html';
-                }
-            } catch (err) {
-                console.error('Erro ao verificar sessão:', err);
+        // Detecta sessão tanto no carregamento normal quanto no callback OAuth
+        // onAuthStateChange dispara após o Supabase processar o #access_token do hash
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                window.location.href = 'dashboard.html';
             }
         });
 
