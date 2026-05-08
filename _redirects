@@ -1,8 +1,0 @@
-# Cloudflare Pages — garante que arquivos HTML sejam servidos corretamente
-/dashboard.html   /dashboard.html   200
-/aula.html        /aula.html        200
-/calculadora.html /calculadora.html 200
-/comunidade.html  /comunidade.html  200
-/perfil.html      /perfil.html      200
-/certificado.html /certificado.html 200
-/offline.html     /offline.html     200
