@@ -262,14 +262,27 @@
             <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Preço de Venda = Custo ÷ (1 − margem)</p>
           </div>
           <!-- CUB como Referência de Mercado (opcional) -->
-          <div class="p-3 rounded-xl bg-white/5 border border-white/10">
-            <p class="text-[9px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Referência de Mercado CUB</p>
-            <div class="relative">
-              <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="CUB do seu Estado (R$/m²)"
-                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-3">
+            <p class="text-[9px] font-black text-on-surface-variant uppercase tracking-widest">Referência de Mercado CUB</p>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">CUB do Estado (R$/m²)</label>
+                <div class="relative">
+                  <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="R$/m²"
+                    class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Área Construída (m²)</label>
+                <div class="relative">
+                  <input id="inCubArea" type="number" inputmode="decimal" min="0" step="0.01" placeholder="m²"
+                    class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">m²</span>
+                </div>
+              </div>
             </div>
-            <p class="text-[9px] text-on-surface-variant/60 mt-1">Preencha para gerar um comparativo com obra convencional no memorial.</p>
+            <p class="text-[9px] text-on-surface-variant/60">Preencha os dois campos para gerar um comparativo com obra convencional no memorial.</p>
           </div>
         </div>
 
@@ -1424,10 +1437,10 @@
       const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear * acoFactor);
       const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
-      // Referência de mercado CUB (só calcula se CUB foi preenchido)
-      const totalAreaConstrucao = somaAreas / 2;
-      const custoObraCinza = cubValue > 0 ? (cubValue * 1.3) * totalAreaConstrucao : 0;
-      const precoSugeridoVenda = cubValue > 0 ? custoObraCinza / 0.65 : 0;
+      // Referência de mercado CUB (só calcula se CUB e área forem preenchidos)
+      const cubArea = parseFloat(document.getElementById('inCubArea').value) || 0;
+      const custoObraCinza = (cubValue > 0 && cubArea > 0) ? (cubValue * 1.3) * cubArea : 0;
+      const precoSugeridoVenda = (cubValue > 0 && cubArea > 0) ? custoObraCinza / 0.65 : 0;
 
       // Módulo Financeiro ICF — usa 0 quando campo não preenchido
       const icfPrices = {
@@ -1499,9 +1512,9 @@
       document.getElementById('icfResBdiLabel').textContent = icfPrices.bdi > 0 ? `Margem: ${icfPrices.bdi}%` : 'Informe a margem';
       document.getElementById('icfBarraLucro').style.width = icfPrices.bdi > 0 ? `${Math.min(icfPrices.bdi, 100)}%` : '0%';
 
-      // Card CUB comparativo — só aparece se CUB foi preenchido
+      // Card CUB comparativo — só aparece se CUB e área foram preenchidos
       const cardCub = document.getElementById('cardCubRef');
-      if (cubValue > 0) {
+      if (cubValue > 0 && cubArea > 0) {
         cardCub.classList.remove('hidden');
         document.getElementById('resCustoObra').textContent = fmt(custoObraCinza);
         document.getElementById('resPrecoVenda').textContent = fmt(precoSugeridoVenda);
