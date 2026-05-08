@@ -199,100 +199,77 @@
       <!-- Inputs de Geometria -->
       <div class="bg-surface rounded-2xl p-5 border border-white/10 space-y-4">
 
-          <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Estimativa Financeira</p>
-          <!-- Sub-toggle CUB / ICF -->
-          <div class="flex gap-1 p-1 bg-background/40 rounded-xl border border-white/10 mb-4">
-            <button id="btnCubMode" onclick="setModoFinanceiro('cub')"
-              class="flex-1 py-2 rounded-lg font-black text-xs uppercase tracking-widest bg-primary text-on-primary transition-all">
-              CUB
-            </button>
-            <button id="btnIcfMode" onclick="setModoFinanceiro('icf')"
-              class="flex-1 py-2 rounded-lg font-black text-xs uppercase tracking-widest text-on-surface-variant transition-all flex items-center justify-center gap-1">
-              <span class="material-symbols-outlined text-sm">domain</span>ICF
-            </button>
-          </div>
-          <!-- Params CUB -->
-          <div id="cubFinParams">
-            <div class="grid grid-cols-2 gap-4">
+          <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-3">Estimativa Financeira ICF</p>
+          <!-- Preços Unitários ICF (sempre visível) -->
+          <details id="icfFinParams" class="border border-white/10 rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-4 cursor-pointer select-none list-none bg-surface">
               <div>
-                <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">CUB do Estado (m²)</label>
-                <div class="relative">
-                  <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 2500"
-                    class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                </div>
+                <p class="text-[10px] font-black text-primary uppercase tracking-widest">Preços Unitários ICF</p>
+                <p class="text-[9px] text-on-surface-variant mt-0.5">Preencha conforme os preços da sua região</p>
               </div>
-              <div>
-                <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem BDI (%)</label>
-                <div class="relative">
-                  <input id="inBDI" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Sugestão: 35"
-                    class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Params ICF -->
-          <div id="icfFinParams" class="hidden space-y-4">
-            <details class="border border-white/10 rounded-xl overflow-hidden">
-              <summary class="flex items-center justify-between p-4 cursor-pointer select-none list-none bg-surface">
+              <span class="material-symbols-outlined text-on-surface-variant text-xl">expand_more</span>
+            </summary>
+            <div class="p-4 space-y-3 bg-surface/50">
+              <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <p class="text-[10px] font-black text-primary uppercase tracking-widest">Preços Unitários ICF</p>
-                  <p class="text-[9px] text-on-surface-variant mt-0.5">Edite conforme os preços da sua região</p>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Forma 18cm (R$/unid)</label>
+                  <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="icfP18" type="number" min="0" placeholder="R$/unid" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
+                  </div>
                 </div>
-                <span class="material-symbols-outlined text-on-surface-variant text-xl">expand_more</span>
-              </summary>
-              <div class="p-4 space-y-3 bg-surface/50">
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Forma 18cm (R$/unid)</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfP18" type="number" min="0" placeholder="R$/unid" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
-                    </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Forma 12cm (R$/unid)</label>
+                  <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="icfP12" type="number" min="0" placeholder="R$/unid" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
                   </div>
-                  <div>
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Forma 12cm (R$/unid)</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfP12" type="number" min="0" placeholder="R$/unid" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
-                    </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Canto 90° (R$/unid)</label>
+                  <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="icfPCanto" type="number" min="0" placeholder="R$/unid" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
                   </div>
-                  <div>
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Canto 90° (R$/unid)</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfPCanto" type="number" min="0" placeholder="R$/unid" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
-                    </div>
+                </div>
+                <div>
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Concreto (R$/m³)</label>
+                  <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="icfPConc" type="number" min="0" placeholder="R$/m³" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
                   </div>
-                  <div>
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Concreto (R$/m³)</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfPConc" type="number" min="0" placeholder="R$/m³" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
-                    </div>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Aço (R$/kg) — média 3,5 kg/m²</label>
+                  <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="icfPAco" type="number" min="0" placeholder="R$/kg" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
                   </div>
-                  <div class="col-span-2">
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Aço (R$/kg) — média 3,5 kg/m²</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfPAco" type="number" min="0" placeholder="R$/kg" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
-                    </div>
-                    <p class="text-[9px] text-on-surface-variant/70 mt-1">Custo calculado por: (m² total × 3,5 kg) × R$/kg</p>
-                  </div>
-                  <div class="col-span-2">
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">ICFlex por balde (R$/balde)</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfPICFlex" type="number" min="0" placeholder="R$/balde" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
-                    </div>
+                  <p class="text-[9px] text-on-surface-variant/70 mt-1">Custo calculado por: (m² total × 3,5 kg) × R$/kg</p>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">ICFlex por balde (R$/balde)</label>
+                  <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+                    <input id="icfPICFlex" type="number" min="0" placeholder="R$/balde" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
                   </div>
                 </div>
               </div>
-            </details>
-            <div>
-              <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem de Lucro (%)</label>
-              <div class="relative">
-                <input id="icfBDI" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Sugestão: 35"
-                  class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
-              </div>
-              <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Preço = Custo ÷ (1 - margem)</p>
             </div>
+          </details>
+          <!-- Margem de Lucro -->
+          <div>
+            <label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Margem de Lucro (%)</label>
+            <div class="relative">
+              <input id="icfBDI" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Sugestão: 35"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">%</span>
+            </div>
+            <p class="text-[9px] text-primary/70 mt-1 font-bold">→ Preço de Venda = Custo ÷ (1 − margem)</p>
+          </div>
+          <!-- CUB como Referência de Mercado (opcional) -->
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+            <p class="text-[9px] font-black text-on-surface-variant uppercase tracking-widest mb-2">Referência de Mercado (opcional)</p>
+            <div class="relative">
+              <input id="inCUB" type="number" inputmode="decimal" min="0" step="0.01" placeholder="CUB do seu Estado (R$/m²)"
+                class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-3 text-white font-bold placeholder-white/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10" />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+            </div>
+            <p class="text-[9px] text-on-surface-variant/60 mt-1">Preencha para gerar um comparativo com obra convencional no memorial.</p>
           </div>
         </div>
 
@@ -785,102 +762,23 @@
       </div>
     </div>
 
-    <!-- ESTUDO DE VIABILIDADE FINANCEIRA (Refinamento Premium) -->
-    <div id="viabilidadeCUB" class="bg-gradient-to-br from-background via-surface to-background rounded-3xl border-2 border-primary/40 overflow-hidden shadow-[0_20px_50px_rgba(0,194,160,0.15)]">
+    <!-- ESTUDO DE VIABILIDADE ICF -->
+    <div id="viabilidadeICF" class="bg-gradient-to-br from-background via-surface to-background rounded-3xl border-2 border-primary/40 overflow-hidden shadow-[0_20px_50px_rgba(0,194,160,0.15)]">
       <div class="p-6 border-b border-primary/20 bg-primary/5 flex justify-between items-center">
         <div>
           <p class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Negócios & Estratégia</p>
-          <h3 class="text-xl font-black text-white">Estudo de Viabilidade</h3>
-        </div>
-        <div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center">
-          <span class="material-symbols-outlined text-primary text-3xl">analytics</span>
-        </div>
-      </div>
-      
-      <div class="p-6 space-y-6">
-        <!-- Kit Piscina (visível só no modo Piscina) -->
-        <div id="cardKitPiscina" class="hidden p-4 rounded-2xl bg-blue-500/10 border border-blue-400/30 space-y-2">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="material-symbols-outlined text-blue-400 text-base">pool</span>
-            <p class="text-[10px] font-black text-blue-300 uppercase tracking-wider">Kit Equipamentos Piscina (estimado)</p>
-          </div>
-          <div class="grid grid-cols-3 gap-2 text-center">
-            <div class="bg-white/5 rounded-xl p-2">
-              <p class="text-[9px] text-on-surface-variant font-bold uppercase">Filtro + Bomba</p>
-              <p class="text-sm font-black text-white">R$ 3.500</p>
-            </div>
-            <div class="bg-white/5 rounded-xl p-2">
-              <p class="text-[9px] text-on-surface-variant font-bold uppercase">LED Subaquático</p>
-              <p class="text-sm font-black text-white">R$ 1.500</p>
-            </div>
-            <div class="bg-white/5 rounded-xl p-2">
-              <p class="text-[9px] text-on-surface-variant font-bold uppercase">Total Kit</p>
-              <p class="text-sm font-black text-blue-300" id="resKitPiscina">R$ 5.000</p>
-            </div>
-          </div>
-          <p class="text-[9px] text-blue-200/60 italic">*Estimativa incluída no custo base antes da aplicação da margem</p>
-        </div>
-
-        <!-- Grid de Valores -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1" id="labelCustoObra">Custo Est. Obra Cinza</p>
-            <p class="text-2xl font-black text-white" id="resCustoObra">R$ 0,00</p>
-            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase">Fórmula: CUB + 30%</p>
-          </div>
-          <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
-            <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Preço Sugerido Venda</p>
-            <p class="text-2xl font-black text-primary" id="resPrecoVenda">R$ 0,00</p>
-            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase" id="bdiLabel">BDI Aplicado: 35%</p>
-          </div>
-        </div>
-
-        <!-- Barra de Lucratividade -->
-        <div class="space-y-2">
-          <div class="flex justify-between items-end">
-            <p class="text-[11px] font-bold text-white uppercase tracking-wide">Margem Bruta Estimada (40%)</p>
-            <p class="text-lg font-black text-primary" id="resLucroAbsoluto">R$ 0,00</p>
-          </div>
-          <div class="h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
-            <div class="h-full bg-gradient-to-r from-primary/40 to-primary rounded-full" style="width: 100%"></div>
-          </div>
-          <p class="text-[10px] text-on-surface-variant italic leading-relaxed">
-            *Nota: O lucro real no sistema ICF costuma ser superior devido ao giro de capital 50% mais rápido que o convencional.
-          </p>
-        </div>
-
-        <button onclick="window.open('./relatorio.html', '_blank')" class="w-full py-4 bg-primary/10 border border-primary/50 text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2">
-          <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
-          Gerar Relatório para Cliente
-        </button>
-
-        <!-- Nota de Escopo (Refinamento Aula 03) -->
-        <div class="p-4 rounded-xl bg-primary/5 border border-primary/20">
-          <div class="flex gap-2 items-start">
-            <span class="material-symbols-outlined text-primary text-sm">info</span>
-            <p class="text-[10px] text-on-surface-variant leading-relaxed">
-              <span class="text-primary font-black uppercase">O que está incluso:</span> Esta estimativa contempla a <span class="text-white font-bold">Obra Cinza</span> (Fundação, Paredes ICF, Laje, Telhado e Infraestrutura Bruta). 
-              <br><br>
-              <span class="text-red-400 font-black uppercase">O que não está incluso:</span> Acabamentos finos (pisos, revestimentos), fiação elétrica, metais, louças e projetos. O <span class="text-white font-bold">BDI</span> de 35% refere-se à sua margem de lucro e custos indiretos.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ESTIMATIVA POR MATERIAIS ICF -->
-    <div id="viabilidadeICF" class="hidden bg-gradient-to-br from-background via-surface to-background rounded-3xl border-2 border-primary/40 overflow-hidden shadow-[0_20px_50px_rgba(0,194,160,0.15)]">
-      <div class="p-6 border-b border-primary/20 bg-primary/5 flex justify-between items-center">
-        <div>
-          <p class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Negócios & Estratégia</p>
-          <h3 class="text-xl font-black text-white">Estimativa por Materiais ICF</h3>
+          <h3 class="text-xl font-black text-white">Estudo de Viabilidade ICF</h3>
         </div>
         <div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center">
           <span class="material-symbols-outlined text-primary text-3xl">receipt_long</span>
         </div>
       </div>
       <div class="p-6 space-y-5">
+
+        <!-- Linha a linha ICF -->
         <div id="icfLinhaItens" class="space-y-0 border border-white/10 rounded-xl overflow-hidden bg-surface p-4"></div>
+
+        <!-- Totais ICF -->
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
             <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Custo Total Materiais</p>
@@ -890,27 +788,55 @@
           <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
             <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Preço Sugerido Venda</p>
             <p class="text-2xl font-black text-primary" id="icfResVenda">R$ 0,00</p>
-            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase" id="icfResBdiLabel">Margem: 35%</p>
+            <p class="text-[9px] text-primary/70 font-bold mt-1 uppercase" id="icfResBdiLabel">Margem: —</p>
           </div>
         </div>
+
+        <!-- Barra de lucratividade ICF -->
         <div class="space-y-2">
           <div class="flex justify-between items-end">
             <p class="text-[11px] font-bold text-white uppercase tracking-wide">Margem Bruta Estimada</p>
             <p class="text-lg font-black text-primary" id="icfResLucro">R$ 0,00</p>
           </div>
           <div class="h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
-            <div class="h-full bg-gradient-to-r from-primary/40 to-primary rounded-full" style="width:35%"></div>
+            <div id="icfBarraLucro" class="h-full bg-gradient-to-r from-primary/40 to-primary rounded-full" style="width:0%"></div>
           </div>
-        </div>
-        <div class="p-4 rounded-xl bg-primary/5 border border-primary/20">
-          <p class="text-[10px] text-on-surface-variant leading-relaxed">
-            <span class="text-primary font-black uppercase">Método:</span> Custo real dos materiais ICF com margem sobre preço de venda. Edite os preços unitários no formulário antes de calcular.
+          <p class="text-[10px] text-on-surface-variant italic leading-relaxed">
+            *O lucro real no sistema ICF costuma ser superior pelo giro de capital 50% mais rápido que o convencional.
           </p>
         </div>
+
+        <!-- Card comparativo CUB (só aparece se CUB foi informado) -->
+        <div id="cardCubRef" class="hidden p-4 rounded-2xl border border-white/10 bg-white/5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-on-surface-variant text-base">compare_arrows</span>
+            <p class="text-[10px] font-black text-on-surface-variant uppercase tracking-wider">Referência Convencional (CUB)</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <p class="text-[9px] text-on-surface-variant uppercase font-bold mb-1">Custo Obra Cinza</p>
+              <p class="text-lg font-black text-white" id="resCustoObra">—</p>
+              <p class="text-[9px] text-on-surface-variant/60">CUB × 1,3 × área</p>
+            </div>
+            <div>
+              <p class="text-[9px] text-on-surface-variant uppercase font-bold mb-1">Preço de Referência</p>
+              <p class="text-lg font-black text-on-surface-variant" id="resPrecoVenda">—</p>
+              <p class="text-[9px] text-on-surface-variant/60" id="bdiLabel">Com margem 35%</p>
+            </div>
+          </div>
+          <p class="text-[9px] text-on-surface-variant/50 mt-3 italic">Estimativa baseada no índice CUB — representa o custo de uma obra convencional na mesma metragem. Não reflete o custo real do sistema ICF.</p>
+        </div>
+
         <button onclick="window.open('./relatorio.html', '_blank')" class="w-full py-4 bg-primary/10 border border-primary/50 text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
           Gerar Relatório para Cliente
         </button>
+
+        <div class="p-4 rounded-xl bg-primary/5 border border-primary/20">
+          <p class="text-[10px] text-on-surface-variant leading-relaxed">
+            <span class="text-primary font-black uppercase">Método:</span> Custo real dos materiais ICF com margem sobre preço de venda. Campos não preenchidos aparecem como R$ 0,00.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -1293,18 +1219,6 @@
     const SIMULATION_KEY = 'iforms_last_simulation';
 
     let tipoProjeto = 'residencial';
-    let modoFinanceiro = 'cub';
-
-    window.setModoFinanceiro = (modo) => {
-      modoFinanceiro = modo;
-      const isCub = modo === 'cub';
-      const activeClass = 'flex-1 py-2 rounded-lg font-black text-xs uppercase tracking-widest bg-primary text-on-primary transition-all';
-      const inactiveClass = 'flex-1 py-2 rounded-lg font-black text-xs uppercase tracking-widest text-on-surface-variant transition-all flex items-center justify-center gap-1';
-      document.getElementById('btnCubMode').className = isCub ? activeClass : inactiveClass + ' justify-center';
-      document.getElementById('btnIcfMode').className = !isCub ? activeClass + ' flex items-center justify-center gap-1' : inactiveClass;
-      document.getElementById('cubFinParams').classList.toggle('hidden', !isCub);
-      document.getElementById('icfFinParams').classList.toggle('hidden', isCub);
-    };
 
     window.setTipoProjeto = (tipo) => {
       tipoProjeto = tipo;
@@ -1463,7 +1377,6 @@
       const vaos   = parseFloat(document.getElementById('inVaos').value) || 0;
       
       const cubValue   = parseFloat(document.getElementById('inCUB').value) || 0;
-      const bdiPercent = parseFloat(document.getElementById('inBDI').value) || 35;
 
       if (!isAuto) {
         if (area18 <= 0 && area12 <= 0) {
@@ -1480,10 +1393,9 @@
 
       // Salvar para persistência (incluindo CUB e Laje)
       localStorage.setItem(SIMULATION_KEY, JSON.stringify({
-        area18, area12, laje, altura, cantos, vaos, cubValue, bdiPercent
+        area18, area12, laje, altura, cantos, vaos, cubValue
       }));
       localStorage.setItem('iforms_cub_padrao', cubValue);
-      localStorage.setItem('iforms_modo_financeiro', modoFinanceiro);
 
       const somaAreas   = area18 + area12;
       const formas18    = Math.ceil(area18 * 2);
@@ -1512,22 +1424,20 @@
       const aco63       = Math.ceil(Math.ceil((altura || 1) / 0.40) * mLinear * acoFactor);
       const tela        = Math.max(1, Math.ceil((somaAreas * 2) / 50));
 
-      // Módulo Financeiro CUB
+      // Referência de mercado CUB (só calcula se CUB foi preenchido)
       const totalAreaConstrucao = somaAreas / 2;
-      const custoObraCinza = (cubValue * 1.3) * totalAreaConstrucao;
-      const margemDivisor = 1 - (bdiPercent / 100);
-      const precoSugeridoVenda = cubValue > 0 && margemDivisor > 0 ? custoObraCinza / margemDivisor : 0;
-      const lucroAbsoluto = precoSugeridoVenda - custoObraCinza;
+      const custoObraCinza = cubValue > 0 ? (cubValue * 1.3) * totalAreaConstrucao : 0;
+      const precoSugeridoVenda = cubValue > 0 ? custoObraCinza / 0.65 : 0;
 
-      // Módulo Financeiro ICF (materiais reais)
+      // Módulo Financeiro ICF — usa 0 quando campo não preenchido
       const icfPrices = {
-        p18:     parseFloat(document.getElementById('icfP18').value)    || 145,
-        p12:     parseFloat(document.getElementById('icfP12').value)    || 120,
-        pCanto:  parseFloat(document.getElementById('icfPCanto').value) || 65,
-        pConc:   parseFloat(document.getElementById('icfPConc').value)  || 610,
-        pAco:    parseFloat(document.getElementById('icfPAco').value)   || 12,
-        pICFlex: parseFloat(document.getElementById('icfPICFlex').value)|| 280,
-        bdi:     parseFloat(document.getElementById('icfBDI').value)    || 35,
+        p18:     parseFloat(document.getElementById('icfP18').value)    || 0,
+        p12:     parseFloat(document.getElementById('icfP12').value)    || 0,
+        pCanto:  parseFloat(document.getElementById('icfPCanto').value) || 0,
+        pConc:   parseFloat(document.getElementById('icfPConc').value)  || 0,
+        pAco:    parseFloat(document.getElementById('icfPAco').value)   || 0,
+        pICFlex: parseFloat(document.getElementById('icfPICFlex').value)|| 0,
+        bdi:     parseFloat(document.getElementById('icfBDI').value)    || 0,
       };
       const icfC18     = formas18 * icfPrices.p18;
       const icfC12     = formas12 * icfPrices.p12;
@@ -1568,50 +1478,37 @@
         document.getElementById('sectionLaje').classList.add('hidden');
       }
 
-      // Validação: modo ICF exige todos os preços preenchidos
-      const isCubMode = modoFinanceiro === 'cub';
-      if (!isCubMode) {
-        const icfCampos = ['icfP18','icfP12','icfPCanto','icfPConc','icfPAco','icfPICFlex','icfBDI'];
-        const faltando = icfCampos.some(id => !(parseFloat(document.getElementById(id).value) > 0));
-        if (faltando) {
-          document.getElementById('icfFinParams').removeAttribute('open');
-          document.querySelector('#icfFinParams details').setAttribute('open', '');
-          alert('Preencha todos os preços unitários ICF (Preços Unitários ICF) antes de gerar o memorial.');
-          return;
-        }
-      }
+      // Atualizar memorial ICF (sempre)
+      const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('icfLinhaItens').innerHTML =
+        pLinhaItem('Formas 18cm — Estrutural', formas18, 'unid', icfPrices.p18, icfC18) +
+        pLinhaItem('Formas 12cm — Vedação', formas12, 'unid', icfPrices.p12, icfC12) +
+        pLinhaItem('Cantos 90°', formasCanto, 'unid', icfPrices.pCanto, icfCCanto) +
+        pLinhaItem('Concreto (0,125 m³/m²)', concreto.toFixed(3), 'm³', icfPrices.pConc, icfCConc) +
+        pLinhaItem('Aço (3,5 kg/m²)', icfAcoKg, 'kg', icfPrices.pAco, icfCAco) +
+        pLinhaItem('ICFlex Verde + Laranja (4 m²/balde)', icflexBaldes * 2, 'baldes', icfPrices.pICFlex, icfCICFlex) +
+        `<div class="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+          <div class="flex-1">
+            <p class="text-sm font-bold text-green-400">Reboco / Emboço Tradicional</p>
+            <p class="text-[10px] text-on-surface-variant">Substituído pela camada fina de ICFlex</p>
+          </div>
+          <p class="text-sm font-black text-green-400 ml-4">R$ 0,00</p>
+        </div>`;
+      document.getElementById('icfResCusto').textContent = fmt(icfTotal);
+      document.getElementById('icfResVenda').textContent = icfPrices.bdi > 0 ? fmt(icfVenda) : '—';
+      document.getElementById('icfResLucro').textContent = icfPrices.bdi > 0 ? fmt(icfLucro) : '—';
+      document.getElementById('icfResBdiLabel').textContent = icfPrices.bdi > 0 ? `Margem: ${icfPrices.bdi}%` : 'Informe a margem';
+      document.getElementById('icfBarraLucro').style.width = icfPrices.bdi > 0 ? `${Math.min(icfPrices.bdi, 100)}%` : '0%';
 
-      // Show/hide financial sections
-      document.getElementById('viabilidadeCUB').classList.toggle('hidden', !isCubMode);
-      document.getElementById('viabilidadeICF').classList.toggle('hidden', isCubMode);
-
-      // Update CUB Viabilidade
-      document.getElementById('resCustoObra').textContent = custoObraCinza.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('resPrecoVenda').textContent = precoSugeridoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('resLucroAbsoluto').textContent = lucroAbsoluto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('bdiLabel').textContent = `Margem sobre Receita: ${bdiPercent}%`;
-
-      // Update ICF Viabilidade
-      if (!isCubMode) {
-        const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        document.getElementById('icfLinhaItens').innerHTML =
-          pLinhaItem('Formas 18cm — Estrutural', formas18, 'unid', icfPrices.p18, icfC18) +
-          pLinhaItem('Formas 12cm — Vedação', formas12, 'unid', icfPrices.p12, icfC12) +
-          pLinhaItem('Cantos 90°', formasCanto, 'unid', icfPrices.pCanto, icfCCanto) +
-          pLinhaItem('Concreto (0,125 m³/m²)', concreto.toFixed(3), 'm³', icfPrices.pConc, icfCConc) +
-          pLinhaItem('Aço (3,5 kg/m²)', icfAcoKg, 'kg', icfPrices.pAco, icfCAco) +
-          pLinhaItem('ICFlex Verde + Laranja (4 m²/balde)', icflexBaldes * 2, 'baldes', icfPrices.pICFlex, icfCICFlex) +
-          `<div class="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-            <div class="flex-1">
-              <p class="text-sm font-bold text-green-400">Reboco / Emboço Tradicional</p>
-              <p class="text-[10px] text-on-surface-variant">Substituído pela camada fina de ICFlex</p>
-            </div>
-            <p class="text-sm font-black text-green-400 ml-4">R$ 0,00</p>
-          </div>`;
-        document.getElementById('icfResCusto').textContent = fmt(icfTotal);
-        document.getElementById('icfResVenda').textContent = fmt(icfVenda);
-        document.getElementById('icfResLucro').textContent = fmt(icfLucro);
-        document.getElementById('icfResBdiLabel').textContent = `Margem: ${icfPrices.bdi}%`;
+      // Card CUB comparativo — só aparece se CUB foi preenchido
+      const cardCub = document.getElementById('cardCubRef');
+      if (cubValue > 0) {
+        cardCub.classList.remove('hidden');
+        document.getElementById('resCustoObra').textContent = fmt(custoObraCinza);
+        document.getElementById('resPrecoVenda').textContent = fmt(precoSugeridoVenda);
+        document.getElementById('bdiLabel').textContent = 'Com margem de 35%';
+      } else {
+        cardCub.classList.add('hidden');
       }
 
       document.getElementById('formSection').classList.add('hidden');
@@ -1635,9 +1532,7 @@
 
     window.resetForm = () => {
       localStorage.removeItem(SIMULATION_KEY);
-      localStorage.removeItem('iforms_modo_financeiro');
       localStorage.removeItem('iforms_icf_prices');
-      setModoFinanceiro('cub');
       // Limpar campos obra
       ['inArea18','inArea12','inAltura','inCantos','inVaos','inLaje'].forEach(id => {
         const el = document.getElementById(id);
@@ -1694,11 +1589,6 @@
       
       // Carregar última simulação se existir
       const lastSimulation = JSON.parse(localStorage.getItem(SIMULATION_KEY));
-      if (!document.getElementById('inBDI').value) document.getElementById('inBDI').value = 35;
-
-      // Restaurar modo financeiro
-      const savedModo = localStorage.getItem('iforms_modo_financeiro');
-      if (savedModo) setModoFinanceiro(savedModo);
 
       // Restaurar preços ICF
       const savedIcfPrices = JSON.parse(localStorage.getItem('iforms_icf_prices') || 'null');
@@ -1718,7 +1608,6 @@
         document.getElementById('inCantos').value = lastSimulation.cantos || '';
         document.getElementById('inVaos').value   = lastSimulation.vaos || '';
         if (lastSimulation.cubValue) document.getElementById('inCUB').value = lastSimulation.cubValue;
-        if (lastSimulation.bdiPercent) document.getElementById('inBDI').value = lastSimulation.bdiPercent;
         window.calcularICF(true); // Chamada silenciosa
       }
 
