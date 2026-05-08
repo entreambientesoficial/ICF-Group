@@ -268,17 +268,12 @@
                       <input id="icfPConc" type="number" min="0" value="610" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
                     </div>
                   </div>
-                  <div>
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Aço Ø8mm (R$/metro)</label>
+                  <div class="col-span-2">
+                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Aço (R$/kg) — média 3,5 kg/m²</label>
                     <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfPAco8" type="number" min="0" value="8" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
+                      <input id="icfPAco" type="number" min="0" value="12" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
                     </div>
-                  </div>
-                  <div>
-                    <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">Aço Ø6,3mm (R$/metro)</label>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
-                      <input id="icfPAco63" type="number" min="0" value="5" class="w-full bg-background/60 border border-white/20 rounded-xl pl-9 pr-3 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
-                    </div>
+                    <p class="text-[9px] text-on-surface-variant/70 mt-1">Custo calculado por: (m² total × 3,5 kg) × R$/kg</p>
                   </div>
                   <div class="col-span-2">
                     <label class="block text-[9px] text-on-surface-variant font-bold uppercase mb-1">ICFlex por balde (R$/balde)</label>
@@ -1489,7 +1484,7 @@
       
       // Cálculo Técnico de Concreto (Aula 03):
       // Paredes + Capa da Laje (5cm)
-      const volParedes  = (area18 * 0.072) + (area12 * 0.042);
+      const volParedes  = (area18 * 0.125) + (area12 * 0.075);
       const volLaje     = laje * 0.05; 
       const volBruto    = volParedes + volLaje;
       const concreto    = volBruto * 1.05; // Margem de 5%
@@ -1522,8 +1517,7 @@
         p12:     parseFloat(document.getElementById('icfP12').value)    || 120,
         pCanto:  parseFloat(document.getElementById('icfPCanto').value) || 65,
         pConc:   parseFloat(document.getElementById('icfPConc').value)  || 610,
-        pAco8:   parseFloat(document.getElementById('icfPAco8').value)  || 8,
-        pAco63:  parseFloat(document.getElementById('icfPAco63').value) || 5,
+        pAco:    parseFloat(document.getElementById('icfPAco').value)   || 12,
         pICFlex: parseFloat(document.getElementById('icfPICFlex').value)|| 280,
         bdi:     parseFloat(document.getElementById('icfBDI').value)    || 35,
       };
@@ -1531,10 +1525,10 @@
       const icfC12     = formas12 * icfPrices.p12;
       const icfCCanto  = formasCanto * icfPrices.pCanto;
       const icfCConc   = concreto * icfPrices.pConc;
-      const icfCAco8   = aco8 * icfPrices.pAco8;
-      const icfCAco63  = aco63 * icfPrices.pAco63;
+      const icfAcoKg   = parseFloat((somaAreas * 3.5).toFixed(1));
+      const icfCAco    = icfAcoKg * icfPrices.pAco;
       const icfCICFlex = icflexBaldes * 2 * icfPrices.pICFlex;
-      const icfTotal   = icfC18 + icfC12 + icfCCanto + icfCConc + icfCAco8 + icfCAco63 + icfCICFlex;
+      const icfTotal   = icfC18 + icfC12 + icfCCanto + icfCConc + icfCAco + icfCICFlex;
       const icfDiv     = 1 - (icfPrices.bdi / 100);
       const icfVenda   = icfDiv > 0 ? icfTotal / icfDiv : 0;
       const icfLucro   = icfVenda - icfTotal;
@@ -1583,10 +1577,16 @@
           pLinhaItem('Formas 18cm — Estrutural', formas18, 'unid', icfPrices.p18, icfC18) +
           pLinhaItem('Formas 12cm — Vedação', formas12, 'unid', icfPrices.p12, icfC12) +
           pLinhaItem('Cantos 90°', formasCanto, 'unid', icfPrices.pCanto, icfCCanto) +
-          pLinhaItem('Concreto', concreto.toFixed(3) + ' m³', 'm³', icfPrices.pConc, icfCConc) +
-          pLinhaItem('Aço Ø8mm', aco8, 'm', icfPrices.pAco8, icfCAco8) +
-          pLinhaItem('Aço Ø6,3mm', aco63, 'm', icfPrices.pAco63, icfCAco63) +
-          pLinhaItem(`ICFlex Verde + Laranja`, icflexBaldes * 2, 'baldes', icfPrices.pICFlex, icfCICFlex);
+          pLinhaItem('Concreto (0,125 m³/m²)', concreto.toFixed(3), 'm³', icfPrices.pConc, icfCConc) +
+          pLinhaItem('Aço (3,5 kg/m²)', icfAcoKg, 'kg', icfPrices.pAco, icfCAco) +
+          pLinhaItem('ICFlex Verde + Laranja (4 m²/balde)', icflexBaldes * 2, 'baldes', icfPrices.pICFlex, icfCICFlex) +
+          `<div class="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+            <div class="flex-1">
+              <p class="text-sm font-bold text-green-400">Reboco / Emboço Tradicional</p>
+              <p class="text-[10px] text-on-surface-variant">Substituído pela camada fina de ICFlex</p>
+            </div>
+            <p class="text-sm font-black text-green-400 ml-4">R$ 0,00</p>
+          </div>`;
         document.getElementById('icfResCusto').textContent = fmt(icfTotal);
         document.getElementById('icfResVenda').textContent = fmt(icfVenda);
         document.getElementById('icfResLucro').textContent = fmt(icfLucro);
@@ -1682,9 +1682,9 @@
       // Restaurar preços ICF
       const savedIcfPrices = JSON.parse(localStorage.getItem('iforms_icf_prices') || 'null');
       if (savedIcfPrices) {
-        ['p18','p12','pCanto','pConc','pAco8','pAco63','pICFlex','bdi'].forEach(key => {
+        ['p18','p12','pCanto','pConc','pAco','pICFlex','bdi'].forEach(key => {
           const elMap = { p18:'icfP18', p12:'icfP12', pCanto:'icfPCanto', pConc:'icfPConc',
-                          pAco8:'icfPAco8', pAco63:'icfPAco63', pICFlex:'icfPICFlex', bdi:'icfBDI' };
+                          pAco:'icfPAco', pICFlex:'icfPICFlex', bdi:'icfBDI' };
           if (savedIcfPrices[key]) document.getElementById(elMap[key]).value = savedIcfPrices[key];
         });
       }
