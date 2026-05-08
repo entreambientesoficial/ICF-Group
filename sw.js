@@ -1,4 +1,4 @@
-const CACHE_NAME = 'iforms-pwa-v3';
+const CACHE_NAME = 'iforms-pwa-v4';
 const OFFLINE_URL = './offline.html';
 
 const STATIC_ASSETS = [
@@ -44,6 +44,10 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   if (request.method !== 'GET') return;
+
+  // Navegações de página (HTML) vão direto para a rede — o SW não interfere
+  // Isso evita ERR_FAILED durante redirects OAuth com #access_token no hash
+  if (request.mode === 'navigate') return;
 
   // CDN externos: stale-while-revalidate
   if (url.origin !== self.location.origin) {
