@@ -10,7 +10,7 @@ export async function loginWithGoogle() {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin + window.location.pathname.replace('index.html', 'dashboard.html')
+            redirectTo: window.location.origin + '/dashboard.html'
         }
     })
     if (error) console.error('Erro ao logar:', error.message)
