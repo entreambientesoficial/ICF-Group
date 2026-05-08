@@ -236,6 +236,26 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 
 ---
 
+## Changelog — 2026-05-08 (Noite 2 — Calculadora ICF Unificada & Comunidade)
+
+### Calculadora (`calculadora.html`) — Unificação do Modo Financeiro
+
+- **[REFACTOR]** Removido o sub-toggle `CUB / ICF` do formulário. O simulador agora é exclusivamente ICF — sem modo alternativo.
+- **[FEAT]** Preços unitários ICF sempre visíveis como accordion `<details>` (antes ficava oculto no modo CUB). Campos abrem **sempre vazios** — localStorage não restaura mais preços nem CUB.
+- **[FEAT]** Campo "Referência de Mercado CUB" (opcional) adicionado abaixo da margem de lucro. Serve apenas como comparativo — não afeta o cálculo ICF.
+- **[FEAT]** Memorial unificado: sempre exibe estudo ICF (linha a linha com R$ 0,00 onde o campo não foi preenchido). Card "Referência Convencional (CUB)" aparece somente se o usuário preencheu o campo CUB.
+- **[FIX]** Corrigido `ReferenceError` que impedia o botão "Gerar Memorial Descritivo" de funcionar: `icfPrices` era referenciado antes de ser declarado (temporal dead zone do `const`).
+- **[FIX]** Adicionado `mt-4` ao botão "Gerar Memorial Descritivo" — espaçamento faltante entre o campo de vãos e o botão.
+- **[FIX]** Campos de preços ICF e campo CUB nunca mais pré-preenchidos: removidos saves e restores de `localStorage` para esses valores.
+- **[FIX]** Label "Referência de Mercado (opcional)" → **"Referência de Mercado CUB"**.
+
+### Comunidade (`comunidade.html`)
+
+- **[FEAT]** Card "Montadores" substituído por **"Experts"** com ícone `engineering` (capacete de obra) do Material Symbols.
+- **[FIX]** `<select>` do modal de cadastro atualizado: opção "Montadores" → "Experts".
+
+---
+
 ## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
 - [x] Módulo Financeiro (Viabilidade) na Calculadora.
