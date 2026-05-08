@@ -537,8 +537,18 @@
                 ${res.type === 'pdf' ? 'download' : 'open_in_new'}
               </span>
             `;
-            li.onclick = () => {
-              if (res.url && res.url !== '#') window.open(res.url, '_blank');
+            li.onclick = async () => {
+              if (!res.url || res.url === '#') return;
+              try {
+                const check = await fetch(res.url, { method: 'HEAD' });
+                if (check.ok) {
+                  window.open(res.url, '_blank');
+                } else {
+                  alert('Material temporariamente indisponível. Em breve será liberado para download.');
+                }
+              } catch {
+                alert('Material temporariamente indisponível. Em breve será liberado para download.');
+              }
             };
             resourceList.appendChild(li);
           });
