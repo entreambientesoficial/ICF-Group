@@ -266,6 +266,22 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 
 ---
 
+---
+
+## Changelog — 2026-05-09 — Lançamento da Aula 05
+
+### Aula 05 (`aula.html`)
+- **[FEAT]** Aula 5 liberada: `released: true`, vídeo oficial integrado (`ssg7Cj3Pr1g`).
+- **[FEAT]** Quiz Aula 5 adicionado — 12 questões técnicas sobre ecossistema ICF, perfis Expert, RI ICF, certificação e visão 2028.
+- **[FEAT]** Material de Apoio: EBOOK-AULA-5 referenciado (`./material-apoio-ICF/EBOOK-AULA-5.pdf`).
+- **[PENDENTE]** EBOOK-AULA-5 precisa ser uploaded no Supabase Storage (bucket `ebooks`) e URL atualizada para padrão `hbcqldrrgrpyufylojtv.supabase.co/...` — pasta `material-apoio-ICF/` está fora do `iforms-pwa/`.
+
+### Dashboard (`dashboard.html`)
+- **[FEAT]** Lógica de bloqueio da Aula 5 atualizada: desbloqueia quando Aula 4 é concluída (`i === 5 && !lesson4Completed`).
+- **[FEAT]** Badge NOVO adicionado ao card da Aula 5: aparece quando Aula 4 concluída e Aula 5 ainda não.
+
+---
+
 ## Roadmap Atualizado
 - [x] Sincronização de Progresso (Cloud Persistence)
 - [x] Módulo Financeiro (Viabilidade) na Calculadora.
@@ -277,9 +293,9 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 - [x] Editor de nome no Perfil (para uso no certificado).
 - [x] Certificado de conclusão (`certificado.html`) — A4 landscape, print/PDF.
 - [x] Calculadora Piscina: motor separado, custos editáveis, memorial próprio.
-- [ ] Upload dos Ebooks no Supabase Storage (aguardando incidente Supabase).
-- [ ] Configuração da Aula 5 (vídeo, quiz, ebook) — professor liberando conteúdo.
-- [ ] Teste do Certificado com 5/5 aulas concluídas (após Aula 5 liberada).
+- [x] Liberação da Aula 05 (vídeo, quiz, ebook) — conteúdo completo integrado.
+- [ ] Upload do EBOOK-AULA-5 no Supabase Storage e atualização da URL em `aula.html`.
+- [ ] Teste do Certificado com 5/5 aulas concluídas (fluxo completo agora possível).
 - [ ] Refinamento Financeiro: Base de cálculo da área da laje para CUB.
 - [ ] Painel Administrativo do Mentor (V2 estável, com módulo JS separado e auth via Supabase).
 - [ ] Módulo Offline: Melhorar cache de vídeos para acesso sem internet.

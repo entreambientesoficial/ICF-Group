@@ -375,7 +375,10 @@
           class="bg-surface/40 border border-outline-variant p-gutter rounded-xl hover:border-primary/50 transition-all cursor-pointer group block" id="lesson-card-5">
           <div class="flex justify-between items-start mb-4">
             <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest lesson-status-label">AULA #05</span>
-            <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+            <div class="flex items-center gap-2">
+              <span id="lesson-5-novo-badge" class="hidden text-[8px] font-black bg-primary text-secondary px-2 py-0.5 rounded-full uppercase tracking-widest">NOVO</span>
+              <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+            </div>
           </div>
           <h5 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors leading-tight">Avançando 4 anos em 3 meses com a Construção ICF</h5>
           <div class="mt-4 flex items-center gap-2">
@@ -759,6 +762,11 @@
         }
 
         // 4. Atualiza os cards das aulas (Bloqueio e Status)
+        const lesson4Completed = progressData.some(p => Number(p.lesson_id) === 4);
+        const lesson5Completed = progressData.some(p => Number(p.lesson_id) === 5);
+        const lesson5NovoBadge = document.getElementById('lesson-5-novo-badge');
+        if (lesson5NovoBadge && lesson4Completed && !lesson5Completed) lesson5NovoBadge.classList.remove('hidden');
+
         for (let i = 1; i <= totalLessons; i++) {
             const card = document.getElementById(`lesson-card-${i}`);
             if (!card) continue;
@@ -768,8 +776,8 @@
             const statusLabel = card.querySelector('.lesson-status-label');
             const actionLabel = card.querySelector('.lesson-action-label');
 
-            // Apenas aula 5 bloqueada (ainda não publicada)
-            if (i > 4) {
+            // Aula 5 bloqueada até aula 4 ser concluída
+            if (i === 5 && !lesson4Completed) {
                 card.classList.add('opacity-40', 'grayscale', 'pointer-events-none');
                 card.style.cursor = 'default';
                 if (icon) icon.textContent = 'lock';
