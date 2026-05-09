@@ -229,18 +229,6 @@
           <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
         </button>
 
-        <div class="w-full flex items-center justify-between p-5 transition-colors">
-          <div class="flex items-center gap-4">
-            <span class="material-symbols-outlined text-primary">notifications</span>
-            <div class="text-left">
-              <p class="text-sm font-bold text-white">Notificações</p>
-              <p class="text-[10px] text-on-surface-variant">Alertas de mensagens e avisos</p>
-            </div>
-          </div>
-          <button id="notifyToggle" class="w-10 h-6 bg-outline/20 rounded-full relative transition-colors">
-            <div class="absolute left-1 top-1 w-4 h-4 bg-on-surface-variant rounded-full transition-all"></div>
-          </button>
-        </div>
       </div>
     </section>
 
@@ -455,23 +443,6 @@
         }
       }
 
-      const notifyBtn = document.getElementById('notifyToggle');
-      if (notifyBtn) {
-          notifyBtn.onclick = () => {
-              const dot = notifyBtn.querySelector('div');
-              const isOff = notifyBtn.classList.contains('bg-outline/20');
-              
-              if (isOff) {
-                  notifyBtn.classList.replace('bg-outline/20', 'bg-primary/20');
-                  dot.classList.replace('left-1', 'right-1');
-                  dot.classList.replace('bg-on-surface-variant', 'bg-primary');
-              } else {
-                  notifyBtn.classList.replace('bg-primary/20', 'bg-outline/20');
-                  dot.classList.replace('right-1', 'left-1');
-                  dot.classList.replace('bg-primary', 'bg-on-surface-variant');
-              }
-          };
-      }
     });
   </script>
   <script src="./assets/js/pwa.js"></script>
