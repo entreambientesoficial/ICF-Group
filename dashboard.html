@@ -757,10 +757,9 @@
         }
 
         // 4. Atualiza os cards das aulas (Bloqueio e Status)
-        const lesson4Completed = progressData.some(p => Number(p.lesson_id) === 4);
         const lesson5Completed = progressData.some(p => Number(p.lesson_id) === 5);
         const lesson5NovoBadge = document.getElementById('lesson-5-novo-badge');
-        if (lesson5NovoBadge && lesson4Completed && !lesson5Completed) lesson5NovoBadge.classList.remove('hidden');
+        if (lesson5NovoBadge && !lesson5Completed) lesson5NovoBadge.classList.remove('hidden');
 
         for (let i = 1; i <= totalLessons; i++) {
             const card = document.getElementById(`lesson-card-${i}`);
@@ -771,46 +770,35 @@
             const statusLabel = card.querySelector('.lesson-status-label');
             const actionLabel = card.querySelector('.lesson-action-label');
 
-            // Aula 5 bloqueada até aula 4 ser concluída
-            if (i === 5 && !lesson4Completed) {
-                card.classList.add('opacity-40', 'grayscale', 'pointer-events-none');
-                card.style.cursor = 'default';
-                if (icon) icon.textContent = 'lock';
+            card.classList.remove('opacity-40', 'grayscale', 'pointer-events-none');
+            card.style.cursor = 'pointer';
+            if (isCompleted) {
+                if (icon) {
+                    icon.textContent = 'check_circle';
+                    icon.classList.add('text-primary');
+                }
+                if (statusLabel) {
+                    statusLabel.textContent = 'CONCLUÍDA';
+                    statusLabel.classList.add('text-primary');
+                    statusLabel.classList.remove('text-on-surface-variant');
+                }
                 if (actionLabel) {
-                    actionLabel.textContent = 'Bloqueado';
+                    actionLabel.textContent = 'REVER AULA';
                     actionLabel.className = 'text-[9px] font-bold text-on-surface-variant uppercase lesson-action-label';
                 }
             } else {
-                card.classList.remove('opacity-40', 'grayscale', 'pointer-events-none');
-                card.style.cursor = 'pointer';
-                if (isCompleted) {
-                    if (icon) {
-                        icon.textContent = 'check_circle';
-                        icon.classList.add('text-primary');
-                    }
-                    if (statusLabel) {
-                        statusLabel.textContent = 'CONCLUÍDA';
-                        statusLabel.classList.add('text-primary');
-                        statusLabel.classList.remove('text-on-surface-variant');
-                    }
-                    if (actionLabel) {
-                        actionLabel.textContent = 'REVER AULA';
-                        actionLabel.className = 'text-[9px] font-bold text-on-surface-variant uppercase lesson-action-label';
-                    }
-                } else {
-                    if (icon) {
-                        icon.textContent = 'play_circle';
-                        icon.classList.remove('text-primary');
-                    }
-                    if (statusLabel) {
-                        statusLabel.textContent = `AULA #${i.toString().padStart(2, '0')}`;
-                        statusLabel.classList.remove('text-primary');
-                        statusLabel.classList.add('text-on-surface-variant');
-                    }
-                    if (actionLabel) {
-                        actionLabel.textContent = 'Assistir Aula';
-                        actionLabel.className = 'text-[9px] font-bold text-primary uppercase lesson-action-label';
-                    }
+                if (icon) {
+                    icon.textContent = 'play_circle';
+                    icon.classList.remove('text-primary');
+                }
+                if (statusLabel) {
+                    statusLabel.textContent = `AULA #${i.toString().padStart(2, '0')}`;
+                    statusLabel.classList.remove('text-primary');
+                    statusLabel.classList.add('text-on-surface-variant');
+                }
+                if (actionLabel) {
+                    actionLabel.textContent = 'Assistir Aula';
+                    actionLabel.className = 'text-[9px] font-bold text-primary uppercase lesson-action-label';
                 }
             }
         }
