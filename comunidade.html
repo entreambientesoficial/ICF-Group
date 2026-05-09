@@ -280,50 +280,10 @@
       </div>
 
       <div class="grid grid-cols-3 gap-3">
-        <!-- Arquitetura -->
-        <button onclick="openDirectory('Arquitetura')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">architecture</span>
-          </div>
-          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Arquitetura</span>
-        </button>
-
-        <!-- Engenharia -->
-        <button onclick="openDirectory('Engenharia')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">engineering</span>
-          </div>
-          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Engenharia</span>
-        </button>
-
-        <!-- Obras -->
-        <button onclick="openDirectory('Obras')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">construction</span>
-          </div>
-          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Obras</span>
-        </button>
-
-        <!-- Elétrica -->
-        <button onclick="openDirectory('Elétrica')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">bolt</span>
-          </div>
-          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Elétrica</span>
-        </button>
-
-        <!-- Hidráulica -->
-        <button onclick="openDirectory('Hidráulica')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">water_drop</span>
-          </div>
-          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Hidráulica</span>
-        </button>
-
-        <!-- Experts -->
+        <!-- Experts — sempre primeiro -->
         <button onclick="openDirectory('Experts')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
           <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">engineering</span>
+            <span class="material-symbols-outlined text-primary text-2xl">hard_hat</span>
           </div>
           <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Experts</span>
         </button>
@@ -336,12 +296,28 @@
           <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center leading-tight">Ar Condicionado</span>
         </button>
 
-        <!-- Pintura -->
-        <button onclick="openDirectory('Pintura')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+        <!-- Arquitetura -->
+        <button onclick="openDirectory('Arquitetura')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
           <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-primary text-2xl">format_paint</span>
+            <span class="material-symbols-outlined text-primary text-2xl">architecture</span>
           </div>
-          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Pintura</span>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Arquitetura</span>
+        </button>
+
+        <!-- Elétrica -->
+        <button onclick="openDirectory('Elétrica')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">bolt</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Elétrica</span>
+        </button>
+
+        <!-- Engenharia -->
+        <button onclick="openDirectory('Engenharia')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">engineering</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Engenharia</span>
         </button>
 
         <!-- Gesso -->
@@ -350,6 +326,30 @@
             <span class="material-symbols-outlined text-primary text-2xl">texture</span>
           </div>
           <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Gesso</span>
+        </button>
+
+        <!-- Hidráulica -->
+        <button onclick="openDirectory('Hidráulica')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">water_drop</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Hidráulica</span>
+        </button>
+
+        <!-- Obras -->
+        <button onclick="openDirectory('Obras')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">construction</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Obras</span>
+        </button>
+
+        <!-- Pintura -->
+        <button onclick="openDirectory('Pintura')" class="bg-surface border border-outline rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-primary/50 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary text-2xl">format_paint</span>
+          </div>
+          <span class="text-[9px] font-bold text-white uppercase tracking-tighter text-center">Pintura</span>
         </button>
       </div>
     </section>
