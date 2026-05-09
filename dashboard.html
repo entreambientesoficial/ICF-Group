@@ -371,7 +371,6 @@
           <div class="flex justify-between items-start mb-4">
             <span class="font-black text-[10px] text-on-surface-variant uppercase tracking-widest lesson-status-label">AULA #05</span>
             <div class="flex items-center gap-2">
-              <span id="lesson-5-novo-badge" class="hidden text-[8px] font-black bg-primary text-secondary px-2 py-0.5 rounded-full uppercase tracking-widest">NOVO</span>
               <span class="material-symbols-outlined text-on-surface-variant">lock</span>
             </div>
           </div>
@@ -757,9 +756,6 @@
         }
 
         // 4. Atualiza os cards das aulas (Bloqueio e Status)
-        const lesson5Completed = progressData.some(p => Number(p.lesson_id) === 5);
-        const lesson5NovoBadge = document.getElementById('lesson-5-novo-badge');
-        if (lesson5NovoBadge && !lesson5Completed) lesson5NovoBadge.classList.remove('hidden');
 
         for (let i = 1; i <= totalLessons; i++) {
             const card = document.getElementById(`lesson-card-${i}`);
