@@ -505,22 +505,24 @@
         }
 
         if (lesson.released) {
-          // Normal Play behavior
-          playButton.innerHTML = `<span class="material-symbols-outlined text-4xl" style="font-variation-settings:'FILL' 1;">play_arrow</span>`;
-          playButton.className = "w-16 h-16 md:w-20 md:h-20 bg-primary/90 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-all text-on-primary relative z-20";
-          
-          playButton.onclick = () => {
-            videoContainer.style.backgroundImage = 'none';
-            videoContainer.style.filter = 'none';
-            videoOverlay.innerHTML = `<iframe src="${lesson.videoUrl}&autoplay=1" class="absolute inset-0 w-full h-full z-10" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-          };
+          // Normal Play behavior — playButton pode ser null se o vídeo já foi iniciado (iframe substituiu o overlay)
+          if (playButton) {
+            playButton.innerHTML = `<span class="material-symbols-outlined text-4xl" style="font-variation-settings:'FILL' 1;">play_arrow</span>`;
+            playButton.className = "w-16 h-16 md:w-20 md:h-20 bg-primary/90 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-all text-on-primary relative z-20";
+            playButton.onclick = () => {
+              videoContainer.style.backgroundImage = 'none';
+              videoContainer.style.filter = 'none';
+              videoOverlay.innerHTML = `<iframe src="${lesson.videoUrl}&autoplay=1" class="absolute inset-0 w-full h-full z-10" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            };
+          }
         } else {
           // Locked behavior
-          playButton.innerHTML = `<span class="material-symbols-outlined text-4xl">lock</span>`;
-          playButton.className = "w-16 h-16 md:w-20 md:h-20 bg-black/60 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center shadow-2xl cursor-not-allowed text-white relative z-20";
-          
-          if (statusText) statusText.textContent = "Aguardando Transmissão...";
-          playButton.onclick = null;
+          if (playButton) {
+            playButton.innerHTML = `<span class="material-symbols-outlined text-4xl">lock</span>`;
+            playButton.className = "w-16 h-16 md:w-20 md:h-20 bg-black/60 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center shadow-2xl cursor-not-allowed text-white relative z-20";
+            if (statusText) statusText.textContent = "Aguardando Transmissão...";
+            playButton.onclick = null;
+          }
         }
 
         // Render Resources
