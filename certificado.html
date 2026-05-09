@@ -419,7 +419,7 @@
       const user = await getUser();
       if (!user) { window.location.href = 'index.html'; return; }
 
-      const progress = await getProgress();
+      const progress = await getProgress(user.id);
       const completedCount = progress.filter(p => p.lesson_id).length;
 
       document.getElementById('state-loading').classList.add('hidden');
@@ -449,6 +449,7 @@
 
       // Show certificate
       const ready = document.getElementById('state-ready');
+      ready.classList.remove('hidden');
       ready.style.display = 'flex';
     });
   </script>
