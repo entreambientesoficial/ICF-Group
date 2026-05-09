@@ -157,8 +157,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: space-between;
       height: 100%;
-      padding: 14mm 38mm 12mm;
+      padding: 10mm 30mm 10mm;
     }
 
     /* Header */
@@ -167,7 +168,6 @@
       align-items: flex-start;
       justify-content: space-between;
       width: 100%;
-      margin-bottom: 5mm;
     }
 
     .cert-logo-center {
@@ -177,17 +177,13 @@
       gap: 2px;
     }
 
-    .cert-helmet-icon {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 2px;
-    }
+    .cert-helmet-icon { width: 32px; height: 32px; margin-bottom: 2px; }
 
     .cert-brand-title {
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 900;
       color: #1a3358;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       line-height: 1;
     }
@@ -200,32 +196,101 @@
       text-transform: uppercase;
     }
 
-    /* Title */
+    /* Title block */
+    .cert-title-block { text-align: center; width: 100%; }
+
     .cert-title {
       font-family: 'Dancing Script', cursive;
-      font-size: 64px;
+      font-size: 62px;
       color: #1a3358;
       line-height: 1;
-      margin-bottom: 5mm;
+      margin-bottom: 3mm;
     }
 
-    /* Body text */
-    .cert-body {
-      text-align: center;
-      color: #243a50;
-      font-size: 11.5px;
-      line-height: 1.9;
-      max-width: 175mm;
+    .cert-title-rule {
+      width: 70mm;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #00c2a0 25%, #00c2a0 75%, transparent);
+      margin: 0 auto;
+    }
+
+    /* Body */
+    .cert-body { text-align: center; width: 100%; }
+
+    .cert-certify-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: #00c2a0;
+      margin-bottom: 3mm;
     }
 
     .cert-student-name {
       font-weight: 800;
-      font-size: 13px;
+      font-size: 26px;
       color: #1a3358;
-      border-bottom: 1.5px solid #1a3358;
-      padding: 0 6px 1px;
+      border-bottom: 2.5px solid #00c2a0;
+      padding: 0 10px 3px;
       display: inline-block;
-      min-width: 52mm;
+      min-width: 70mm;
+      margin-bottom: 4mm;
+    }
+
+    .cert-participated {
+      font-size: 13px;
+      color: #4a6275;
+      line-height: 1.7;
+      margin-bottom: 2mm;
+    }
+
+    .cert-course-name {
+      display: block;
+      font-size: 15.5px;
+      font-weight: 900;
+      color: #1a3358;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 1mm;
+      margin-bottom: 4mm;
+    }
+
+    .cert-meta {
+      font-size: 12px;
+      color: #6a7a8a;
+      line-height: 1.6;
+      margin-bottom: 4mm;
+    }
+
+    .cert-rule-ornament {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      justify-content: center;
+      margin-bottom: 4mm;
+    }
+    .cert-rule-ornament::before,
+    .cert-rule-ornament::after {
+      content: '';
+      display: block;
+      width: 20mm;
+      height: 1px;
+      background: #00c2a0;
+      opacity: 0.5;
+    }
+    .cert-rule-ornament span {
+      font-size: 8px;
+      color: #00c2a0;
+      letter-spacing: 4px;
+    }
+
+    .cert-approval {
+      font-size: 11.5px;
+      color: #7a8a9a;
+      font-style: italic;
+      line-height: 1.7;
+      max-width: 160mm;
+      margin: 0 auto;
     }
 
     /* Footer */
@@ -234,19 +299,18 @@
       justify-content: space-between;
       align-items: flex-end;
       width: 100%;
-      margin-top: auto;
     }
 
     .cert-footer-block {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 52mm;
+      min-width: 58mm;
     }
 
     .cert-footer-sig {
       font-family: 'Dancing Script', cursive;
-      font-size: 22px;
+      font-size: 26px;
       color: #1a3358;
       line-height: 1.2;
       margin-bottom: 2px;
@@ -255,11 +319,11 @@
     .cert-footer-line {
       width: 100%;
       border-top: 1px solid #2a3a50;
-      padding-top: 4px;
+      padding-top: 5px;
     }
 
     .cert-footer-value {
-      font-size: 9.5px;
+      font-size: 11px;
       font-weight: 700;
       color: #1a3358;
       letter-spacing: 0.06em;
@@ -267,12 +331,12 @@
     }
 
     .cert-footer-label {
-      font-size: 7.5px;
+      font-size: 8.5px;
       font-weight: 500;
       color: #6a7a8a;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     /* ── Print ── */
@@ -346,10 +410,7 @@
           <!-- Header -->
           <div class="cert-header">
             <div style="width:80px;"></div>
-
-            <!-- Center logo -->
             <div class="cert-logo-center">
-              <!-- Construction helmet SVG -->
               <svg class="cert-helmet-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18 4C11.37 4 6 9.37 6 16v2h24v-2C30 9.37 24.63 4 18 4Z" fill="#00c2a0"/>
                 <path d="M18 4v14M12 8l2 6M24 8l-2 6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
@@ -359,8 +420,6 @@
               <div class="cert-brand-title">INTENSIVÃO</div>
               <div class="cert-brand-sub">DA CONSTRUÇÃO COM ISOPOR</div>
             </div>
-
-            <!-- ICF logo (adapted for light background) -->
             <div style="width:80px; display:flex; justify-content:flex-end; padding-top:2px;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 52" width="72">
                 <polygon fill="#01c38e" points="45.72 20.78 31.12 20.78 20.78 0 45.72 0 45.72 20.78"/>
@@ -374,34 +433,43 @@
           </div>
 
           <!-- Title -->
-          <div class="cert-title">Certificado</div>
+          <div class="cert-title-block">
+            <div class="cert-title">Certificado</div>
+            <div class="cert-title-rule"></div>
+          </div>
 
           <!-- Body -->
           <div class="cert-body">
-            Certifico que <span id="cert-name" class="cert-student-name">&nbsp;</span>
-            participou do Intensivão da Construção com Isopor,<br>
-            um evento online, realizado entre 04/05/2026 a 08/05/2026, com carga horária de <strong>12 horas</strong>.<br>
-            Tendo acertado mais do que 80% das questões do Quiz de Conhecimento<br>
-            sobre o aprendizado no evento.
+            <p class="cert-certify-label">Certificamos que</p>
+            <div id="cert-name" class="cert-student-name">&nbsp;</div>
+            <p class="cert-participated">
+              participou e concluiu com êxito o
+              <strong class="cert-course-name">INTENSIVÃO DA CONSTRUÇÃO COM ISOPOR</strong>
+            </p>
+            <p class="cert-meta">
+              Evento online de formação técnica em construção civil<br>
+              realizado de 04 a 08 de maio de 2026 &nbsp;·&nbsp; Carga horária: <strong>12 horas</strong>
+            </p>
+            <div class="cert-rule-ornament"><span>◆ ◆ ◆</span></div>
+            <p class="cert-approval">
+              Aprovado com aproveitamento superior a 80% nas avaliações de conhecimento sobre o programa
+            </p>
           </div>
 
           <!-- Footer -->
           <div class="cert-footer">
-            <!-- Date -->
             <div class="cert-footer-block">
               <div class="cert-footer-sig">&nbsp;</div>
               <div class="cert-footer-line">
                 <div class="cert-footer-value" id="cert-date">SÃO PAULO, 08/05/2026</div>
-                <div class="cert-footer-label">DATA</div>
+                <div class="cert-footer-label">Data</div>
               </div>
             </div>
-
-            <!-- Signature -->
             <div class="cert-footer-block">
               <div class="cert-footer-sig">João F. da Rocha</div>
               <div class="cert-footer-line">
-                <div class="cert-footer-value">JOÃO F. DA ROCHA</div>
-                <div class="cert-footer-label">ASSINATURA</div>
+                <div class="cert-footer-value">João F. da Rocha</div>
+                <div class="cert-footer-label">Diretor — ICF Educação</div>
               </div>
             </div>
           </div>
