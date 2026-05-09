@@ -449,6 +449,11 @@
                   </div>
                 </div>
               </div>
+              <div id="pExtrasEstrutura" class="mt-3 space-y-2"></div>
+              <button type="button" onclick="pAddExtra('Estrutura')"
+                class="mt-2 w-full flex items-center justify-center gap-1 h-8 rounded-xl border border-dashed border-primary/40 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 transition-all">
+                <span class="material-symbols-outlined text-sm">add</span> Adicionar item
+              </button>
             </div>
 
             <!-- Estanqueidade -->
@@ -474,6 +479,11 @@
                   </div>
                 </div>
               </div>
+              <div id="pExtrasEstanque" class="mt-3 space-y-2"></div>
+              <button type="button" onclick="pAddExtra('Estanque')"
+                class="mt-2 w-full flex items-center justify-center gap-1 h-8 rounded-xl border border-dashed border-blue-400/40 text-blue-400 text-[10px] font-black uppercase tracking-widest hover:bg-blue-400/10 transition-all">
+                <span class="material-symbols-outlined text-sm">add</span> Adicionar item
+              </button>
             </div>
 
             <!-- Mão de Obra -->
@@ -515,6 +525,11 @@
                   </div>
                 </div>
               </div>
+              <div id="pExtrasMO" class="mt-3 space-y-2"></div>
+              <button type="button" onclick="pAddExtra('MO')"
+                class="mt-2 w-full flex items-center justify-center gap-1 h-8 rounded-xl border border-dashed border-yellow-400/40 text-yellow-400 text-[10px] font-black uppercase tracking-widest hover:bg-yellow-400/10 transition-all">
+                <span class="material-symbols-outlined text-sm">add</span> Adicionar item
+              </button>
             </div>
 
             <!-- Equipamentos -->
@@ -545,6 +560,23 @@
                     class="w-full bg-background/60 border border-white/20 rounded-xl px-4 py-2.5 text-white text-sm font-bold focus:border-primary focus:outline-none transition-all" />
                 </div>
               </div>
+              <div id="pExtrasEquip" class="mt-3 space-y-2"></div>
+              <button type="button" onclick="pAddExtra('Equip')"
+                class="mt-2 w-full flex items-center justify-center gap-1 h-8 rounded-xl border border-dashed border-primary/40 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 transition-all">
+                <span class="material-symbols-outlined text-sm">add</span> Adicionar item
+              </button>
+            </div>
+
+            <!-- Outros / Extras -->
+            <div>
+              <p class="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">add_circle</span> Outros / Extras
+              </p>
+              <div id="pExtrasOutros" class="space-y-2"></div>
+              <button type="button" onclick="pAddExtra('Outros')"
+                class="mt-2 w-full flex items-center justify-center gap-1 h-8 rounded-xl border border-dashed border-purple-400/40 text-purple-400 text-[10px] font-black uppercase tracking-widest hover:bg-purple-400/10 transition-all">
+                <span class="material-symbols-outlined text-sm">add</span> Adicionar item
+              </button>
             </div>
 
           </div>
@@ -967,6 +999,15 @@
       <div class="p-4 space-y-3" id="pBlocoEquip"></div>
     </div>
 
+    <!-- Bloco: Outros / Extras -->
+    <div id="pBlocoOutrosWrapper" class="hidden bg-surface rounded-2xl border border-white/10 overflow-hidden">
+      <div class="flex items-center gap-3 p-4 border-b border-white/5 bg-purple-500/5">
+        <span class="material-symbols-outlined text-purple-400 text-lg">add_circle</span>
+        <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">5. Outros / Extras</p>
+      </div>
+      <div class="p-4 space-y-3" id="pBlocoOutros"></div>
+    </div>
+
     <!-- Bloco: Financeiro -->
     <div class="bg-gradient-to-br from-background via-surface to-background rounded-3xl border-2 border-primary/40 overflow-hidden shadow-[0_20px_50px_rgba(0,194,160,0.15)]">
       <div class="p-6 border-b border-primary/20 bg-primary/5 flex justify-between items-center">
@@ -1192,6 +1233,8 @@
       const progressData = await getProgress(user.id);
       const completedCount = progressData.length;
       if (sideLevel) sideLevel.textContent = `Nível ${computeLevel(completedCount)}`;
+
+      pLoadExtras();
     });
 
     window.closeLogoutModal = () => {
@@ -1268,6 +1311,52 @@
       </div>`;
     }
 
+    // ── Extras dinâmicos da piscina ─────────────────────────────────────
+    window.pAddExtra = (section, desc = '', val = '') => {
+      const container = document.getElementById('pExtras' + section);
+      if (!container) return;
+      const row = document.createElement('div');
+      row.className = 'p-extra-row flex gap-2 items-center';
+      row.innerHTML = `
+        <input type="text" placeholder="Descrição" class="flex-1 bg-background/60 border border-white/20 rounded-xl px-3 py-2 text-white text-xs font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
+        <div class="relative w-28 shrink-0">
+          <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] text-on-surface-variant font-bold">R$</span>
+          <input type="number" min="0" step="0.01" placeholder="0,00" class="w-full bg-background/60 border border-white/20 rounded-xl pl-8 pr-2 py-2 text-white text-xs font-bold placeholder-white/30 focus:border-primary focus:outline-none transition-all" />
+        </div>
+        <button onclick="this.closest('.p-extra-row').remove()" class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 hover:bg-red-500/30 transition-all">
+          <span class="material-symbols-outlined text-sm">close</span>
+        </button>`;
+      if (desc) row.querySelector('input[type=text]').value = desc;
+      if (val)  row.querySelector('input[type=number]').value = val;
+      container.appendChild(row);
+    };
+
+    function pGetExtras(section) {
+      const container = document.getElementById('pExtras' + section);
+      if (!container) return [];
+      return Array.from(container.querySelectorAll('.p-extra-row')).map(row => ({
+        desc: row.querySelector('input[type=text]').value.trim() || 'Item extra',
+        val:  parseFloat(row.querySelector('input[type=number]').value) || 0,
+      })).filter(e => e.val > 0);
+    }
+
+    function pSaveExtras() {
+      const data = {};
+      ['Estrutura','Estanque','MO','Equip','Outros'].forEach(s => { data[s] = pGetExtras(s); });
+      localStorage.setItem('pPiscinaExtras', JSON.stringify(data));
+    }
+
+    function pLoadExtras() {
+      try {
+        const stored = localStorage.getItem('pPiscinaExtras');
+        if (!stored) return;
+        const data = JSON.parse(stored);
+        ['Estrutura','Estanque','MO','Equip','Outros'].forEach(s => {
+          if (data[s]) data[s].forEach(e => pAddExtra(s, e.desc, e.val));
+        });
+      } catch(e) {}
+    }
+
     // ── CALCULAR PISCINA ────────────────────────────────────────────────
     window.calcularPiscina = () => {
       const C = parseFloat(document.getElementById('pComp').value) || 0;
@@ -1326,18 +1415,37 @@
       const moParedesM2  = Math.ceil(areaParedes);
       const moImpermM2   = Math.ceil(areaInterna);
 
-      // Custos por bloco
-      const custoEstrutura = formasQtd*cu.forma + cantosQtd*cu.canto + concTotal*cu.concreto + acoKg*cu.aco;
-      const custoEstanque  = icflexM2*cu.icflex + telaM2*cu.tela;
-      const custoMO        = moFundoM2*cu.moFundo + moParedesM2*cu.moParedes + moImpermM2*(cu.moImperm + cu.matImperm);
-      const custoEquip     = cu.kitFiltro + cu.qtdLed * cu.led;
-      const custoTotal     = custoEstrutura + custoEstanque + custoMO + custoEquip;
+      // Extras adicionados pelo usuário
+      const extrasEstrutura = pGetExtras('Estrutura');
+      const extrasEstanque  = pGetExtras('Estanque');
+      const extrasMO        = pGetExtras('MO');
+      const extrasEquip     = pGetExtras('Equip');
+      const extrasOutros    = pGetExtras('Outros');
+      const xEstrutura = extrasEstrutura.reduce((s, e) => s + e.val, 0);
+      const xEstanque  = extrasEstanque.reduce((s, e) => s + e.val, 0);
+      const xMO        = extrasMO.reduce((s, e) => s + e.val, 0);
+      const xEquip     = extrasEquip.reduce((s, e) => s + e.val, 0);
+      const xOutros    = extrasOutros.reduce((s, e) => s + e.val, 0);
+
+      // Custos por bloco (fixos + extras)
+      const custoEstrutura = formasQtd*cu.forma + cantosQtd*cu.canto + concTotal*cu.concreto + acoKg*cu.aco + xEstrutura;
+      const custoEstanque  = icflexM2*cu.icflex + telaM2*cu.tela + xEstanque;
+      const custoMO        = moFundoM2*cu.moFundo + moParedesM2*cu.moParedes + moImpermM2*(cu.moImperm + cu.matImperm) + xMO;
+      const custoEquip     = cu.kitFiltro + cu.qtdLed * cu.led + xEquip;
+      const custoTotal     = custoEstrutura + custoEstanque + custoMO + custoEquip + xOutros;
 
       // Financeiro
       const divisor    = 1 - (bdi / 100);
       const precoVenda = divisor > 0 ? custoTotal / divisor : 0;
       const lucro      = precoVenda - custoTotal;
       const brl = v => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+
+      // Helper para extras no memorial
+      const renderExtras = (extras, color) => extras.map(e =>
+        `<div class="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+          <div class="flex-1"><p class="text-sm font-bold text-white">${e.desc}</p><p class="text-[10px] text-on-surface-variant">Item adicional</p></div>
+          <p class="text-sm font-black ${color} ml-4">${brl(e.val)}</p>
+        </div>`).join('');
 
       // Preenche memorial
       document.getElementById('pResComp').textContent = C.toFixed(1);
@@ -1350,11 +1458,13 @@
         pLinhaItem('Concreto FCK25 — Radier', concRadier, 'm³', cu.concreto, concRadier*cu.concreto) +
         pLinhaItem('Concreto FCK25 — Paredes', concParedes, 'm³', cu.concreto, concParedes*cu.concreto) +
         pLinhaItem('Aço 8mm (+25% armadura dupla)', acoKg, 'kg', cu.aco, acoKg*cu.aco) +
+        renderExtras(extrasEstrutura, 'text-primary') +
         `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Estrutura</p><p class="text-sm font-black text-white">${brl(custoEstrutura)}</p></div>`;
 
       document.getElementById('pBlocoEstanque').innerHTML =
         pLinhaItem('ICFlex Argamassa + Tela', icflexM2, 'm²', cu.icflex, icflexM2*cu.icflex) +
         pLinhaItem('Tela Fibra de Vidro', telaM2, 'm²', cu.tela, telaM2*cu.tela) +
+        renderExtras(extrasEstanque, 'text-blue-400') +
         `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Estanqueidade</p><p class="text-sm font-black text-white">${brl(custoEstanque)}</p></div>`;
 
       document.getElementById('pBlocoMO').innerHTML =
@@ -1362,12 +1472,24 @@
         pLinhaItem('MO — Execução Paredes ICF', moParedesM2, 'm²', cu.moParedes, moParedesM2*cu.moParedes) +
         pLinhaItem('MO — Impermeabilização', moImpermM2, 'm²', cu.moImperm, moImpermM2*cu.moImperm) +
         pLinhaItem('Materiais Impermeabilização', moImpermM2, 'm²', cu.matImperm, moImpermM2*cu.matImperm) +
+        renderExtras(extrasMO, 'text-yellow-400') +
         `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Mão de Obra</p><p class="text-sm font-black text-white">${brl(custoMO)}</p></div>`;
 
       document.getElementById('pBlocoEquip').innerHTML =
         pLinhaItem('Kit Filtro + Bomba', 1, 'kit', cu.kitFiltro, cu.kitFiltro) +
         pLinhaItem('LED Subaquático', cu.qtdLed, 'unid', cu.led, cu.qtdLed*cu.led) +
+        renderExtras(extrasEquip, 'text-primary') +
         `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Equipamentos</p><p class="text-sm font-black text-white">${brl(custoEquip)}</p></div>`;
+
+      const pBlocoOutrosWrapper = document.getElementById('pBlocoOutrosWrapper');
+      if (extrasOutros.length > 0) {
+        pBlocoOutrosWrapper.classList.remove('hidden');
+        document.getElementById('pBlocoOutros').innerHTML =
+          renderExtras(extrasOutros, 'text-purple-400') +
+          `<div class="flex justify-between pt-2"><p class="text-[10px] font-black text-on-surface-variant uppercase">Subtotal Outros</p><p class="text-sm font-black text-white">${brl(xOutros)}</p></div>`;
+      } else {
+        pBlocoOutrosWrapper.classList.add('hidden');
+      }
 
       document.getElementById('pResCusto').textContent  = brl(custoTotal);
       document.getElementById('pResVenda').textContent  = brl(precoVenda);
@@ -1376,6 +1498,7 @@
       document.getElementById('pResLucroLabel').textContent = `Lucro Bruto Estimado (${bdi}%)`;
       document.getElementById('pResBarra').style.width = `${Math.min(bdi, 100)}%`;
 
+      pSaveExtras();
       document.getElementById('formSection').classList.add('hidden');
       document.getElementById('memorialPiscina').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
