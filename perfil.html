@@ -201,7 +201,7 @@
 
     <!-- Certificate CTA -->
     <section>
-      <a id="cert-btn" href="certificado.html" target="_blank" class="w-full flex items-center justify-between p-5 bg-primary/10 border border-primary/30 rounded-3xl hover:bg-primary/20 transition-colors group">
+      <a id="cert-btn" href="certificado.html" class="w-full flex items-center justify-between p-5 bg-primary/10 border border-primary/30 rounded-3xl hover:bg-primary/20 transition-colors group">
         <div class="flex items-center gap-4">
           <span class="material-symbols-outlined text-primary text-2xl">workspace_premium</span>
           <div class="text-left">
@@ -408,7 +408,7 @@
           sideAvatar.innerHTML = `<img src="${photo}" class="w-full h-full rounded-full object-cover" alt="Perfil">`;
       }
 
-      const progressData = await getProgress();
+      const progressData = await getProgress(user.id);
       const totalLessons = 5;
       const completedCount = progressData.filter(p => p.lesson_id).length;
       document.getElementById('stats-lessons').textContent = `${completedCount}/${totalLessons}`;
