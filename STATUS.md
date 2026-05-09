@@ -274,7 +274,7 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 - **[FEAT]** Aula 5 liberada: `released: true`, vídeo oficial integrado (`ssg7Cj3Pr1g`).
 - **[FEAT]** Quiz Aula 5 adicionado — 12 questões técnicas sobre ecossistema ICF, perfis Expert, RI ICF, certificação e visão 2028.
 - **[FEAT]** Material de Apoio: EBOOK-AULA-5 referenciado (`./material-apoio-ICF/EBOOK-AULA-5.pdf`).
-- **[PENDENTE]** EBOOK-AULA-5 precisa ser uploaded no Supabase Storage (bucket `ebooks`) e URL atualizada para padrão `hbcqldrrgrpyufylojtv.supabase.co/...` — pasta `material-apoio-ICF/` está fora do `iforms-pwa/`.
+- **[FIX]** URL do EBOOK-AULA-5 atualizada para Supabase Storage (`hbcqldrrgrpyufylojtv.supabase.co/storage/v1/object/public/ebooks/EBOOK-AULA-5.pdf`) — padrão consistente com ebooks 1-4.
 
 ### Dashboard (`dashboard.html`)
 - **[FEAT]** Lógica de bloqueio da Aula 5 atualizada: desbloqueia quando Aula 4 é concluída (`i === 5 && !lesson4Completed`).
@@ -294,7 +294,7 @@ Tabelas criadas pelo Gemini (existem no banco, não usadas pelo app):
 - [x] Certificado de conclusão (`certificado.html`) — A4 landscape, print/PDF.
 - [x] Calculadora Piscina: motor separado, custos editáveis, memorial próprio.
 - [x] Liberação da Aula 05 (vídeo, quiz, ebook) — conteúdo completo integrado.
-- [ ] Upload do EBOOK-AULA-5 no Supabase Storage e atualização da URL em `aula.html`.
+- [x] Upload do EBOOK-AULA-5 no Supabase Storage e URL atualizada em `aula.html`.
 - [ ] Teste do Certificado com 5/5 aulas concluídas (fluxo completo agora possível).
 - [ ] Refinamento Financeiro: Base de cálculo da área da laje para CUB.
 - [ ] Painel Administrativo do Mentor (V2 estável, com módulo JS separado e auth via Supabase).
